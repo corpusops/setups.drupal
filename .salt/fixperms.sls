@@ -30,7 +30,7 @@
                \(\
                     \( -type f -and \( -not -perm 0640 \) -and \( -not -path "{{cfg.project_root}}/www/sites/*/files*" \) \)\
                 -or \( -type d -and \( -not -perm 2751 \) -and \( -not -path "{{cfg.project_root}}/www/sites/*/files*" \) \)\
-               \)\
+               \) \
                2>/dev/null |\
                while read i; do
                    if [ ! -h "${i}" ]; then
@@ -53,7 +53,7 @@
               \(\
                 \(     -type f -and \( -not -user {{cfg.user}} -or -not -group $datagroup                      \) \)\
                 -or \( -type d -and \( -not -user {{cfg.user}} -or -not -group $datagroup -or -not -perm -2000 \) \)\
-              \)\
+              \) \
               2>/dev/null |\
               while read i;do
                 if [ ! -h "${i}" ];then
