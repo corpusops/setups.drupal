@@ -13,14 +13,15 @@
             # hack to be sure that nginx is in www-data
             # in most cases
             datagroup="{{cfg.group}}"
-            groupadd -r $datagroup || /bin/true
-            gpasswd -a {{cfg.user}} $datagroup || /bin/true
-            gpasswd -a nginx $datagroup || /bin/true
-            gpasswd -a www-data $datagroup || /bin/true
+            groupadd -r $datagroup 2>/dev/null || /bin/true
+            users="nginx www-data"
+            for i in $users;do
+              gpasswd -a $i $datagroup >/dev/null 2>&1 || /bin/true
+            done
             # be sure to remove POSIX acls support
             setfacl -P -R -b -k "{{cfg.project_dir}}"
             "{{locs.resetperms}}" -q --no-acls\
-              --user root --group "{{cfg.group}}" \
+              --user root --group "$datagroup" \
               --dmode '0770' --fmode '0770' \
               --paths "{{cfg.pillar_root}}";
              # web directory loop (user and groups rights)
@@ -30,7 +31,7 @@
                     \( -type f -and \( -not -perm 0640 \) -and \( -not -path "{{cfg.project_root}}/www/sites/*/files*" \) \)\
                 -or \( -type d -and \( -not -perm 2751 \) -and \( -not -path "{{cfg.project_root}}/www/sites/*/files*" \) \)\
                \)\
-               |\
+               2>/dev/null |\
                while read i; do
                    if [ ! -h "${i}" ]; then
                        if [ -d "${i}" ]; then
@@ -50,10 +51,10 @@
               "{{cfg.project_root}}" \
               "{{cfg.data_root}}" {%if not cfg.remote_less %}"{{cfg.git_root}}"{% endif %} \
               \(\
-                \(     -type f -and \( -not -user {{cfg.user}} -or -not -group {{cfg.group}}                      \) \)\
-                -or \( -type d -and \( -not -user {{cfg.user}} -or -not -group {{cfg.group}} -or -not -perm -2000 \) \)\
+                \(     -type f -and \( -not -user {{cfg.user}} -or -not -group $datagroup                      \) \)\
+                -or \( -type d -and \( -not -user {{cfg.user}} -or -not -group $datagroup -or -not -perm -2000 \) \)\
               \)\
-              |\
+              2>/dev/null |\
               while read i;do
                 if [ ! -h "${i}" ];then
                   if [ -d "${i}" ];then
@@ -66,16 +67,16 @@
                 fi
              done
              find "{{cfg.data_root}}/var" "{{cfg.data_root}}/var/run" \
-               -maxdepth 1 -mindepth 1 | \
+               -maxdepth 1 -mindepth 1 2>/dev/null | \
              egrep '((/(sites|run|private|tmp|log))|sock)'|while read f;do
                 {{locs.resetperms}} -q --no-acls \
                   --fmode 771 --dmode 2771 \
-                  -u {{cfg.user}} -g {{cfg.group}} \
+                  -u {{cfg.user}} -g $datagroup \
                   --paths "$f";
              done
              #{{locs.resetperms}} -q --no-acls\
              #  --fmode 770 --dmode 771 \
-             #  -u {{cfg.user}} -g {{cfg.group}}\
+             #  -u {{cfg.user}} -g $datagroup\
              #  --paths "{{cfg.data_root}}/var/sites"\
              #  --excludes=".*files.+";
              #{{locs.resetperms}} -q --no-recursive --no-acls\
@@ -83,7 +84,7 @@
              #  --paths "{{cfg.data_root}}"\
              #  --paths "{{cfg.data_root}}/var";
              {{locs.resetperms}} -q --no-recursive --no-acls\
-               --fmode  644 -u {{cfg.user}} -g {{cfg.group}}\
+               --fmode  644 -u {{cfg.user}} -g $datagroup\
                --paths "{{cfg.project_root}}"/www/sites/default/settings.php\
                --paths "{{cfg.project_root}}"/www/sites/default/common.settings.php\
                --paths "{{cfg.project_root}}"/www/sites/default/local.settings.php\
@@ -96,7 +97,7 @@
              for x in sites/*/files private;do
                {{locs.resetperms}} -q --no-acls\
                  --fmode 660 --dmode 2771\
-                 -u {{cfg.user}} -g {{cfg.group}}\
+                 -u {{cfg.user}} -g $datagroup\
                  --paths "${x}";
              done
             "{{locs.resetperms}}" -q --no-acls --no-recursive\
