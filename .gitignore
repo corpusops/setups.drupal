@@ -1,0 +1,37 @@
+# Ignore all core Drupal files.
+www/*.*
+www/includes
+www/misc
+www/modules
+www/scripts
+www/themes
+www/profiles/*
+www/sites/default
+www/sites/*/modules/*
+www/sites/*/themes/*
+www/sites/*/libraries/*
+www/sites/*/translations/*
+www/sites/all/README.txt
+www/sites/README.txt
+www/sites/default/default.settings.php
+www/sites/example.sites.php
+
+# Exceptions inside Drupal files (custom code).
+!www/sites/*/modules/custom
+!www/sites/*/themes/custom
+!www/sites/*/libraries/custom
+# You will want to use your custom profile's real name below.
+!www/profiles/example
+
+# Uncomment following line if modifying Drupal's .htaccess ?
+#!www/.htaccess
+
+# Documentation builds
+doc/_build
+
+# ignore apache logs and tmp uploads
+var/log/apache/*
+var/tmp/upload/*
+
+#ide settings
+nbproject
