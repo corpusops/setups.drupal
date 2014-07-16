@@ -1,0 +1,19 @@
+name = SALT Example
+description = Drupal salt-compatible sample profile
+version = 7.x-1.0
+core = 7.x
+exclusive = TRUE
+
+; Core
+dependencies[] = block
+dependencies[] = image
+dependencies[] = menu
+dependencies[] = path
+dependencies[] = dblog
+dependencies[] = field_ui
+dependencies[] = file
+dependencies[] = list
+dependencies[] = toolbar
+dependencies[] = contextual
+; Contrib
+dependencies[] = views_ui

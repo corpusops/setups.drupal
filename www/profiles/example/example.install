@@ -1,0 +1,165 @@
+<?php
+// $Id: simplydrupal.install 55 2011-04-17 19:46:02Z sgs $
+
+/**
+ * Implements hook_install().
+ *
+ * Perform actions to set up the site for this profile.
+ */
+function example_install() {
+  // Select language selected for the install
+  global $install_state;
+
+  // Add text format.
+  $full_html_format = array(
+    'format' => 'full_html',
+    'name' => 'Full HTML',
+    'weight' => 1,
+    'filters' => array(
+      // Ckeditor link filter.
+      'ckeditor_link_filter' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 5,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+      ),
+    ),
+  );
+  $full_html_format = (object) $full_html_format;
+  filter_format_save($full_html_format);
+
+  // Create Footer menu
+  $menu = array(
+    'menu_name' => 'footer',
+    'title' => st('Footer'),
+  );
+  menu_save($menu);
+
+  // Set menu sources
+  variable_set('menu_main_links_source', 'main-menu');
+  variable_set('menu_secondary_links_source', 'footer');
+
+  // Enable some standard blocks.
+  $default_theme = variable_get('theme_default', 'bartik');
+  $values = array(
+    array(
+      'module' => 'system',
+      'delta' => 'main',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'content',
+      'pages' => '',
+      'title' => '',
+      'cache' => DRUPAL_NO_CACHE,
+    ),
+    array(
+      'module' => 'menu',
+      'delta' => 'footer',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'footer',
+      'pages' => '',
+      'title' => '<none>',
+      'cache' => DRUPAL_NO_CACHE,
+    ),
+  );
+  $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'pages', 'title', 'cache'));
+  foreach ($values as $record) {
+    $query->values($record);
+  }
+  $query->execute();
+  
+  // Enable default permissions for system roles.
+  $full_html_permission = filter_permission_name($full_html_format);
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content'));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content', $full_html_permission));
+
+  // Create a default role for site administrators, with all available permissions assigned.
+  $admin_role = new stdClass();
+  $admin_role->name = 'administrator';
+  $admin_role->weight = 3;
+  user_role_save($admin_role);
+  // Set this as the administrator role.
+  variable_set('user_admin_role', $admin_role->rid);
+  // Assign user 1 the "administrator" role.
+  db_insert('users_roles')
+    ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
+    ->execute();
+
+  // Create "Page" content type
+  $page = array(
+    'type' => 'page',
+    'name' => st('Basic page'),
+    'base' => 'node_content',
+    'description' => st("Use <em>basic pages</em> for your static content, such as an 'About us' page."),
+    'custom' => 1,
+    'modified' => 1,
+    'locked' => 1,
+  );
+  $page = node_type_set_defaults($page);
+  node_type_save($page);
+  node_add_body_field($page);
+
+  // Access rights
+  user_role_grant_permissions($admin_role->rid, array_keys(module_invoke_all('permission')));
+
+  // Default "Basic page" to unpublished (publishcontent module is there)
+  // But enable revisions by default.
+  variable_set('node_options_page', array('revision'));
+  // Deny comments on "Basic page"
+  variable_set('comment_page', 0);
+  // Don't display date and author information for "Basic page" nodes by default.
+  variable_set('node_submitted_page', FALSE);
+
+  // Don't allow visitor account creation.
+  variable_set('user_register', USER_REGISTER_ADMINISTRATORS_ONLY);
+
+  // Pathauto basic node configuration
+  variable_set('pathauto_node_pattern', '[node:content-type:machine-name]/[node:title]');
+  // We should have 'hackable' URLs (@See http://www.nngroup.com/articles/url-as-ui/)
+  variable_set('pathauto_node_page_pattern', '[node:menu-link:parents:join-path]/[node:title]');
+
+  // Use a higher locale cache, so long strings are in there too!
+  variable_set('locale_cache_length', 65535);
+
+  // Prepare eventually i18n
+  variable_set('i18n_string_source_language', 'en');
+
+  // Date settings
+  variable_set('configurable_timezones', 0);
+  variable_set('date_first_day', '1');
+
+  // Image toolkit settings
+  variable_set('image_jpeg_quality', 100);
+
+  // Only notify on Security Issue(s).
+  variable_set('update_notification_threshold', 'security');
+  variable_set('update_check_frequency', '7');
+
+  // Performance
+  variable_set('cron_safe_threshold', '0');
+  variable_set('cache', '1');
+  variable_set('block_cache', '1');
+  variable_set('preprocess_css', '1');
+  variable_set('preprocess_js', '1');
+  // Better done by the web server.
+  variable_set('page_compression', '0');
+  // Prevents feature for always rebuilding.
+  variable_set('features_rebuild_on_flush', 0);
+
+  variable_set('admin_theme', 'seven');
+  variable_set('node_admin_theme', '1');
+
+  // Prevent people from trying to install modules.
+  variable_set('allow_authorize_operations', FALSE);
+}
