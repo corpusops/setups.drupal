@@ -112,4 +112,24 @@ makina-projects.projectname:
     dev:
       local_settings:
         reroute_email_enable: 1
+
+# an exemple pillar
+# makina-projects.eurecia:
+#   api_version: '2'
+#   data:
+#     domain: "aaaaa.makina-corpus.net"
+#     cron_cmd: "wget -O - -q -t 1 http://aaaaa.makina-corpus.net/cron.php?cron_key=Daaaaa-aaaaa-aaaa"
+#     db_host: "10.5.0.12"
+#     db_password: "aaa"
+#     db_name: "aaa"
+#     db_user: "aaa"
+#     password: "secret"
+#     http_users:
+#       - root: secret
+#     local_settings:
+#       site_password: "aaa"
+#       account_name: 'admin'
+#       account_email: 'sysadmin+aaa@aaa-corpus.com'
+#       site_email: 'sysadmin+aaa@aaa-corpus.com'
+
 # vim:set ft=sls:
