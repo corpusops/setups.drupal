@@ -35,3 +35,13 @@ var/tmp/upload/*
 
 #ide settings
 nbproject
+
+/bin/
+/lib/
+/log
+/private
+/tmp
+/var
+/www/sites
+
+
