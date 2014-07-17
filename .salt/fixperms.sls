@@ -90,10 +90,16 @@
                --users {{cfg.user}}:rwx \
                --groups {{cfg.group}}:rwx \
                --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
-             {{locs.resetperms}} -q --no-recursive\
+            {{locs.resetperms}} -q --no-recursive\
                --fmode 444 --dmode 661 \
                -u {{cfg.user}} -g {{cfg.group}}\
                --paths "{{cfg.project_root}}"/www/index.php\
+               --users {{cfg.user}}:r-- \
+               --groups {{cfg.group}}:r-- \
+               --groups {{salt['mc_apache.settings']().httpd_user}}:r--;
+             {{locs.resetperms}} -q --no-recursive\
+               --fmode 664 --dmode 661 \
+               -u {{cfg.user}} -g {{cfg.group}}\
                --paths "{{cfg.project_root}}"/www/sites/default/settings.php\
                --paths "{{cfg.project_root}}"/www/sites/default/default.settings.php\
                --paths "{{cfg.project_root}}"/www/sites/{{lsettings.base_url}}/settings.php\

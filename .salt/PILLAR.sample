@@ -114,7 +114,7 @@ makina-projects.projectname:
         reroute_email_enable: 1
 
 # an exemple pillar
-# makina-projects.eurecia:
+# makina-projects.testdrupal:
 #   api_version: '2'
 #   data:
 #     domain: "aaaaa.makina-corpus.net"
