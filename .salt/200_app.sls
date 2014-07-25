@@ -50,7 +50,7 @@
               if test -e "{{cfg.data_root}}/installed";then exit 0;fi
               {{cfg.data_root}}/bin/test_hasdb.sh
               exit ${?}
-    - name: ../bin/drush site-install -v -y {{data.drupal_profile}} --locale={{data.drupal_locale}} --account-name={{data.local_settings.account_name}} --account-pass={{data.local_settings.site_password}} --account-mail={{data.local_settings.account_email}} --site-mail={{data.local_settings.site_email}} --site-name={{data.local_settings.site_name}} --db-url="{{data.db_url}}" && touch "{{cfg.data_root}}/installed"
+    - name: ../bin/drush site-install -v -y {{data.drupal_profile}} --locale={{data.drupal_locale}} --account-name={{data.local_settings.account_name}} --account-pass={{data.local_settings.site_password}} --account-mail={{data.local_settings.account_email}} --site-mail={{data.local_settings.site_email}} --site-name={{data.local_settings.site_name}} --db-url="{{data.db_url}}" && touch "{{cfg.data_root}}/installed" && rm -f "{{cfg.data_root}}/force_reinstall"
     - cwd: {{cfg.project_root}}/www
     - user: {{cfg.user}}
     - use_vt: true
