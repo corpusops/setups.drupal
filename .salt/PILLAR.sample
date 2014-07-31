@@ -28,7 +28,7 @@ makina-projects.projectname:
     domain: "{fqdn}"
     cron_periodicity: "* */3 * * *"
     cron_user: "root"
-    cron_cmd: "wget -O - -q -t 1 http://{domain}/cron.php?cron_key=JvV3n-RWwGSmsHHDETlD7leZOxCX6Kwrxrze6wuJ1yU"
+    cron_cmd: "cd {project_root}/www && ../bin/drush cron -y"
     password: "secret"
     # if a special php is needed for drush, set the path here
     modules_check: ctools webform ckeditor_link

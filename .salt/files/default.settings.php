@@ -6,11 +6,11 @@
 
 // BASE URL --------------------------------------------------------------------
 {% if ddata.local_settings.base_url != 'default' %}
+{% endif %}
 $base_url = 'http://{{ ddata.domain }}';
 // this is a hack for drush in site-install mode, overriding base_url with crap,
 // at least you have a copy in variables, if needed
 $conf['base_url'] = $base_url;
-{% endif %}
 
 /**
  * @file
