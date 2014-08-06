@@ -69,7 +69,7 @@
 
 {{cfg.name}}-drush-updb:
   cmd.run:
-    - name: ../bin/drush updb
+    - name: ../bin/drush updb -y
     - cwd: {{cfg.project_root}}/www
     - user: {{cfg.user}}
     - use_vt: true
