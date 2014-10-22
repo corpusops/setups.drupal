@@ -34,7 +34,45 @@
       - {{cfg.project_root}}/www/sites/{{data.local_settings.base_url}}/settings.php
       {% endif %}
     - template: jinja
-    - mode: 770
+    - mode: 660
+    - user: "{{cfg.user}}"
+    - group: "root"
+    - defaults:
+        cfg: |
+             {{scfg}}
+    - require:
+      - cmd: {{cfg.name}}-drush-make
+
+{{cfg.name}}-drupal-common-settings:
+  file.managed:
+    - makedirs: true
+    - source: salt://makina-projects/{{cfg.name}}/files/default.settings.php
+    - names:
+      - {{cfg.project_root}}/www/sites/default/common.settings.php
+      {% if data.local_settings.base_url != 'default' %}
+      - {{cfg.project_root}}/www/sites/{{data.local_settings.base_url}}/common.settings.php
+      {% endif %}
+    - template: jinja
+    - mode: 660
+    - user: "{{cfg.user}}"
+    - group: "root"
+    - defaults:
+        cfg: |
+             {{scfg}}
+    - require:
+      - cmd: {{cfg.name}}-drush-make
+
+{{cfg.name}}-drupal-local-settings:
+  file.managed:
+    - makedirs: true
+    - source: salt://makina-projects/{{cfg.name}}/files/local.settings.php
+    - names:
+      - {{cfg.project_root}}/www/sites/default/local.settings.php
+      {% if data.local_settings.base_url != 'default' %}
+      - {{cfg.project_root}}/www/sites/{{data.local_settings.base_url}}/local.settings.php
+      {% endif %}
+    - template: jinja
+    - mode: 660
     - user: "{{cfg.user}}"
     - group: "root"
     - defaults:
@@ -50,12 +88,14 @@
               if test -e "{{cfg.data_root}}/installed";then exit 0;fi
               {{cfg.data_root}}/bin/test_hasdb.sh
               exit ${?}
-    - name: ../bin/drush site-install -v -y {{data.drupal_profile}} --locale={{data.drupal_locale}} --account-name={{data.local_settings.account_name}} --account-pass={{data.local_settings.site_password}} --account-mail={{data.local_settings.account_email}} --site-mail={{data.local_settings.site_email}} --site-name={{data.local_settings.site_name}} --db-url="{{data.db_url}}" && touch "{{cfg.data_root}}/installed" && rm -f "{{cfg.data_root}}/force_reinstall"
+    - name: ../bin/drush site-install -v -y {{data.drupal_profile}} --locale={{data.drupal_locale}} --account-name={{data.local_settings.account_name}} --account-pass={{data.local_settings.site_password}} --account-mail={{data.local_settings.account_email}} --site-mail={{data.local_settings.site_email}} --site-name={{data.local_settings.site_name}} --db-url="{{data.db_url}}" install_configure_form.site_default_country={{data.country}} install_configure_form.date_default_timezone={{data.tz}} install_configure_form.update_status_module={{data.update_status_module}} && touch "{{cfg.data_root}}/installed" && rm -f "{{cfg.data_root}}/force_reinstall"
     - cwd: {{cfg.project_root}}/www
     - user: {{cfg.user}}
     - use_vt: true
     - require:
       - file: {{cfg.name}}-drupal-settings
+      - file: {{cfg.name}}-drupal-common-settings
+      - file: {{cfg.name}}-drupal-local-settings
 
 {{cfg.name}}-drush-fra:
   cmd.run:

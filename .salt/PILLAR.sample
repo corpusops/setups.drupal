@@ -82,7 +82,20 @@ makina-projects.projectname:
     #http_users:
     #  - root: secret
     admins: 'sysadmin@{domain}'
+    tz: Europe/Paris
+    country: FR
+    update_status_module: 0
     local_settings:
+      cache: 0
+      cache_block: 0
+      reverse_proxy_header: 'HTTP_X_FORWARDED_FOR'
+      image_allow_insecure_derivatives: 0
+      error_level: 0
+      omit_vary_cookie: 'FALSE'
+      page_compression: 0
+      js_gzip_compression: 1
+      css_gzip_compression: 1
+      page_cache_maximum_age: 21600
       site_password: "{password}"
       account_name: 'admin'
       account_email: 'root@{fqdn}'
@@ -90,7 +103,6 @@ makina-projects.projectname:
       site_name: "{name}"
       reverse_proxy: 'TRUE'
       reverse_proxy_addresses: "array('127.0.0.1', '10.5.0.1')"
-      image_allow_insecure_derivatives: 1
       reroute_email_enable: 0
       reroute_email_address: '{admins}'
       image_jpeg_quality: 95
@@ -98,11 +110,9 @@ makina-projects.projectname:
       cookie_cache_bypass_adv_cache_lifetime: 300
       file_chmod_directory: '02770'
       file_chmod_file: '0660'
-      error_level: 1
       preprocess_css: 0
       preprocess_js: 0
       base_url: 'default'
-      omit_vary_cookie: 'TRUE'
       smtp:
         used: True
         host: '127.0.0.1'
