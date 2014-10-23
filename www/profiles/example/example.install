@@ -106,6 +106,7 @@ function _example_install_local_settings_link() {
  * Perform actions to set up the site for this profile.
  */
 function example_install() {
+/*
   // Select language selected for the install
   global $install_state;
 
@@ -244,21 +245,23 @@ function example_install() {
   // Only notify on Security Issue(s).
   variable_set('update_notification_threshold', 'security');
   variable_set('update_check_frequency', '7');
-
+*/
+  // This is commented, you MAY use that here, but, REALLY, all this MUST be set in seetings files
+  // and not in the database, really.
   // Performance
-  variable_set('cron_safe_threshold', '0');
-  variable_set('cache', '1');
-  variable_set('block_cache', '1');
-  variable_set('preprocess_css', '1');
-  variable_set('preprocess_js', '1');
+  //variable_set('cron_safe_threshold', '0');
+  //variable_set('cache', '1');
+  //variable_set('block_cache', '1');
+  //variable_set('preprocess_css', '1');
+  //variable_set('preprocess_js', '1');
   // Better done by the web server.
-  variable_set('page_compression', '0');
+  //variable_set('page_compression', '0');
   // Prevents feature for always rebuilding.
-  variable_set('features_rebuild_on_flush', 0);
+  //variable_set('features_rebuild_on_flush', 0);
 
-  variable_set('admin_theme', 'seven');
-  variable_set('node_admin_theme', '1');
+  //variable_set('admin_theme', 'seven');
+  //variable_set('node_admin_theme', '1');
 
   // Prevent people from trying to install modules.
-  variable_set('allow_authorize_operations', FALSE);
+  //variable_set('allow_authorize_operations', FALSE);
 }
