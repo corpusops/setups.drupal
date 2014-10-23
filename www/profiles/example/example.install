@@ -1,5 +1,104 @@
 <?php
-// $Id: simplydrupal.install 55 2011-04-17 19:46:02Z sgs $
+
+/**
+ * Implements hook_install_tasks_alter().
+ */
+function example_install_tasks_alter(&$tasks, $install_state) {
+  // we need to link our local settings right after the settings.php file creation
+  // we'll try to move it just before install_system_module
+  if (!array_key_exists('link_local_configuration', $tasks)) {
+    $found = FALSE;
+    $new_tasks = array();
+    foreach ($tasks as $task_name => $taskdef) {
+      if ('install_system_module' == $task_name) {
+        $new_tasks[$task_name] = $taskdef;
+        $found = TRUE;
+        $new_tasks['link_local_configuration'] = $tasks['link_local_configuration'];
+      }
+      else {
+        if ('link_local_configuration' !== $task_name) {
+          $new_tasks[$task_name] = $taskdef;
+        }
+      }
+    }
+    $tasks = $new_tasks;
+  }
+
+  // While we are working on an installation we tell Drupal we have no time limit for installation
+  drupal_set_time_limit(0);
+}
+
+/**
+ * Implements hook_install_tasks()
+ */
+function alouette_profile_install_tasks($install_state) {
+  $tasks = array();
+  // Add a link to local conf file
+  $tasks['link_local_configuration'] = array(
+    'display_name' => st('Links local settings.php file'),
+    'display'      => FALSE,
+    'type'         => 'normal',
+    'run'          => ($install_state['settings_verified']) ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,
+    'function'     => '_example_install_local_settings_link',
+  );
+  return $tasks;
+}
+
+/**
+ * Linking local settings.php extension file on the bottom of the settings.php file
+ *
+ * This was once done after the install process in a batch script BUT
+ * the install process final step (install_finished) adds a drupal_cron call
+ * which may lead to bad things if our settings are not set (let's say for example
+ * theses extended settings contains the solr server settingsor or php-fpm directories)
+ */
+function _example_install_local_settings_link() {
+  $settings_file = 'sites/default/settings.php';
+  drupal_install_fix_file(DRUPAL_ROOT . '/' . $settings_file,
+    FILE_READABLE | FILE_WRITABLE);
+  $buffer = NULL;
+  $found = FALSE;
+  if ($fp = fopen(DRUPAL_ROOT . '/' . $settings_file, 'r')) {
+    // Step line by line through settings.php.
+    while (!feof($fp) && !$found) {
+      $line = fgets($fp);
+      $buffer .= $line;
+      if (FALSE !== strpos($line, 'localsettingsfile')) {
+        // this setting file is already activating our local settings stop here
+        $found = TRUE;
+      }
+    }
+    fclose($fp);
+    if (!$found) {
+      // Add our code to link optionnal settings
+      $buffer .= '$localsettingsfile = DRUPAL_ROOT . "/sites/default/common.settings.php";' . "\n" . 'if (file_exists($localsettingsfile)) {' . "\n" . '  include_once($localsettingsfile);' . "\n" . '}' . "\n";
+
+      $fp = fopen(DRUPAL_ROOT . '/' . $settings_file, 'w');
+      drupal_install_fix_file(DRUPAL_ROOT . '/' . $settings_file,
+        FILE_READABLE | FILE_NOT_WRITABLE);
+      if ($fp && fwrite($fp, $buffer) === FALSE) {
+        throw new Exception(st('Failed to modify %settings (adding local link). Verify the file permissions.',
+            array('%settings' => $settings_file)));
+      }
+    }
+    // load theses settings if they are available
+    $localsettingsfile = DRUPAL_ROOT . "/sites/default/common.settings.php";
+    if (file_exists($localsettingsfile)) {
+      global $conf;
+      include_once($localsettingsfile);
+      // hack
+      unset($conf['session_inc']);
+      unset($conf['lock_inc']);
+    }
+  }
+  else {
+    throw new Exception(st('Failed to open %settings (adding local link). Verify the file permissions.',
+        array('%settings' => $settings_file)));
+  }
+
+  // Just go to next step
+  return NULL;
+}
 
 /**
  * Implements hook_install().
