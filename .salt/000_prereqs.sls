@@ -70,17 +70,17 @@ This produce the default layout
   /project     : sources
     bin/       : binaries
     www/       : docroot
-    www/sites  link --> ../data/var/sites/
+    www/sites/default  link --> ../data/var/sites/default
     lib/       : extra libs
-    var        link --> ../data/var
-    tmp        link --> ../data/var/tmp
+    var                link --> ../data/var
+    tmp                link --> ../data/var/tmp
 
   /data    : persistent data
     bin    link --> ../project/bin
     www    link --> ../project/www
     lib    link --> ../project/lib
     var/   : runtime files (sockets, logs, session, tempfiles)
-    var/sites/ : sites files
+    var/sites/default: default site files and settings
 
 #}
 
@@ -97,7 +97,6 @@ This produce the default layout
       - {{cfg.project_root}}/bin
       - {{cfg.project_root}}/www
       - {{cfg.data_root}}/var
-      - {{cfg.data_root}}/var/sites
       - {{cfg.data_root}}/var/sites/default/files
       - {{cfg.data_root}}/var/log
       - {{cfg.data_root}}/var/tmp
@@ -120,8 +119,9 @@ This produce the default layout
 {% endfor %}
 {{cfg.name}}-l-dirs-sites:
   file.symlink:
-    - name: {{cfg.project_root}}/www/sites
-    - target: {{cfg.data_root}}/var/sites
+    - name: {{cfg.project_root}}/www/sites/default
+    - target: {{cfg.data_root}}/var/sites/default
+    - makedirs: true
     - user: {{cfg.user}}
     - group: {{cfg.group}}
     - watch:
