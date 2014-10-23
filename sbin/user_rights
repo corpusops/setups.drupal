@@ -82,7 +82,7 @@ if [ -z $GROUP ];then
   GROUP=nginx
 fi
 
-cho "${RED}= Operating in ${WEBROOT_PATH}.${NORMAL} Please check ${WEBROOT_PATH} is really your project web directory root"
+echo "${RED}= Operating in ${WEBROOT_PATH}.${NORMAL} Please check ${WEBROOT_PATH} is really your project web directory root"
 echo " and that user ${RED}${USER}${NORMAL} and group ${RED}${GROUP}${NORMAL} are ok or or stop this program with CTRL-C";
 sleep 5
 echo "${YELLOW}= Reseting user/group file & directory rights with ${RED}${USER}:${GROUP}${NORMAL}";
