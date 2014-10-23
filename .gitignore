@@ -36,10 +36,14 @@ www/sites/example.sites.php
 
 # WARNING: You will want to use your custom profile's real name below.
 !www/profiles/example
+!www/profiles/project_profile
 
 
 # Ignore vendor files (drush), comment for production release
 sbin/vendor
+sbin/composer.phar
+sbin/composer.lock
+
 # Ignore conf files
 sbin/profile_conf.sh
 
