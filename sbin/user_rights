@@ -108,9 +108,7 @@ find ${WEBROOT_PATH} -path "${WEBROOT_PATH}/*/files" -prune -o -type f -execdir 
 echo "${YELLOW}== directories write rights for sites/*/files${NORMAL}";
 echo "${BLUE}find ${PUBLIC_PATH} -path \"${PUBLIC_PATH}/*/files*\" -type d -exec chmod 2770 {} +${NORMAL}";
 chmod 2770 ${PUBLIC_PATH}
-chmod 2770 ${PUBLIC_PATH}
 chmod 2770 ${PUBLIC_PATH}/default
-chmod 2770 ${PUBLIC_PATH}/backoffice
 find ${PUBLIC_PATH} -path "${PUBLIC_PATH}/*/files*" -type d -exec chmod 2770 {} +;
 
 echo "${YELLOW}== files write rights for sites/*/*settings*.php${NORMAL}";
