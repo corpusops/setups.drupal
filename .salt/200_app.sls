@@ -10,6 +10,7 @@
     - user: {{cfg.user}}
     - use_vt: true
     - onlyif: |
+              if test -e "{{cfg.data_root}}/force_make";then exit 0;fi
               {% if data.force.make %}exit 0{%endif %}
               if [ ! -e {{cfg.project_root}}/www/sites/all/modules ];then
                 exit 0
