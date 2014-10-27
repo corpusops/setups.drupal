@@ -170,7 +170,7 @@ This produce the default layout
                   mysql --database={{data.db_name}} --host={{data.db_host}}\
                   --port={{data.db_port}} --user={{data.db_user}}\
                   --password="{{data.db_password}}"|wc -l > "{{cfg.data_root}}/nbtables"
-                test "$(cat "{{cfg.data_root}}/nbtables")" -gt "100"
+                test "$(cat "{{cfg.data_root}}/nbtables")" -gt "25"
                 exit ${?}
     - name: "{{cfg.data_root}}/bin/test_hasdb.sh"
     - makedirs: true
