@@ -180,3 +180,21 @@ This produce the default layout
     - group: "{{cfg.group}}"
     - watch:
       - file: {{cfg.name}}-dirs
+
+{{cfg.name}}-test-drush-status:
+  file.managed:
+    - contents: |
+                #!/usr/bin/env bash
+                set -e
+                cd "`dirname $0`";
+                BIN_DIR=`pwd`;
+                ${BIN_DIR}/drush status --format=yaml|grep "bootstrap: Successful"
+                exit ${?}
+    - name: "{{cfg.data_root}}/bin/test_drush_status.sh"
+    - makedirs: true
+    - template: jinja
+    - mode: 770
+    - user: "{{cfg.user}}"
+    - group: "{{cfg.group}}"
+    - watch:
+      - file: {{cfg.name}}-dirs
