@@ -104,7 +104,7 @@
     - cwd: {{cfg.project_root}}/www
     - user: {{cfg.user}}
     - use_vt: true
-    - onlyif: "{{cfg.data_root}}/bin/test_hasdb.sh"
+    - onlyif: "{{cfg.data_root}}/bin/test_drush_status.sh"
     - require:
       - cmd: {{cfg.name}}-drush-install
 
@@ -114,7 +114,7 @@
     - cwd: {{cfg.project_root}}/www
     - user: {{cfg.user}}
     - use_vt: true
-    - onlyif: "{{cfg.data_root}}/bin/test_hasdb.sh"
+    - onlyif: "{{cfg.data_root}}/bin/test_drush_status.sh"
     - require:
       - cmd: {{cfg.name}}-drush-fra
 
@@ -124,7 +124,7 @@
     - cwd: {{cfg.project_root}}/www
     - user: {{cfg.user}}
     - use_vt: true
-    - onlyif: "{{cfg.data_root}}/bin/test_hasdb.sh"
+    - onlyif: "{{cfg.data_root}}/bin/test_drush_status.sh"
     - require:
       - cmd: {{cfg.name}}-drush-updb
 
