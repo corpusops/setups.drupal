@@ -81,27 +81,28 @@ then
 fi
 
 function check_directories() {
-    #
-    #             \- PROJECT_ROOT/  <--- php-fpm
-    #                   \- bin/
-    #                   \- config/
-    #                   \- www/     <-- DOC ROOT
-    #                       \- sites/     <-- symlink to [A]
-    #                   \- var/
-    #                       \- fcgi/ <--- php-fpm socket (apache<->php)
-    #                       \- public/   <-- [A] in non-saltstack envs
-    #                            \- default/ 
-    #                                 \- files/
-    #                       \- tmp/
-    #                       \- log/
-    #                           \-php/
-    #                           \-nginx/
-    #                       \- private/
-    #                  \-data/   <- [A] only in saltstack envs
-    #                        \- default/ 
-    #                             \- files/
-    #                  \-.salt/  <- for saltstack envs
-    #                      \- files/ <- templates of conf files
+    # [g] -> versionés dans git
+    # \- PROJECT_ROOT/
+    #   [g] \-.salt/  <- pris dans corpus-salt
+    #   [g]    \- files/ <- templates de fichiers de conf pour salt
+    #   [g] \- sbin/     <- [no-salt]
+    #   [g] \- config/   <- stockage de modèles de config client
+    #   [g] \- www/      <-- DOC ROOT
+    #   [g]     \- profiles/
+    #   [g]         \- my_profile/
+    #   [g]     \- sites/
+    #   [g]        \-all/ <- possible de le mettre dans git
+    #              \-default/  <-- symlink to [A]
+    #   [g] \- sites/
+    #         \- default/ <-- [A] in non-saltstack envs
+    #             \- files/
+    #       \- var/ <- [managed by salt or sbin script]
+    #           \- fcgi/ <--- php-fpm socket (nginx<->php)
+    #           \- tmp/
+    #           \- log/
+    #               \-php/
+    #               \-nginx/
+    #           \- private/
     WWWDIR=${PROJECT_PATH}/www
     SITESDIR=${WWWDIR}/sites
     VARDIR=${PROJECT_PATH}/var
