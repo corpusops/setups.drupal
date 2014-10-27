@@ -51,7 +51,7 @@ $conf['smtp_fromname'] = "{{ data.smtp.fromname }}";
 // File system ////////////////////////////////////////////////////////////////
 // Warning: when PHP-FPM is chrooted, we musn't use real absolute path but only
 // "absolute path in the choot"
-$conf['file_directory_path'] = 'site/default/files';
+$conf['file_directory_path'] = 'sites/default/files';
 $conf['file_public_path'] = $conf['file_directory_path'];
 # www/sites/default/settings.php
 $root = dirname(dirname(dirname(dirname(__FILE__))));
@@ -84,7 +84,7 @@ $conf['cookie_cache_bypass_adv_set_time']='after_validate';
 $conf['form_cache_retention_time'] = 3600;
 
 // File system permissions ////////////////////////////////////////////////////
-// default is 0775, we have user-group:www-data in site/default/files
+// default is 0775, we have user-group:www-data in sites/default/files
 // when creating a new directory the first '2' will enforce keeping
 // user-group as the group of files in this directory, 'others' do
 // not need anything, so 2770 is good. But a 1st 0 should be added
