@@ -31,7 +31,7 @@ makina-projects.projectname:
     cron_cmd: "cd {project_root}/www && ../bin/drush cron -y"
     password: "secret"
     # if a special php is needed for drush, set the path here
-    modules_check: ctools webform ckeditor_link
+    modules_check: token pathauto
     php: ''
     force:
       make: 0
