@@ -26,8 +26,12 @@ makina-projects.projectname:
     drush_ver: "6.*"
     drush_make_args: "profiles/{drupal_profile}/{drupal_profile}.make"
     domain: "{fqdn}"
-    cron_periodicity: "* */3 * * *"
     cron_user: "root"
+    # uncomment if you use default -- cron --
+    # cron_periodicity: "* */3 * * *"
+    # cron_cmd: "cd {project_root}/www && ../bin/drush cron -y"
+    # uncomment if you use -- elysia cron --
+    cron_periodicity: "* * * * *"
     cron_cmd: "cd {project_root}/www && ../bin/drush --root={project_root}/www --uri={domain} --quiet elysia-cron"
     password: "secret"
     # if a special php is needed for drush, set the path here
