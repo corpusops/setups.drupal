@@ -38,8 +38,21 @@ makina-projects.projectname:
     modules_check: token pathauto
     php: ''
     force:
+      # this will force a drush make
+      # you can also use a data/force_make file for one-time things
       make: 0
-      install: 0
+      # this will force a "drush fra" after code update
+      # (set to 0 for special manual updates)
+      feature_revert: 1
+      # this will force a "drush updb" after code update
+      #  (set to 0 for special manual updates)
+      update_db: 1
+      # this will remove maintenance mode after code update
+      #  (set to 0 for special manual updates, then do not forget the "drush vset maintenance_mode 0")
+      remove_maintenance: 1
+      # this will remove the cron suspension after code update
+      # (set to 0 for special manual updates, then rm data/suspend_cron to re-enable crons)
+      remove_suspend_cron: 1
     db_prefix: ""
     db_type: mysql
     db_host: "127.0.0.1"
