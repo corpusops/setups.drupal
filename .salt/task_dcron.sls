@@ -8,3 +8,4 @@
     - cwd: {{cfg.project_root}}/www
     - user: {{cfg.user}}
     - use_vt: true
+    - unless: test -e "{{cfg.data_root}}/suspend_cron";
