@@ -28,7 +28,7 @@ makina-projects.projectname:
     domain: "{fqdn}"
     cron_periodicity: "* */3 * * *"
     cron_user: "root"
-    cron_cmd: "cd {project_root}/www && ../bin/drush cron -y"
+    cron_cmd: "cd {project_root}/www && ../bin/drush --root={project_root}/www --uri={domain} --quiet elysia-cron"
     password: "secret"
     # if a special php is needed for drush, set the path here
     modules_check: token pathauto
@@ -128,6 +128,7 @@ makina-projects.projectname:
 #   api_version: '2'
 #   data:
 #     domain: "aaaaa.makina-corpus.net"
+#     cron_cmd: "cd {project_root}/www && ../bin/drush cron -y"
 #     cron_cmd: "wget -O - -q -t 1 http://aaaaa.makina-corpus.net/cron.php?cron_key=Daaaaa-aaaaa-aaaa"
 #     db_host: "10.5.0.12"
 #     db_password: "aaa"
