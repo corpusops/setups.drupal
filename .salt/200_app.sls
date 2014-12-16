@@ -3,6 +3,25 @@
 {% set scfg = salt['mc_utils.json_dump'](cfg) %}
 {% set php = salt['mc_php.settings']() %}
 
+{{cfg.name}}-drush-set-maintenance-mode:
+  cmd.run:
+    - name: ../bin/drush vset maintenance_mode 1
+    - cwd: {{cfg.project_root}}/www
+    - user: {{cfg.user}}
+    - use_vt: true
+    - onlyif: |
+              if [ ! -e "{{cfg.data_root}}/installed" ];then exit 1;fi
+              {{cfg.data_root}}/bin/test_drush_status.sh
+              exit ${?}
+
+{{cfg.name}}-drupal-suspend_crons:
+  file.touch:
+    - name: "{{cfg.data_root}}/suspend_cron"
+    - user: {{cfg.user}}
+    - onlyif: test -e "{{cfg.data_root}}/installed"
+    - require:
+      - cmd: {{cfg.name}}-drush-set-maintenance-mode
+
 {{cfg.name}}-drush-make:
   cmd.run:
     - name: ../bin/drush make --no-cache {{data.drush_make}} . && rm -f "{{cfg.data_root}}/force_make"
@@ -24,6 +43,8 @@
                  fi
               done
               exit ${ret}
+    - require:
+      - file: {{cfg.name}}-drupal-suspend_crons
 
 {{cfg.name}}-drupal-settings:
   file.managed:
@@ -104,7 +125,10 @@
     - cwd: {{cfg.project_root}}/www
     - user: {{cfg.user}}
     - use_vt: true
-    - onlyif: "{{cfg.data_root}}/bin/test_drush_status.sh"
+    - onlyif: |
+              {% if data.force.feature_revert %}"{{cfg.data_root}}/bin/test_drush_status.sh";
+              exit $?;{%endif %}
+              exit 1;
     - require:
       - cmd: {{cfg.name}}-drush-install
 
@@ -114,9 +138,45 @@
     - cwd: {{cfg.project_root}}/www
     - user: {{cfg.user}}
     - use_vt: true
-    - onlyif: "{{cfg.data_root}}/bin/test_drush_status.sh"
+    - onlyif: |
+              {% if data.force.feature_revert %}"{{cfg.data_root}}/bin/test_drush_status.sh";
+              exit $?;{%endif %}
+              exit 1;
     - require:
       - cmd: {{cfg.name}}-drush-fra
+
+{{cfg.name}}-drush-remove-maintenance-mode:
+  cmd.run:
+    - name: ../bin/drush vset maintenance_mode 0
+    - cwd: {{cfg.project_root}}/www
+    - user: {{cfg.user}}
+    - use_vt: true
+    - onlyif: |
+              {% if data.force.remove_maintenance %}"{{cfg.data_root}}/bin/test_drush_status.sh";
+              exit $?;{%endif %}
+              exit 1;
+    - require:
+      - cmd: {{cfg.name}}-drush-updb
+
+{{cfg.name}}-drush-remove-cron_suspension:
+  file.absent:
+    - name: "{{cfg.data_root}}/suspend_cron"
+    - onlyif: |
+              {% if data.force.remove_suspend_cron %}"{{cfg.data_root}}/bin/test_drush_status.sh";
+              exit $?;{%endif %}
+              exit 1;
+    - require:
+      - cmd: {{cfg.name}}-drush-remove-maintenance-mode
+
+{{cfg.name}}-drush-cc-drush:
+  cmd.run:
+    - name: ../bin/drush cc drush
+    - cwd: {{cfg.project_root}}/www
+    - user: {{cfg.user}}
+    - use_vt: true
+    - onlyif: "{{cfg.data_root}}/bin/test_drush_status.sh"
+    - require:
+      - file: {{cfg.name}}-drush-remove-cron_suspension
 
 {{cfg.name}}-drush-cc-all:
   cmd.run:
@@ -126,7 +186,7 @@
     - use_vt: true
     - onlyif: "{{cfg.data_root}}/bin/test_drush_status.sh"
     - require:
-      - cmd: {{cfg.name}}-drush-updb
+      - cmd: {{cfg.name}}-drush-cc-drush
 
 {{cfg.name}}-cron-cmd:
   file.managed:
