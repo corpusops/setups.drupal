@@ -139,7 +139,7 @@
     - user: {{cfg.user}}
     - use_vt: true
     - onlyif: |
-              {% if data.force.feature_revert %}"{{cfg.data_root}}/bin/test_drush_status.sh";
+              {% if data.force.update_db %}"{{cfg.data_root}}/bin/test_drush_status.sh";
               exit $?;{%endif %}
               exit 1;
     - require:
