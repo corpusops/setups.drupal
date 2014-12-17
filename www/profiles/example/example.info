@@ -15,5 +15,6 @@ dependencies[] = file
 dependencies[] = list
 dependencies[] = toolbar
 dependencies[] = contextual
+dependencies[] = elysia_cron
 ; Contrib
 dependencies[] = views_ui

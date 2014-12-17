@@ -31,10 +31,10 @@
     - onlyif: |
               if test -e "{{cfg.data_root}}/force_make";then exit 0;fi
               {% if data.force.make %}exit 0{%endif %}
-              if [ ! -e {{cfg.project_root}}/www/sites/all/modules ];then
+              if [ ! -e "{{data.modules_dir}}" ];then
                 exit 0
               fi
-              cd {{cfg.project_root}}/www/sites/all/modules
+              cd "{{data.modules_dir}}"
               ret=1
               for f in {{data.modules_check}};do
                  if [ ! -e "${f}" ];then

@@ -10,6 +10,7 @@ projects[] = entity
 projects[] = ctools
 projects[] = views
 projects[] = entityreference
+projects[] = elysia_cron
 
 ; Box
 projects[] = colorbox

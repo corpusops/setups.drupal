@@ -31,7 +31,7 @@ function example_install_tasks_alter(&$tasks, $install_state) {
 /**
  * Implements hook_install_tasks()
  */
-function alouette_profile_install_tasks($install_state) {
+function example_profile_install_tasks($install_state) {
   $tasks = array();
   // Add a link to local conf file
   $tasks['link_local_configuration'] = array(
