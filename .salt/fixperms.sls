@@ -78,6 +78,7 @@
                --fmode 770 --dmode 771 \
                -u {{cfg.user}} -g {{cfg.group}}\
                --paths "{{cfg.data_root}}/var/sites"\
+               --paths "{{cfg.project_root}}/sbin"\
                --excludes=".*files.+" \
                --users {{cfg.user}}:rwx \
                --groups {{cfg.group}}:rwx \

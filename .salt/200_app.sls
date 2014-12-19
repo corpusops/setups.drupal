@@ -103,6 +103,20 @@
     - require:
       - cmd: {{cfg.name}}-drush-make
 
+{{cfg.name}}-sbin-localconf:
+  file.managed:
+    - makedirs: true
+    - source: salt://makina-projects/{{cfg.name}}/files/profile_conf.sh
+    - name: {{cfg.project_root}}/sbin/profile_conf.sh
+    - template: jinja
+    - mode: 750
+    - user: "{{cfg.user}}"
+    - group: "root"
+    - defaults:
+        project: {{cfg.name}}
+    - require_in:
+      - cmd: {{cfg.name}}-drush-make
+
 {{cfg.name}}-drush-install:
   cmd.run:
     - unless: |
