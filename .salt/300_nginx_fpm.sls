@@ -24,6 +24,7 @@ echo reboot:
 
 {{php.fpm_pool(cfg.data.domain,
                cfg.data.www_dir,
+               pool_name=cfg.name,
                cfg=cfg,
                **cfg.data.fpm_pool)}}
 
