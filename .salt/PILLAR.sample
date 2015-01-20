@@ -14,6 +14,7 @@
 makina-projects.projectname:
   data:
     drupal_profile: example
+    drush_make_opts: "--no-cache --translations={drupal_locale}"
     drush_make: profiles/{drupal_profile}/{drupal_profile}.make
     nginx_vhost: "salt://makina-projects/{name}/files/nginx.conf"
     nginx_top: "salt://makina-projects/{name}/files/nginx.top.conf"

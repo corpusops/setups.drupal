@@ -24,7 +24,7 @@
 
 {{cfg.name}}-drush-make:
   cmd.run:
-    - name: ../bin/drush make --no-cache {{data.drush_make}} . && rm -f "{{cfg.data_root}}/force_make"
+    - name: ../bin/drush make {{data.drush_make_opts}} {{data.drush_make}} . && rm -f "{{cfg.data_root}}/force_make"
     - cwd: {{cfg.project_root}}/www
     - user: {{cfg.user}}
     - use_vt: true
