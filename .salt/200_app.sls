@@ -68,7 +68,7 @@
 {{cfg.name}}-drupal-common-settings:
   file.managed:
     - makedirs: true
-    - source: salt://makina-projects/{{cfg.name}}/files/default.settings.php
+    - source: salt://makina-projects/{{cfg.name}}/files/common.settings.php
     - names:
       - {{cfg.project_root}}/www/sites/default/common.settings.php
       {% if data.local_settings.base_url != 'default' %}
