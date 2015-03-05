@@ -92,7 +92,7 @@ $conf['form_cache_retention_time'] = 3600;
 $conf['file_chmod_directory']={{data.file_chmod_directory}};
 // default is 0664
 $conf['file_chmod_file']={{data.file_chmod_file}};
-    ;
+
 // ensure nothing in the default multithread shared umask will break
 // our mkdir commands (chmod is not impacted, but mkdir is...)
 umask(0000);
