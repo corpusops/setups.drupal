@@ -7,6 +7,7 @@ www/includes
 www/misc
 www/modules
 www/scripts
+www/translations
 www/themes
 www/profiles/*
 www/sites
@@ -15,16 +16,22 @@ www/sites
 # to ignore theses files:
 www/sites/default
 www/sites/all/README.txt
-www/sites/README.txt
+www/sites/default/default.settings.php
 www/sites/example.sites.php
+www/sites/sites.php
+www/sites/README.txt
 
 # In case you manage non salted /data directory in a /sites directory
 # with symlinks from www/sites/default to /sites/default
 # We do not want to store in git most of this content. Except the common.settings.php
 # But do not forget this common.settings.php is not the one used by salt
 # the real one should be in: .salt/files/common.settings.php
-/sites/*/files
-/sites/*/*settings*
+/www/sites/*/files
+/www/sites/*/modules/*
+/www/sites/*/*settings*
+/www/sites/*/libraries/*
+/www/sites/*/modules/*
+/www/sites/*/themes/*
 !/sites/*/common.settings.php
 !/sites/*/local.settings.*.php
 
@@ -38,11 +45,11 @@ www/sites/example.sites.php
 !www/profiles/example
 !www/profiles/project_profile
 
-
 # Ignore vendor files (drush), comment for production release
 sbin/vendor
 sbin/composer.phar
 sbin/composer.lock
+/sbin/user_rights*
 
 # Ignore conf files
 sbin/profile_conf.sh
@@ -54,12 +61,16 @@ sbin/profile_conf.sh
 # Documentation builds
 doc/_build
 
+# ignore runtime files
 /bin/
 /lib/
 /log
 /private
 /tmp
 /var
+
+#ignore apache conf
+/etc/*
 
 # Ignore IDE and OS-related files
 .buildpath
@@ -74,4 +85,3 @@ nbproject
 atlassian-ide-plugin.xml
 *~
 \#*#
-

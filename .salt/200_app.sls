@@ -11,13 +11,15 @@
     - use_vt: true
     - onlyif: |
               if [ ! -e "{{cfg.data_root}}/installed" ];then exit 1;fi
-              {{cfg.data_root}}/bin/test_drush_status.sh
+              {{cfg.project_root}}/bin/test_drush_status.sh
               exit ${?}
 
 {{cfg.name}}-drupal-suspend_crons:
-  file.touch:
+  file.managed:
     - name: "{{cfg.data_root}}/suspend_cron"
     - user: {{cfg.user}}
+    - group: {{cfg.user}}
+    - mode: 0644
     - onlyif: test -e "{{cfg.data_root}}/installed"
     - require:
       - cmd: {{cfg.name}}-drush-set-maintenance-mode
@@ -140,7 +142,7 @@
     - user: {{cfg.user}}
     - use_vt: true
     - onlyif: |
-              {% if data.force.feature_revert %}"{{cfg.data_root}}/bin/test_drush_status.sh";
+              {% if data.force.feature_revert %}"{{cfg.project_root}}/bin/test_drush_status.sh";
               exit $?;{%endif %}
               exit 1;
     - require:
@@ -153,7 +155,7 @@
     - user: {{cfg.user}}
     - use_vt: true
     - onlyif: |
-              {% if data.force.update_db %}"{{cfg.data_root}}/bin/test_drush_status.sh";
+              {% if data.force.update_db %}"{{cfg.project_root}}/bin/test_drush_status.sh";
               exit $?;{%endif %}
               exit 1;
     - require:
@@ -166,7 +168,7 @@
     - user: {{cfg.user}}
     - use_vt: true
     - onlyif: |
-              {% if data.force.remove_maintenance %}"{{cfg.data_root}}/bin/test_drush_status.sh";
+              {% if data.force.remove_maintenance %}"{{cfg.project_root}}/bin/test_drush_status.sh";
               exit $?;{%endif %}
               exit 1;
     - require:
@@ -176,7 +178,7 @@
   file.absent:
     - name: "{{cfg.data_root}}/suspend_cron"
     - onlyif: |
-              {% if data.force.remove_suspend_cron %}"{{cfg.data_root}}/bin/test_drush_status.sh";
+              {% if data.force.remove_suspend_cron %}"{{cfg.project_root}}/bin/test_drush_status.sh";
               exit $?;{%endif %}
               exit 1;
     - require:
@@ -188,7 +190,7 @@
     - cwd: {{cfg.project_root}}/www
     - user: {{cfg.user}}
     - use_vt: true
-    - onlyif: "{{cfg.data_root}}/bin/test_drush_status.sh"
+    - onlyif: "{{cfg.project_root}}/bin/test_drush_status.sh"
     - require:
       - file: {{cfg.name}}-drush-remove-cron_suspension
 
@@ -198,7 +200,7 @@
     - cwd: {{cfg.project_root}}/www
     - user: {{cfg.user}}
     - use_vt: true
-    - onlyif: "{{cfg.data_root}}/bin/test_drush_status.sh"
+    - onlyif: "{{cfg.project_root}}/bin/test_drush_status.sh"
     - require:
       - cmd: {{cfg.name}}-drush-cc-drush
 
