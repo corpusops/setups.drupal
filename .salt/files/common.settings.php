@@ -54,7 +54,7 @@ $conf['smtp_fromname'] = "{{ data.smtp.fromname }}";
 $conf['file_directory_path'] = 'sites/default/files';
 $conf['file_public_path'] = $conf['file_directory_path'];
 # www/sites/default/settings.php
-$root = dirname(dirname(dirname(dirname(__FILE__))));
+$root = "{{cfg.project_root}}";
 $conf['file_private_path'] = $root . '/var/private';
 $conf['file_temporary_path'] = $root . '/var/tmp';
 $conf['file_directory_temp'] = $conf['file_temporary_path'];
