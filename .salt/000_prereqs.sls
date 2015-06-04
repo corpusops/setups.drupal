@@ -6,8 +6,13 @@
 include:
   - makina-states.services.php.phpfpm_with_nginx
 
+{% import "makina-states/services/php/macros.sls" as phpm with context %}
+{{ phpm.toggle_ext('pgsql') }}
+{{ phpm.toggle_ext('pdo_pgsql') }}
 prepreqs-{{cfg.name}}:
   pkg.installed:
+    - require_in:
+      - mc_proxy: makina-php-pre-inst
     - pkgs:
       - unzip
       - xsltproc
@@ -19,6 +24,7 @@ prepreqs-{{cfg.name}}:
       - {{ php.packages.ldap }}
       - {{ php.packages.dev }}
       - {{ php.packages.json }}
+      - php5-pgsql
       - sqlite3
       - libsqlite3-dev
       - mysql-client
@@ -72,15 +78,15 @@ This produce the default layout
     www/       : docroot
     www/sites/default  link --> ../data/var/sites/default
     lib/       : extra libs
-    var                link --> ../data/var
-    tmp                link --> ../data/var/tmp
+    var        link --> ../data/var
+    tmp        link --> ../data/var/tmp
 
   /data    : persistent data
     bin    link --> ../project/bin
     www    link --> ../project/www
     lib    link --> ../project/lib
     var/   : runtime files (sockets, logs, session, tempfiles)
-    var/sites/default: default site files and settings
+    var/sites/default : default site files and settings
 
 #}
 
@@ -97,6 +103,7 @@ This produce the default layout
       - {{cfg.project_root}}/bin
       - {{cfg.project_root}}/www
       - {{cfg.data_root}}/var
+      - {{cfg.data_root}}/var/sites
       - {{cfg.data_root}}/var/sites/default/files
       - {{cfg.data_root}}/var/log
       - {{cfg.data_root}}/var/tmp
@@ -160,41 +167,3 @@ This produce the default layout
       - mc_proxy: makina-php-pre-inst
       - mc_proxy: nginx-pre-install-hook
 {% endfor %}
-
-{{cfg.name}}-test-db:
-  file.managed:
-    - contents: |
-                #!/usr/bin/env bash
-                set -e
-                echo "show tables"|\
-                  mysql --database={{data.db_name}} --host={{data.db_host}}\
-                  --port={{data.db_port}} --user={{data.db_user}}\
-                  --password="{{data.db_password}}"|wc -l > "{{cfg.data_root}}/nbtables"
-                test "$(cat "{{cfg.data_root}}/nbtables")" -gt "25"
-                exit ${?}
-    - name: "{{cfg.data_root}}/bin/test_hasdb.sh"
-    - makedirs: true
-    - template: jinja
-    - mode: 770
-    - user: "{{cfg.user}}"
-    - group: "{{cfg.group}}"
-    - watch:
-      - file: {{cfg.name}}-dirs
-
-{{cfg.name}}-test-drush-status:
-  file.managed:
-    - contents: |
-                #!/usr/bin/env bash
-                set -e
-                cd "`dirname $0`";
-                BIN_DIR=`pwd`;
-                ${BIN_DIR}/drush status --format=yaml|grep "bootstrap: Successful"
-                exit ${?}
-    - name: "{{cfg.data_root}}/bin/test_drush_status.sh"
-    - makedirs: true
-    - template: jinja
-    - mode: 770
-    - user: "{{cfg.user}}"
-    - group: "{{cfg.group}}"
-    - watch:
-      - file: {{cfg.name}}-dirs

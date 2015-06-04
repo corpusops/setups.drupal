@@ -25,21 +25,26 @@ makina-projects.projectname:
     drupal_authorize_enabled: false
     drupal_update_enabled: false
     drush_ver: "6.*"
+    drupal_uri: "http://{domain}"
     drush_make_args: "profiles/{drupal_profile}/{drupal_profile}.make"
     domain: "{fqdn}"
-    cron_user: "root"
     # uncomment if you use default -- cron --
     # cron_periodicity: "* */3 * * *"
     # cron_cmd: "cd {project_root}/www && ../bin/drush cron -y"
     # uncomment if you use -- elysia cron --
-    cron_periodicity: "* * * * *"
+    cron_periodicity: "* */3 * * *"
+    cron_user: "root"
     cron_cmd: "cd {project_root}/www && ../bin/drush --root={project_root}/www --uri={domain} --quiet elysia-cron"
+    #cron_cmd: "cd {project_root}/www && ../sbin/drush --root={project_root}/www --uri={domain} --quiet cron -y"
     password: "secret"
     # if a special php is needed for drush, set the path here
     modules_dir: "{project_root}/www/sites/all/modules"
     modules_check: "{modules_dir}/token {modules_dir}/pathauto"
     php: ''
     force:
+      # this will force a drush install
+      # you can also use a data/force_install file for one-time things
+      install: 0
       # this will force a drush make
       # you can also use a data/force_make file for one-time things
       make: 0
@@ -108,9 +113,6 @@ makina-projects.projectname:
       cache: 0
       cache_block: 0
       reverse_proxy_header: 'HTTP_X_FORWARDED_FOR'
-      image_allow_insecure_derivatives: 0
-      error_level: 0
-      omit_vary_cookie: 'FALSE'
       page_compression: 0
       js_gzip_compression: 1
       css_gzip_compression: 1
@@ -122,16 +124,19 @@ makina-projects.projectname:
       site_name: "{name}"
       reverse_proxy: 'TRUE'
       reverse_proxy_addresses: "array('127.0.0.1', '10.5.0.1')"
+      image_allow_insecure_derivatives: 0
       reroute_email_enable: 0
       reroute_email_address: '{admins}'
-      image_jpeg_quality: 95
+      image_jpeg_quality: 100
       locale_cache_length: 204800
       cookie_cache_bypass_adv_cache_lifetime: 300
       file_chmod_directory: '02770'
       file_chmod_file: '0660'
+      error_level: 0
       preprocess_css: 0
       preprocess_js: 0
       base_url: 'default'
+      omit_vary_cookie: 'FALSE'
       smtp:
         used: True
         host: '127.0.0.1'

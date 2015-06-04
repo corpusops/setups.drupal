@@ -1,8 +1,8 @@
 <?php
 /* GENERATED VIA SALT -- DO NOT EDIT -- */
-{% set cfg = salt['mc_utils.json_load'](cfg) %}
-{% set ddata = cfg.data %}
-{% set data = ddata.local_settings %}
+# {% set cfg = salt['mc_project.get_configuration'](cfg) %}
+# {% set ddata = cfg.data %}
+# {% set data = ddata.local_settings %}
 
 $conf['reverse_proxy'] = {{data.reverse_proxy}};
 $conf['reverse_proxy_header'] = '{{data.reverse_proxy_header}}';

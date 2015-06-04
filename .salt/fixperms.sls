@@ -78,6 +78,7 @@
                --fmode 770 --dmode 771 \
                -u {{cfg.user}} -g {{cfg.group}}\
                --paths "{{cfg.data_root}}/var/sites"\
+               --paths "{{cfg.data_root}}/sbin"\
                --paths "{{cfg.project_root}}/sbin"\
                --excludes=".*files.+" \
                --users {{cfg.user}}:rwx \
@@ -106,8 +107,8 @@
                --paths "{{cfg.project_root}}"/www/sites/default/local.settings.php\
                --paths "{{cfg.project_root}}"/www/sites/default/default.settings.php\
                --paths "{{cfg.project_root}}"/www/sites/{{lsettings.base_url}}/settings.php\
-               --paths "{{cfg.project_root}}"/www/sites/{{lsettings.base_url}}/local.settings.php\
                --paths "{{cfg.project_root}}"/www/sites/{{lsettings.base_url}}/common.settings.php\
+               --paths "{{cfg.project_root}}"/www/sites/{{lsettings.base_url}}/local.settings.php\
                --paths "{{cfg.project_root}}"/www/sites/{{lsettings.base_url}}/default.settings.php\
                --users {{cfg.user}}:r-- \
                --groups {{cfg.group}}:r-- \

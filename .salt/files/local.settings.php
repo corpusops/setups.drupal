@@ -1,12 +1,10 @@
 <?php
 /* GENERATED VIA SALT -- DO NOT EDIT -- */
-{% set cfg = salt['mc_utils.json_load'](cfg) %}
-{% set ddata = cfg.data %}
-{% set data = ddata.local_settings %}
+# {% set cfg = salt['mc_project.get_configuration'](cfg) %}
+# {% set ddata = cfg.data %}
+# {% set data = ddata.local_settings %}
 
 // BASE URL --------------------------------------------------------------------
-{% if ddata.local_settings.base_url != 'default' %}
-{% endif %}
 $base_url = 'http://{{ ddata.domain }}';
 // this is a hack for drush in site-install mode, overriding base_url with crap,
 // at least you have a copy in variables, if needed
@@ -17,7 +15,7 @@ $drupal_hash_salt = "{{salt['mc_utils.generate_stored_password']('drupal_salt_'+
 // default contact mail
 // $conf['site_mail'] = '{{ data.site_email }}';
 
-// Log level 
+// Log level
 // $conf['error_level'] = {{ data.error_level }};
 
 
