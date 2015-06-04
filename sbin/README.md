@@ -1,6 +1,7 @@
 SBIN directory
 ===============
 
+
 This directory is used on non-salted heterogenous environments.
 
 You'll find here some of the development tools that can be used to facilitate deployments and installation in places where you do not have salt-stack and corpus.

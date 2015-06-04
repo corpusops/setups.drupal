@@ -1,38 +1,74 @@
-#!/bin/bash
-
-# insall script for people not using saltctack to deploy
-
-RED=$'\e[31;01m'
-BLUE=$'\e[36;01m'
-YELLOW=$'\e[33;01m'
-NORMAL=$'\e[0m'
-
-if [ "$1" = "make" ];
-then
-  #execute drush make
-  ./"`dirname "$0"`/make.sh";
+#!/usr/bin/env bash
+# install script for people not using saltstack to deploy
+. "$(dirname "${0}")/base.sh"
+SETTINGS="${BINPATH}/profile_conf.sh"
+if [ ! -e "${SETTINGS}" ];then
+    echo "${SETTINGS} does not exists, create it from ${SETTINGS}.sample"
+    exit 1
 fi
 
-#get some conf
-. "`dirname "$0"`/get-paths.sh";
-. "${BINPATH}/get-drush.sh";
-. "${BINPATH}/profile_conf.sh";
+. "${SETTINGS}"
 
-#execute drush site-install
-cd "${ROOTPATH}/www";
+
+do_install=""
+if [ "x${FORCE_INSTALL}" != "x0" ] && [ "x${FORCE_INSTALL}" != "x" ];then
+    do_install="y"
+elif [ -e "${FORCE_INSTALL_MARKER}" ];then
+    do_install="y"
+elif [ -e "${INSTALL_MARKER}" ];then
+    do_install=""
+fi
+
+if [ "x${do_install}" = "x" ];then
+    echo "Install skipped"
+    exit 0
+fi
+
+if [ "x${1}" = "xmake" ];then
+    # execute drush make
+    "${BINPATH}/make.sh"
+    ret="${?}"
+    if [ "x${ret}" != "x0" ];then
+        echo "Make failed"
+        exit ${ret}
+    fi
+fi
+
+cd "${WWW_DIR}"
+PROFILE="$(drupal_profile)"
+PROFILE_PATH="$(dirname "${PROFILE_PATH}")"
+
+# remove www/robots.txt (this site use a module for that url)
+rm "${ROOTPATH}/www/robots.txt"
 
 #store session informations if site already installed
-SESSIONS="$(mktemp 'sessions_XXXXXXXXXX')"; trap 'rm "${SESSIONS}"' EXIT
-test "`${DRUSH} st bootstrap --pipe --format=list`" == "Successful" && ${DRUSH} sql-dump --tables-list=sessions > "${SESSIONS}"
+SESSIONS="$(mktemp 'sessions_XXXXXXXXXX')"
+trap 'rm "${SESSIONS}"' EXIT
+test "x$(call_drush st bootstrap --pipe --format=list)" = "xSuccessful" && call_drush sql-dump --tables-list=sessions > "${SESSIONS}"
 
 # re-add write rights for the directory in case of
 chmod u+w ../sites/
 chmod u+w ../sites/default
 
-# Manually drop tables because drush site-install is an idiot
-${DRUSH} sql-drop -y
+# download locale
+VERSION=$(call_drush status|grep "Drupal version"|cut -d: -f2| tr -d '[:space:]')
+if [ ! -f ${PROFILE_PATH}/translations/drupal-$VERSION.${LOCALE}.po ]; then
+    wget "http://ftp.drupal.org/files/translations/7.x/drupal/drupal-$VERSION.${LOCALE}.po" -P ${PROFILE_PATH}/translations/
+fi
 
-${DRUSH} si -y "${PROFILE}" \
+cd "${WWW_DIR}"
+
+# Manually drop tables because drush site-install is an idiot
+call_drush sql-drop -y
+
+cd "${WWW_DIR}"
+
+# Remove translations while installing... arf, @see https://www.drupal.org/node/1297438
+if [ -d "${PROFILE_PATH}/translations" ];then
+    mv "${PROFILE_PATH}/translations" "${PROFILE_PATH}/translations_back"
+fi
+
+call_drush si -v -y "${PROFILE}" \
   --account-mail="${MAIL}" \
   --account-name="${NAME}" \
   --account-pass="${PASS}" \
@@ -40,20 +76,25 @@ ${DRUSH} si -y "${PROFILE}" \
   --site-mail="${SITE_MAIL}" \
   --site-name="${SITE_NAME}" \
   --locale="${LOCALE}" \
-  install_configure_form.site_default_country=FR \
-  install_configure_form.date_default_timezone=Europe/Paris \
-  install_configure_form.update_status_module=0
+  install_configure_form.site_default_country=${SITE_DEFAULT_COUNTRY} \
+  install_configure_form.date_default_timezone=${DATE_DEFAULT_TIMEZONE} \
+  install_configure_form.update_status_module=${UPDATE_STATUS_MODULE} \
+  --debug ${EXTRA_DRUSH_SITE_INSTALL_ARGS} 
+
+# restore translations
+if [ -d "${PROFILE_PATH}/translations_back" ];then
+    mv "${PROFILE_PATH}/translations_back" "${PROFILE_PATH}/translations"
+fi
 
 #restore sessions if they were saved
-test -f "${SESSIONS}" && ${DRUSH} sqlc < "${SESSIONS}" && echo "Sessions restored"
+test -f "${SESSIONS}" && call_drush sqlc < "${SESSIONS}" && echo "Sessions restored"
 
 # fix rights
-${PATH_USER_RIGHTS}
+if [ "x${USER_RIGHTS}" != "x" ];then
+    "${USER_RIGHTS}"
+fi
 
-# to add some post-install scripts, prefer writing some other sbin scripts and 
-# laucnh them for here (this way we can add theses scripts in salt also
-#${DRUSH} en devel_generate -y
-#${DRUSH} dis devel_generate -y
-
-${DRUSH} en field_ui -y
-
+# Enable some dev modules.
+if [ "x${DEV_MODE}" = "x1" ];then
+    call_drush en field_ui -y
+fi

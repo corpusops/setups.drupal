@@ -13,64 +13,23 @@ ${EXPLAIN}
 
 Usage: ${WHOAMI} <USER> <GROUP> [DEV]
 "
-# exit codes
-END_SUCCESS=0;
-END_FAIL=1;
-END_RECVSIG=3;
-END_BADUSAGE=65;
-
-# some colors
-RED=$'\e[31;01m'
-BLUE=$'\e[36;01m'
-YELLOW=$'\e[33;01m'
-NORMAL=$'\e[0m'
-
-###############################
-# exit functions ##############
-bad_exit() {
-    echo ;
-    echo "${RED} AAaaRG: ${1}" >&2;
-    echo "${NORMAL}" >&2;
-    exit ${END_FAIL};
-}
-
-cd "`dirname $0`";
-BASE_NAME=`pwd`;
-for i in profile_conf profile_conf.sh profile_conf.example;do
-    if [ -e "${i}" ];then
-         . "${i}"
-         break
-    fi
-done
-ROOTPATH=${BASE_NAME}"/..";
-cd $ROOTPATH
-ROOTPATH=`pwd`;
+. "$(dirname "${0}")/base.sh"
 
 if [ ! -d ${ROOTPATH} ]; then
-   bad_exit "${ROOTPATH} is not a valid directory";
-fi
-WEBROOT_PATH=${ROOTPATH}/www
-PUBLIC_PATH=${ROOTPATH}/sites
-if [ ! -d ${PUBLIC_PATH} ]; then
-   PUBLIC_PATH=${WEBROOT_PATH}/sites
+   bad_exit "${ROOTPATH} is not a valid directory"
 fi
 
-PRIVATE_PATH=${ROOTPATH}/var/private
-TMP_PATH=${ROOTPATH}/var/tmp
-SOCKET_PATH=${ROOTPATH}/var/fcgi
-CACHE_PATH=${ROOTPATH}/var/cache
+USER=${1}
+GROUP=${2}
+DEV_MODE=${3}
 
-USER=$1;
-GROUP=$2;
-DEVMODE=$3;
-
-if [ "xDEV" == "x${DEVMODE}" ];then
-  DEVMODE="yes"
+if [ "x${DEV_MODE}" = "xDEV" ];then
+  DEV_MODE="yes"
 else
-  DEVMODE="no"
+  DEV_MODE="no"
 fi
 
-if [ -z $USER ];then
+if [ "x${USER}" = "x" ];then
   echo "Please set \$USER"
   exit 1
 fi
@@ -78,103 +37,132 @@ if [  "x${USER}" = "xroot" ];then
     echo "Please set \$USER to something else than root"
     exit 1
 fi
-if [ -z $GROUP ];then
-  GROUP=nginx
+if [ "x${GROUP}" = "x" ];then
+    GROUP=www-data
 fi
 
-echo "${RED}= Operating in ${WEBROOT_PATH}.${NORMAL} Please check ${WEBROOT_PATH} is really your project web directory root"
+if [ ! -d ${DATA_DIR} ]; then
+   DATA_DIR="${WWW_DIR}/sites"
+fi
+ 
+echo "${RED}= Operating in ${WWW_DIR}.${NORMAL} Please check ${WWW_DIR} is really your project web directory root"
 echo " and that user ${RED}${USER}${NORMAL} and group ${RED}${GROUP}${NORMAL} are ok or or stop this program with CTRL-C";
 sleep 5
 echo "${YELLOW}= Reseting user/group file & directory rights with ${RED}${USER}:${GROUP}${NORMAL}";
 
 echo "${YELLOW}== change user/group...${NORMAL}";
-echo "${BLUE}chown ${USER}:${GROUP} ${WEBROOT_PATH}${NORMAL}"
-chown ${USER}:${GROUP} ${WEBROOT_PATH};
-echo "${BLUE}chown -R ${USER}:${GROUP} ${WEBROOT_PATH}${NORMAL}"
-chown -R ${USER}:${GROUP} ${WEBROOT_PATH};
-echo "${BLUE}chown ${USER}:${GROUP} ${PUBLIC_PATH}${NORMAL}"
-chown ${USER}:${GROUP} ${PUBLIC_PATH};
-echo "${BLUE}chown -R ${USER}:${GROUP} ${PUBLIC_PATH}${NORMAL}"
-chown -R ${USER}:${GROUP} ${PUBLIC_PATH};
+echo "${BLUE}chown ${USER}:${GROUP} ${WWW_DIR}${NORMAL}"
+chown ${USER}:${GROUP} "${WWW_DIR}"
+echo "${BLUE}chown -R ${USER}:${GROUP} ${WWW_DIR}${NORMAL}"
+chown -R ${USER}:${GROUP} "${WWW_DIR}"
+echo "${BLUE}chown ${USER}:${GROUP} ${DATA_DIR}${NORMAL}"
+chown ${USER}:${GROUP} "${DATA_DIR}"
+echo "${BLUE}chown -R ${USER}:${GROUP} ${DATA_DIR}${NORMAL}"
+chown -R ${USER}:${GROUP} "${DATA_DIR}"
 
 echo "${YELLOW}== default directories read rights (excluding sites/*/files)${NORMAL}";
-echo "${BLUE}find ${WEBROOT_PATH} -type d -path \"${WEBROOT_PATH}/*/files\" -prune  -o -type d -exec chmod 2750 {} +${NORMAL}";
-find ${WEBROOT_PATH} -type d -path "${WEBROOT_PATH}/*/files" -prune  -o -type d -exec chmod 2750 {} +;
+echo "${BLUE}find ${WWW_DIR} -type d -path \"${WWW_DIR}/*/files\" -prune  -o -type d -exec chmod 2750 {} +${NORMAL}";
+find ${WWW_DIR} -type d -path "${WWW_DIR}/*/files" -prune  -o -type d -exec chmod 2750 {} +;
 
 echo "${YELLOW}== default files read rights (excluding sites/*/files)${NORMAL}";
-echo "${BLUE}find ${WEBROOT_PATH} -path \"${WEBROOT_PATH}/*/files\" -prune  -o -type f -execdir chmod 0640 {} +${NORMAL}";
-find ${WEBROOT_PATH} -path "${WEBROOT_PATH}/*/files" -prune -o -type f -execdir chmod 0640 {} +;
+echo "${BLUE}find ${WWW_DIR} -path \"${WWW_DIR}/*/files\" -prune  -o -type f -execdir chmod 0640 {} +${NORMAL}";
+find ${WWW_DIR} -path "${WWW_DIR}/*/files" -prune -o -type f -execdir chmod 0640 {} +;
 
 echo "${YELLOW}== directories write rights for sites/*/files${NORMAL}";
-echo "${BLUE}find ${PUBLIC_PATH} -path \"${PUBLIC_PATH}/*/files*\" -type d -exec chmod 2770 {} +${NORMAL}";
-chmod 2770 ${PUBLIC_PATH}
-chmod 2770 ${PUBLIC_PATH}/default
-find ${PUBLIC_PATH} -path "${PUBLIC_PATH}/*/files*" -type d -exec chmod 2770 {} +;
+echo "${BLUE}find ${DATA_DIR} -path \"${DATA_DIR}/*/files*\" -type d -exec chmod 2770 {} +${NORMAL}";
+chmod 2770 ${DATA_DIR}
+chmod 2750 ${DATA_DIR}/default
+find ${DATA_DIR} -path "${DATA_DIR}/*/files*" -type d -exec chmod 2770 {} +
 
 echo "${YELLOW}== files write rights for sites/*/*settings*.php${NORMAL}";
-echo "${BLUE}find ${PUBLIC_PATH} -path \"${PUBLIC_PATH}/*/*settings*.php\" -type f -exec chmod 0640 {} +${NORMAL}";
-find ${PUBLIC_PATH} -path "${PUBLIC_PATH}/*/*settings*.php" -type f -exec chmod 0640 {} +;
+echo "${BLUE}find ${DATA_DIR} -path \"${DATA_DIR}/*/*settings*.php\" -type f -exec chmod 0640 {} +${NORMAL}"
+find ${DATA_DIR} -path "${DATA_DIR}/*/*settings*.php" -type f -exec chmod 0640 {} +
 
 echo "${YELLOW}== files write rights for sites/*/files/ files ${NORMAL}";
-echo "${BLUE}find ${PUBLIC_PATH} -path \"${PUBLIC_PATH}/*/files/*\" -type f -execdir chmod 0660 {} +${NORMAL}";
-find ${PUBLIC_PATH} -path "${PUBLIC_PATH}/*/files/*" -type f -execdir chmod 0660 {} +;
+echo "${BLUE}find ${DATA_DIR} -path \"${DATA_DIR}/*/files/*\" -type f -execdir chmod 0660 {} +${NORMAL}"
+find ${DATA_DIR} -path "${DATA_DIR}/*/files/*" -type f -execdir chmod 0660 {} +
 
 if [ ! -d ${PRIVATE_PATH} ]; then
-    echo "${YELLOW}== Creating private directory${NORMAL}";
+    echo "${YELLOW}== Creating private directory${NORMAL}"
     mkdir ${PRIVATE_PATH}
 fi
 
-echo "${YELLOW}== directories write rights for private files${NORMAL}";
-echo "${BLUE}find ${PRIVATE_PATH} -path \"${PRIVATE_PATH}/*/files*\" -type d -exec chmod 2770 {} +${NORMAL}";
-chmod 2770 ${PRIVATE_PATH}
-find ${PRIVATE_PATH} -path "${PRIVATE_PATH}/*" -type d -exec chmod 2770 {} +;
-chown -R ${USER}:${GROUP} ${PRIVATE_PATH}
+echo "${YELLOW}== directories write rights for private files${NORMAL}"
+echo "${BLUE}find ${PRIVATE_PATH} -path \"${PRIVATE_PATH}/*/files*\" -type d -exec chmod 2770 {} +${NORMAL}"
+chmod 2770 "${PRIVATE_PATH}"
+find ${PRIVATE_PATH} -path "${PRIVATE_PATH}/*" -type d -exec chmod 2770 {} +
+chown -R ${USER}:${GROUP} "${PRIVATE_PATH}"
 
 if [ ! -d ${CACHE_PATH} ]; then
-    echo "${YELLOW}== Creating cache directory${NORMAL}";
-    mkdir ${CACHE_PATH}
+    echo "${YELLOW}== Creating cache directory${NORMAL}"
+    mkdir "${CACHE_PATH}"
 fi
-chgrp -R ${GROUP} ${CACHE_PATH}
-chmod 2770 ${CACHE_PATH}
+chgrp -R ${GROUP} "${CACHE_PATH}"
+chmod 2770 "${CACHE_PATH}"
 
 
 echo "${YELLOW}== files write rights for private files ${NORMAL}";
 echo "${BLUE}find ${PRIVATE_PATH} -path \"${PRIVATE_PATH}/*\" -type f -execdir chmod 0660 {} +${NORMAL}";
-find ${PRIVATE_PATH} -path "${PRIVATE_PATH}/*" -type f -execdir chmod 0660 {} +;
+find ${PRIVATE_PATH} -path "${PRIVATE_PATH}/*" -type f -execdir chmod 0660 {} +
 
 if [ -d ${SOCKET_PATH} ]; then
   echo "${YELLOW}= ${SOCKET_PATH} handling${NORMAL}"
-  chown ${USER}:${GROUP} ${SOCKET_PATH};
-  chmod 2770 ${SOCKET_PATH};
+  chown ${USER}:${GROUP} "${SOCKET_PATH}"
+  chmod 2770 "${SOCKET_PATH}"
 fi
 
-if [ -d ${TMP_PATH} ]; then
+if [ -d "${TMP_PATH}" ]; then
   echo "${YELLOW}= ${TMP_PATH} handling (1777)${NORMAL}"
-  chmod 1777 ${TMP_PATH};
+  chmod 1777 "${TMP_PATH}"
 fi
 
 echo "${YELLOW}= Executable rights for ${ROOTPATH}/sbin/*.sh and sbin/drush and ownership for ${USER}${NORMAL}"
-chown -R ${USER} ${ROOTPATH}/sbin/*
-chmod u+x ${ROOTPATH}/sbin/*.sh
-chmod u+x ${ROOTPATH}/sbin/drush
-chmod u+x ${ROOTPATH}/sbin/vendor/drush/drush/drush
+chown -R ${USER} "${ROOTPATH}/sbin/"*
+chmod u+x "${ROOTPATH}/sbin/"*.sh
+chmod u+x "${ROOTPATH}/sbin/drush"
+chmod u+x "${ROOTPATH}/sbin/vendor/drush/drush/drush"
 
-# Gulp mode for js and css compression
-if [ "yes" == "${DEVMODE}" ]; then
-  echo "${RED}=DEV-ONLY= NEED WRITE ACCESS IN profiles/*/themes/*/[img/|js/|dist] to generate javascript archives${NORMAL}"
-  chmod u+wx ${WEBROOT_PATH}/profiles/*/themes/*/js
-  chmod u+w ${WEBROOT_PATH}/profiles/*/themes/*/js/*
-  chmod g+wx ${WEBROOT_PATH}/profiles/*/themes/*/js
-  chmod g+w ${WEBROOT_PATH}/profiles/*/themes/*/js/*
-  chmod u+wx ${WEBROOT_PATH}/profiles/*/themes/*/img
-  chmod u+w ${WEBROOT_PATH}/profiles/*/themes/*/img/*
-  chmod g+wx ${WEBROOT_PATH}/profiles/*/themes/*/img
-  chmod g+w ${WEBROOT_PATH}/profiles/*/themes/*/img/*
-  chmod u+wx ${WEBROOT_PATH}/profiles/*/themes/*/dist
-  chmod u+w ${WEBROOT_PATH}/profiles/*/themes/*/dist/*
-  chmod g+wx ${WEBROOT_PATH}/profiles/*/themes/*/dist
-  chmod g+w ${WEBROOT_PATH}/profiles/*/themes/*/dist/*
+echo "${YELLOW}= Executable rights and ownership for payment cgi in lib/cgi-bin${NORMAL}"
+chmod 0770 "${ROOTPATH}/lib/cgi-bin/"*.cgi
+chmod 2770 "${ROOTPATH}/lib/cgi-bin"
+chown "${USER}:${GROUP}" "${ROOTPATH}/lib/cgi-bin/"*.cgi
+chown "${USER}:${GROUP}" "${ROOTPATH}/lib/cgi-bin/"
+
+echo "${YELLOW}= Owners of LOG directories${NORMAL}"
+chown "${USER}:${GROUP}" "${ROOTPATH}/var"
+chown "${USER}:${GROUP}" "${ROOTPATH}/var/log"
+chown "${USER}:${GROUP}" "${ROOTPATH}/var/log/nginx"
+chown "${USER}:${GROUP}" "${ROOTPATH}/var/log/php"
+chown "${GROUP}:${GROUP}" "${ROOTPATH}/var/log/php/"*
+chmod 2775 "${ROOTPATH}/var"
+chmod 2775 "${ROOTPATH}/var/log"
+chmod 2775 "${ROOTPATH}/var/log/php"
+chmod 2775 "${ROOTPATH}/var/log/nginx"
+if [ ! -h "/var/log/nginx/${PROJECT_NAME}" ]; then
+    echo "${YELLOW}= create system log symlinks for nginx${NORMAL}"
+    ln -s "${ROOTPATH}/var/log/nginx" "/var/log/nginx/${PROJECT_NAME}"
+fi
+if [ ! -d /var/log/php ]; then
+   mkdir /var/log/php
+fi
+if [ ! -h "/var/log/php/${PROJECT_NAME}" ]; then
+    echo "${YELLOW}= create system log symlinks for php${NORMAL}"
+    ln -s "${ROOTPATH}/var/log/php" "/var/log/php/${PROJECT_NAME}"
 fi
 
-
-
+# Gulp mode for js and css compression
+if [ "x${DEVMODE}" = "xyes"]; then
+  echo "${RED}=DEV-ONLY= NEED WRITE ACCESS IN profiles/*/themes/*/[img/|js/|dist] to generate javascript archives${NORMAL}"
+  chmod u+wx "${WWW_DIR}/profiles/"*/themes/*/js
+  chmod u+w  "${WWW_DIR}/profiles/"*/themes/*/js/*
+  chmod g+wx "${WWW_DIR}/profiles/"*/themes/*/js
+  chmod g+w  "${WWW_DIR}/profiles/"*/themes/*/js/*
+  chmod u+wx "${WWW_DIR}/profiles/"*/themes/*/img
+  chmod u+w  "${WWW_DIR}/profiles/"*/themes/*/img/*
+  chmod g+wx "${WWW_DIR}/profiles/"*/themes/*/img
+  chmod g+w  "${WWW_DIR}/profiles/"*/themes/*/img/*
+  chmod u+wx "${WWW_DIR}/profiles/"*/themes/*/dist
+  chmod u+w  "${WWW_DIR}/profiles/"*/themes/*/dist/*
+  chmod g+wx "${WWW_DIR}/profiles/"*/themes/*/dist
+  chmod g+w  "${WWW_DIR}/profiles/"*/themes/*/dist/*
+fi

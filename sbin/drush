@@ -1,23 +1,5 @@
-#/bin/bash
-#!/usr/bin/bash
+#!/usr/bin/env bash
 # A drush wrapper for local project environment.
-cd "`dirname $0`";
-mBASE_NAME=`pwd`;
-mROOT_PATH=${mBASE_NAME}"/..";
-cd ${mROOT_PATH}
-ROOT_PATH=`pwd`;
-
-DRUSH_CMD="${ROOT_PATH}/sbin/vendor/drush/drush/drush"
-if [ -x $ROOT_PATH/bin/drush ];then
-    DRUSH_CMD="${ROOT_PATH}/bin/drush"
-fi
-WWW_DIR="${ROOT_PATH}/www"
-
-# Always cd in drupal ww dir before running drush!
-cd "${WWW_DIR}"
-
-# In case you use several domains, set the domain here
-#DRUPAL_URI="http://www.mydomain.com"
-# Drush wrapper
-#$DRUSH_CMD --root=$WWW_DIR --uri=$DRUPAL_URI "$@"
-$DRUSH_CMD --root=$WWW_DIR "$@"
+. "$(dirname "${0}")/base.sh"
+call_drush "${@}"
+exit ${?}

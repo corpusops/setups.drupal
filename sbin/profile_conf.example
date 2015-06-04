@@ -1,39 +1,21 @@
-#!/bin/sh
-
-#Copy this file in the same directory
-#and rename it to profile_conf.sh
-
-#Enter property to used during drupal install
-
-# Locale to set
-LOCALE="fr"
-
-# Profile to use
-PROFILE="example_profile"
-
-# System User
-USER=${USER:-$(whoami)}
-
+#!/usr/bin/env bash
 # Used for account mail and site mail
-MAIL="example-dev@makina-corpus.com"
+MAIL="sysadmin@localhost"
 NAME="admin"
-PASS="admin"
+PASS="password"
 
 # Database info
-DB_USER="example7"
-DB_PASS="example7"
+DB_USER="sampledevu"
+DB_PASS="sampledevp"
 DB_TYPE="mysql"
 # warning 'localhost' means socket, unavailable in chroot
 DB_HOST="127.0.0.1"
-DB_NAME="example7"
+DB_NAME="sampledev"
 DB_PORT="3306"
 
-SITE_NAME="example"
-SITE_MAIL="example-dev@makina-corpus.com"
+SITE_NAME="SAMPLE"
+SITE_MAIL="contact@localhost"
 
-#user right bash script path
-#It should be absolute
-# 1st arg is the file editor user,
-# 2nd argument is the web server/php-fpm group (which may need some write rights on specific places)
-# 3rd argument CAN be DEV or empty
-PATH_USER_RIGHTS="/path/to/project/sbin/user_rights tri nginx DEV"
+SITE_DEFAULT_COUNTRY="FR"
+DATE_DEFAULT_TIMEZONE="Europe/Paris"
+UPDATE_STATUS_MODULE=0
