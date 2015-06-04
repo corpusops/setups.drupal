@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 # A composer wrapper for local project environment.
 . "$(dirname "${0}")/base.sh"
-"$(get_composer)" "${@}"
+call_composer "${@}"
 exit ${?}

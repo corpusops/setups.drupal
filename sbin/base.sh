@@ -141,8 +141,10 @@ function set_drush() {
         if [ "x${search}" != "x" ];then
             for i in ${DRUSH_PRETENDANTS};do
                 if [ -x "$(filter_drush ${i})" ];then
-                    DRUSH_CMD="${i}"
-                    break
+                    if ${i} --version 1>/dev/null 2>&1;then
+                        DRUSH_CMD="${i}"
+                        break
+                    fi
                 fi
             done
         fi
@@ -217,8 +219,24 @@ function backup_settings() {
     cp sites/default/local.settings.php "../backups/local.settings.php.${NOW}";
 }
 
+download() {
+    url="${1}"
+    target="${2}"
+    shift
+    shift
+    if which curl >/dev/null 2>&1;then
+        curl -sS "${url}" -o "${target}"
+    elif which wget >/dev/null 2>&1;then
+        wget --quiet ${@} "${url}" -O "${target}"
+    else
+        echo "no download method available"
+        exit 1
+    fi
+
+}
+
 COMPOSER_SET=""
-function get_composer() {
+function set_composer() {
     if [ "x${COMPOSER_SET}" = "x" ];then
         composer=""
         for c in ${COMPOSER_PRETENDANTS};do
@@ -234,17 +252,26 @@ function get_composer() {
             FORCE_LOCAL_COMPOSER="y"
         fi
         if [ "x${FORCE_LOCAL_COMPOSER}" != "x" ];then
-            wget "${COMPOSER_URL}" -O "${LOCALCOMPOSER}"
-            chmod +x "${LOCALCOMPOSER}"
+            download="1"
+            if [ -e "${LOCALCOMPOSER}" ];then
+                chmod +x "${LOCALCOMPOSER}"
+                if "${LOCALCOMPOSER}" --version >/dev/null 2>&1;then
+                    download=""
+                fi
+            fi
+            if [ "x${download}" != "x" ];then
+                download "${COMPOSER_URL}" "${LOCALCOMPOSER}"
+                chmod +x "${LOCALCOMPOSER}"
+            fi
             composer="${LOCALCOMPOSER}"
         fi
         COMPOSER_SET=${composer}
     fi
-    echo "${COMPOSER_SET}"
 }
 
 function call_composer() {
-    "$(get_composer)" "${@}"
+    set_composer
+    "${COMPOSER_SET}" "${@}"
 }
 
 function call_drush() {
