@@ -33,13 +33,16 @@ if test_prereqs;then
         | sort -h \
     );do
         . ${migfile}
+        record="$(basename ${migfile})"
         basen="$(basename ${migfile} .sh)"
         test_fun="test_${basen}"
         mig_fun="${basen}"
-        if fn_exists "${test_fun}" && fn_exists "${mig_fun}";then
+        if egrep -q "^${record}$" "${UPGRADES_MARKER}";then
+            echo "${GREEN}Already done: ${migfile}${NORMAL}"
+        elif fn_exists "${test_fun}" && fn_exists "${mig_fun}";then
             dnoup="1"
             if "${test_fun}";then
-                run_ "${mig_fun}"
+                run_ "${mig_fun}" && echo "${record}" >> "${UPGRADES_MARKER}"
             else
                 echo "${YELLOW}- ${mig_fun} skipped${NORMAL}"
             fi
@@ -50,7 +53,7 @@ if test_prereqs;then
     if [ "x${dnoup}" = "x" ];then
         # deactivated for now, only specific upgrade are allowed to be planned
         # automatically
-        echo "run_ standard_upgrade"
+        echo "${YELLOW}No upgrades have been done${NORMAL}"
     fi
 else
     die "no drush"

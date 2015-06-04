@@ -36,6 +36,7 @@ PRIVATE_PATH="${ROOTPATH}/var/private"
 TMP_PATH="${ROOTPATH}/var/tmp"
 SOCKET_PATH="${ROOTPATH}/var/fcgi"
 CACHE_PATH="${ROOTPATH}/var/cache"
+UPGRADES_MARKER="${BINPATH}/.upgrades.done"
 
 # System User
 USER="${USER:-$(whoami)}"
@@ -277,8 +278,10 @@ function call_composer() {
 function call_drush() {
     set_drush
     # Always cd in drupal www dir before running drush !
+    cwd="$(pwd)"
     cd "${WWW_DIR}"
     ${DRUSH_CALL} "${@}"
+    cd "${cwd}"
 }
 
 function verbose_call_drush() {

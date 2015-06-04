@@ -10,7 +10,6 @@ test_upgrade_0001() {
 
 upgrade_0001() {
     set -e
-    "${BINPATH}/composer" install
     cd "${WWW_DIR}"
     echo drush_fra
     echo drush_cc_all

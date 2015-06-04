@@ -49,6 +49,7 @@ www/sites/README.txt
 sbin/vendor
 sbin/composer.phar
 sbin/composer.lock
+sbin/.upgrades.done
 /sbin/user_rights*
 
 # Ignore conf files
