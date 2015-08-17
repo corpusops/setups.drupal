@@ -12,96 +12,77 @@
     - group: {{cfg.group}}
     - contents: |
             #!/usr/bin/env bash
+            gpasswd -a www-data "{{cfg.group}}"
+            for i in \
+              "{{cfg.project_dir}}/global-reset-perms.sh" \
+              "{{cfg.project_root}}/.." \
+              "{{cfg.project_root}}/../.."\
+              ;do
+              setfacl -k "${i}";setfacl -b "${i}";
+            done
+            for i in \
+                "{{cfg.project_root}}" \
+                "{{cfg.data_root}}" \
+                "{{cfg.pillar_root}}" \
+              ;do \
+              setfacl -R -k "${i}";setfacl -R -b "${i}";
+            done
             if [ -e "{{cfg.pillar_root}}" ];then
-            "{{locs.resetperms}}" -q "${@}" \
-              --dmode '0771' --fmode '0770' \
-              --user root --group "{{cfg.group}}" \
-              --users root \
-              --groups "{{cfg.group}}" \
-              --paths "{{cfg.pillar_root}}";
+              "{{locs.resetperms}}" -q --no-acls \
+                --dmode '0771' --fmode '0770'\
+                --user root --group root \
+                --paths "{{cfg.pillar_root}}";
             fi
             if [ -e "{{cfg.project_root}}" ];then
-             {{locs.resetperms}} -q --no-recursive --only-acls\
-              --paths "{{cfg.project_root}}/.."\
-              --paths "{{cfg.project_root}}/../.."\
-              --users {{cfg.user}}:r-x \
-              --groups {{cfg.group}}:r-x \
-              --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
-             {{locs.resetperms}} -q\
-              --fmode 550 --dmode 771 \
-              --paths "{{cfg.project_dir}}/global-reset-perms.sh"\
-              --users {{cfg.user}}:rwx \
-              --groups {{cfg.group}}:rwx \
-              --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
-             {{locs.resetperms}} -q --no-recursive\
-              -u {{cfg.user}} -g {{cfg.group}}\
-              --fmode 661 --dmode 771 \
-              --paths "{{cfg.project_root}}"\
-              --users {{cfg.user}}:r-x \
-              --groups {{cfg.group}}:r-x \
-              --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
+             {{locs.resetperms}} -q --no-recursive --no-acls\
+               -u root -g root --dmode 0751 --fmode 755 \
+               --paths "{{cfg.project_dir}}/global-reset-perms.sh" \
+               --paths "{{cfg.project_root}}/.." \
+               --paths "{{cfg.project_root}}/../..";
+             chmod g-s "{{cfg.project_root}}" "{{cfg.data_root}}"
+             chmod 771 "{{cfg.project_root}}" "{{cfg.data_root}}"
+             chown "{{cfg.user}}:{{cfg.group}}" "{{cfg.project_root}}" "{{cfg.data_root}}"
+             find "{{cfg.data_root}}/var" "{{cfg.data_root}}/var/run" \
+               -maxdepth 1 -mindepth 1 | \
+               egrep '((/(sites|run|private|tmp|log))|sock)'|while read f;do
+                {{locs.resetperms}} -q --no-acls \
+                  --fmode 771 --dmode 2771 \
+                  -u {{cfg.user}} -g {{cfg.group}} \
+                  --paths "$f";
+             done
              find "{{cfg.project_root}}" "{{cfg.data_root}}" -name .git|while read f;do
-               {{locs.resetperms}} -q\
-                --fmode 771 --dmode 771 --paths "${f}"\
-                -u {{cfg.user}} -g {{cfg.group}}\
-                --users {{cfg.user}}:rwx --groups {{cfg.group}}:rwx;
+              {{locs.resetperms}} -q --no-acls\
+               --fmode 770 --dmode 2771 --paths "${f}"\
+               -u {{cfg.user}} -g {{cfg.group}};
              done
-             chmod o+x "{{cfg.project_root}}/.." "{{cfg.project_root}}/../..";
-             find "{{cfg.project_root}}" -maxdepth 1 -mindepth 1|egrep -v "/(bin|sbin|lib|www|\.git)"|while read f;do
-               {{locs.resetperms}} -q \
-                  --fmode 441 --dmode 551 \
-                  -u {{cfg.user}} -g {{cfg.group}}\
-                  --paths "$f"\
-                  --users {{cfg.user}}:r-x \
-                  --groups {{cfg.group}}:r-x \
-                  --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
+             find -H \
+               "{{cfg.project_root}}/sites" \
+               --paths "{{cfg.data_root}}/var/sites"\
+               "{{cfg.project_root}}/www" \
+               "{{cfg.data_root}}/www" \
+               -type d|while read f;do
+               chmod g-s,o+x "${f}"
+               chown "{{cfg.user}}:{{cfg.group}}" "${f}"
+               chmod g+s,o+x "${f}"
              done
-             {{locs.resetperms}} -q \
-               --fmode 441 --dmode 551 \
-               -u {{cfg.user}} -g {{cfg.group}}\
-               --paths "{{cfg.project_root}}/www"\
-               --users {{cfg.user}}:r-x \
-               --groups {{cfg.group}}:r-x \
-               --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
              find "{{cfg.data_root}}/var/sites" -maxdepth 1 -mindepth 1|\
               egrep "/(sites|run|private|tmp|log)"|while read f;do
-                {{locs.resetperms}} -q\
+                {{locs.resetperms}} -q --no-acls\
                   --fmode 440 --dmode 551 \
                   -u {{cfg.user}} -g {{cfg.group}}\
-                  --paths "$f"\
-                  --users {{cfg.user}}:rwx \
-                  --groups {{cfg.group}}:rwx \
-                  --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
+                  --paths "$f";
              done
-             find "{{cfg.data_root}}/var/run" -type s|while read f;do
-                  chmod 771 "${f}"
-                  chown {{cfg.user}}:{{cfg.group}} "${f}"
-                  setfacl -bR "${f}"
-                  setfacl -m u:{{cfg.user}}:rwx "${f}"
-                  setfacl -m g:{{cfg.group}}:rwx "${f}"
-                  setfacl -m u:{{salt['mc_apache.settings']().httpd_user}}:rwx "${f}"
-             done
-             {{locs.resetperms}} -q\
+             {{locs.resetperms}} -q --no-acls\
                --fmode 770 --dmode 771 \
                -u {{cfg.user}} -g {{cfg.group}}\
                --paths "{{cfg.data_root}}/var/sites"\
-               --paths "{{cfg.data_root}}/sbin"\
-               --paths "{{cfg.project_root}}/sbin"\
-               --excludes=".*files.+" \
-               --users {{cfg.user}}:rwx \
-               --groups {{cfg.group}}:rwx \
-               --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
-             {{locs.resetperms}} -q --no-recursive\
-               --fmode 771 --dmode 771 \
-               -u root -g root \
+               --excludes=".*files.+";
+             {{locs.resetperms}} -q --no-recursive --no-acls\
+               --dmode 2771 -u root -g root \
                --paths "{{cfg.data_root}}"\
-               --paths "{{cfg.data_root}}/var"\
-               --users {{cfg.user}}:r-x \
-               --groups {{cfg.group}}:r-x \
-               --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
-             {{locs.resetperms}} -q --no-recursive\
-               --fmode 664 --dmode 661 \
-               -u {{cfg.user}} -g {{cfg.group}}\
+               --paths "{{cfg.data_root}}/var";
+             {{locs.resetperms}} -q --no-recursive --no-acls\
+               --fmode  664 -u {{cfg.user}} -g {{cfg.group}}\
                --paths "{{cfg.project_root}}"/www/sites/default/settings.php\
                --paths "{{cfg.project_root}}"/www/sites/default/common.settings.php\
                --paths "{{cfg.project_root}}"/www/sites/default/local.settings.php\
@@ -109,18 +90,12 @@
                --paths "{{cfg.project_root}}"/www/sites/{{lsettings.base_url}}/settings.php\
                --paths "{{cfg.project_root}}"/www/sites/{{lsettings.base_url}}/common.settings.php\
                --paths "{{cfg.project_root}}"/www/sites/{{lsettings.base_url}}/local.settings.php\
-               --paths "{{cfg.project_root}}"/www/sites/{{lsettings.base_url}}/default.settings.php\
-               --users {{cfg.user}}:r-- \
-               --groups {{cfg.group}}:r-- \
-               --groups {{salt['mc_apache.settings']().httpd_user}}:r--;
+               --paths "{{cfg.project_root}}"/www/sites/{{lsettings.base_url}}/default.settings.php;
              cd '{{cfg.data_root}}/var'
              for x in sites/*/files private;do
-               {{locs.resetperms}} -q\
-                 --fmode 770 --dmode 771\
+               {{locs.resetperms}} -q --no-acls\
+                 --fmode 770 --dmode 2771\
                  -u {{cfg.user}} -g {{cfg.group}}\
-                 --users {{cfg.user}}:rwx\
-                 --groups {{cfg.group}}:rwx\
-                 --groups {{salt['mc_apache.settings']().httpd_user}}:r-x\
                  --paths "${x}";
              done
             fi
@@ -137,5 +112,5 @@
     - user: root
     - mode: 744
     - contents: |
-                {{cfg.data.cron_periodicity}} root {{cfg.project_dir}}/global-reset-perms.sh
+                {{cfg.data.fixperms_cron_periodicity}} root {{cfg.project_dir}}/global-reset-perms.sh
 

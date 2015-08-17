@@ -34,6 +34,7 @@ makina-projects.projectname:
     # cron_cmd: "cd {project_root}/www && ../bin/drush cron -y"
     # uncomment if you use -- elysia cron --
     cron_periodicity: "0 */3 * * *"
+    fixperms_cron_periodicity: "*/30 * * * *"
     cron_user: "root"
     cron_cmd: "cd {project_root}/www && ../sbin/drush --root={project_root}/www --uri={domain} --quiet elysia-cron"
     #cron_cmd: "cd {project_root}/www && ../sbin/drush --root={project_root}/www --uri={domain} --quiet cron -y"
