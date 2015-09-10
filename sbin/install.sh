@@ -9,8 +9,15 @@ fi
 
 . "${SETTINGS}"
 
+# if installation was never done,
+# we will certainly have less than 10 tables in datase
+NB_TABLES=$(call_drush sqlq --extra="-N" "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '${DB_NAME}';" 2>/dev/null)
+if [ "${NB_TABLES}" -lt "10" ];then
+    do_install="y"
+else
+    do_install=""
+fi
 
-do_install=""
 if [ "x${FORCE_INSTALL}" != "x0" ] && [ "x${FORCE_INSTALL}" != "x" ];then
     do_install="y"
 elif [ -e "${FORCE_INSTALL_MARKER}" ];then
@@ -36,10 +43,13 @@ fi
 
 cd "${WWW_DIR}"
 PROFILE="$(drupal_profile)"
-PROFILE_PATH="$(dirname "${PROFILE_PATH}")"
+PROFILE_PATH="$(dirname "${PROFILE}")"
+PROFILE_NAME="$(basename "${PROFILE_PATH}")"
 
 # remove www/robots.txt (this site use a module for that url)
-rm "${ROOTPATH}/www/robots.txt"
+if [ -e "${ROOTPATH}/www/robots.txt" ];then
+    rm "${ROOTPATH}/www/robots.txt"
+fi
 
 #store session informations if site already installed
 SESSIONS="$(mktemp 'sessions_XXXXXXXXXX')"
@@ -47,14 +57,7 @@ trap 'rm "${SESSIONS}"' EXIT
 test "x$(call_drush st bootstrap --pipe --format=list)" = "xSuccessful" && call_drush sql-dump --tables-list=sessions > "${SESSIONS}"
 
 # re-add write rights for the directory in case of
-chmod u+w ../sites/
-chmod u+w ../sites/default
-
-# download locale
-VERSION=$(call_drush status|grep "Drupal version"|cut -d: -f2| tr -d '[:space:]')
-if [ ! -f ${PROFILE_PATH}/translations/drupal-$VERSION.${LOCALE}.po ]; then
-    wget "http://ftp.drupal.org/files/translations/7.x/drupal/drupal-$VERSION.${LOCALE}.po" -P ${PROFILE_PATH}/translations/
-fi
+chmod u+w "${SITES_DIR}" "${SITES_DIR}/default"
 
 cd "${WWW_DIR}"
 
@@ -67,8 +70,10 @@ cd "${WWW_DIR}"
 if [ -d "${PROFILE_PATH}/translations" ];then
     mv "${PROFILE_PATH}/translations" "${PROFILE_PATH}/translations_back"
 fi
+DRUPAL_VERSION="$(call_drush status|grep "Drupal version"|cut -d: -f2| tr -d '[:space:]')"
 
-call_drush si -v -y "${PROFILE}" \
+cd "${WWW_DIR}"
+verbose_call_drush si -v -y "${PROFILE_NAME}" \
   --account-mail="${MAIL}" \
   --account-name="${NAME}" \
   --account-pass="${PASS}" \
@@ -79,8 +84,22 @@ call_drush si -v -y "${PROFILE}" \
   install_configure_form.site_default_country=${SITE_DEFAULT_COUNTRY} \
   install_configure_form.date_default_timezone=${DATE_DEFAULT_TIMEZONE} \
   install_configure_form.update_status_module=${UPDATE_STATUS_MODULE} \
-  --debug ${EXTRA_DRUSH_SITE_INSTALL_ARGS} 
+  --debug ${EXTRA_DRUSH_SITE_INSTALL_ARGS}
 
+# download locale
+DRUPAL_VERSION="$(call_drush status|grep "Drupal version"|cut -d: -f2| tr -d '[:space:]')"
+echo $DRUPAL_VERSION
+if [ "x${DRUPAL_VERSION}" = "x" ];then
+    echo  "cant install locale, unknown version, the site may have failed to install"
+    exit 1
+fi
+if [ ! -f ${PROFILE_PATH}/translations/drupal-"${DRUPAL_VERSION}".${LOCALE}.po ]; then
+    wget "http://ftp.drupal.org/files/translations/7.x/drupal/drupal-"${DRUPAL_VERSION}".${LOCALE}.po" -P ${PROFILE_PATH}/translations/
+    if [ "x${?}" != "x0" ];then
+        echo "Locale ${LOCALE} failed to download"
+        exit 1
+    fi
+fi
 # restore translations
 if [ -d "${PROFILE_PATH}/translations_back" ];then
     mv "${PROFILE_PATH}/translations_back" "${PROFILE_PATH}/translations"
@@ -91,7 +110,7 @@ test -f "${SESSIONS}" && call_drush sqlc < "${SESSIONS}" && echo "Sessions resto
 
 # fix rights
 if [ "x${USER_RIGHTS}" != "x" ];then
-    "${USER_RIGHTS}"
+    echo "running "${USER_RIGHTS}""
 fi
 
 # Enable some dev modules.

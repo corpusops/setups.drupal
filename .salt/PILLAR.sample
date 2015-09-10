@@ -39,7 +39,7 @@ makina-projects.projectname:
     password: "secret"
     # if a special php is needed for drush, set the path here
     modules_dir: "{project_root}/www/sites/all/modules"
-    modules_check: "{modules_dir}/token {modules_dir}/pathauto"
+    modules_check: "ctools webform token pathauto" 
     php: ''
     force:
       # this will force a drush install

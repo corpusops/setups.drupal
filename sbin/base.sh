@@ -56,7 +56,7 @@ FORCE_INSTALL_MARKER="${FORCE_INSTALL_MARKER:-/a/non/existing/file}"
 FORCE_INSTALL="${FORCE_INSTALL:-}"
 
 # check for those module presence to force drush make
-MODULES_CHECK="ctools webform ckeditor_link field_timer me userpoints field_group_table views_secondary_row"
+MODULES_CHECK="ctools webform token pathauto"
 
 # override the drush profile asbsolute path
 DRUPAL_PROFILE=""
