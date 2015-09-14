@@ -34,7 +34,7 @@ makina-projects.projectname:
     # uncomment if you use -- elysia cron --
     cron_periodicity: "* */3 * * *"
     cron_user: "root"
-    cron_cmd: "cd {project_root}/www && ../bin/drush --root={project_root}/www --uri={domain} --quiet elysia-cron"
+    cron_cmd: "cd {project_root}/www && ../sbin/drush --root={project_root}/www --uri={domain} --quiet elysia-cron"
     #cron_cmd: "cd {project_root}/www && ../sbin/drush --root={project_root}/www --uri={domain} --quiet cron -y"
     password: "secret"
     # if a special php is needed for drush, set the path here
