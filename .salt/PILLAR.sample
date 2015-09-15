@@ -110,6 +110,8 @@ makina-projects.projectname:
     country: FR
     update_status_module: 0
     local_settings:
+      # to fix drupal_hash_salt
+      #drupal_hash: "xxxxxxxxxxxxxxxxxxxxxxxxxxx"
       cache: 0
       cache_block: 0
       reverse_proxy_header: 'HTTP_X_FORWARDED_FOR'

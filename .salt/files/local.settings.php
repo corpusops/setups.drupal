@@ -10,7 +10,7 @@ $base_url = 'http://{{ ddata.domain }}';
 // at least you have a copy in variables, if needed
 $conf['base_url'] = $base_url;
 
-$drupal_hash_salt = "{{salt['mc_utils.generate_stored_password']('drupal_salt_'+cfg.name)}}";
+$drupal_hash_salt = "{{ddata.get('drupal_hash', salt['mc_utils.generate_stored_password']('drupal_salt_'+cfg.name))}}";
 
 // default contact mail
 // $conf['site_mail'] = '{{ data.site_email }}';
