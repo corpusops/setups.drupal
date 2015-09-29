@@ -54,6 +54,7 @@ sbin/.upgrades.done
 
 # Ignore conf files
 sbin/profile_conf.sh
+sbin/local_conf.sh
 
 # Uncomment following line if modifying Drupal's .htaccess ?
 # but really, you should not, either work on Nginx config files or real Apache config files
