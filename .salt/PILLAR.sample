@@ -28,6 +28,7 @@ makina-projects.projectname:
     drupal_uri: "http://{domain}"
     drush_make_args: "profiles/{drupal_profile}/{drupal_profile}.make"
     domain: "{fqdn}"
+    server_aliases: []
     # uncomment if you use default -- cron --
     # cron_periodicity: "* */3 * * *"
     # cron_cmd: "cd {project_root}/www && ../bin/drush cron -y"
