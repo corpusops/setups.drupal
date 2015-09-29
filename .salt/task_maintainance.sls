@@ -8,7 +8,7 @@ include:
   cmd.run:
     - name: ../sbin/toggle_maintainance.sh 1
     - cwd: {{cfg.project_root}}/www
-    - user: {{cfg.user}}
+    - user: root
     - use_vt: true
     - require:
       - mc_proxy: {{cfg.name}}-drush-activate-maintenance

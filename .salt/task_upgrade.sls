@@ -7,7 +7,7 @@ include:
   cmd.run:
     - name: ../sbin/upgrade.sh
     - cwd: {{cfg.project_root}}/www
-    - user: {{cfg.user}}
+    - user: root
     - use_vt: true
     - require:
       - mc_proxy: {{cfg.name}}-drush-activated-maintenance

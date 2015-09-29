@@ -35,35 +35,42 @@
               --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
              {{locs.resetperms}} -q --no-recursive\
               -u {{cfg.user}} -g {{cfg.group}}\
-              --fmode 771 --dmode 771 \
+              --fmode 661 --dmode 771 \
               --paths "{{cfg.project_root}}"\
-              --users {{cfg.user}}:rwx \
-              --groups {{cfg.group}}:rwx \
+              --users {{cfg.user}}:r-x \
+              --groups {{cfg.group}}:r-x \
               --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
              find "{{cfg.project_root}}" "{{cfg.data_root}}" -name .git|while read f;do
                {{locs.resetperms}} -q\
-                --fmode 770 --dmode 771 --paths "${f}"\
+                --fmode 771 --dmode 771 --paths "${f}"\
                 -u {{cfg.user}} -g {{cfg.group}}\
                 --users {{cfg.user}}:rwx --groups {{cfg.group}}:rwx;
              done
              chmod o+x "{{cfg.project_root}}/.." "{{cfg.project_root}}/../..";
-             find "{{cfg.project_root}}" -maxdepth 1 -mindepth 1|egrep -v "/(bin|lib|www|\.git)"|while read f;do
-               {{locs.resetperms}} -q\
-                  --fmode 661 --dmode 551 \
+             find "{{cfg.project_root}}" -maxdepth 1 -mindepth 1|egrep -v "/(bin|sbin|lib|www|\.git)"|while read f;do
+               {{locs.resetperms}} -q \
+                  --fmode 441 --dmode 551 \
                   -u {{cfg.user}} -g {{cfg.group}}\
                   --paths "$f"\
-                  --users {{cfg.user}}:rw- \
+                  --users {{cfg.user}}:r-x \
                   --groups {{cfg.group}}:r-x \
                   --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
              done
-             find "{{cfg.data_root}}/var" "{{cfg.project_root}}" -maxdepth 1 -mindepth 1|\
-              egrep "/(bin|lib|www|sites|run|private|tmp|log)"|while read f;do
+             {{locs.resetperms}} -q \
+               --fmode 441 --dmode 551 \
+               -u {{cfg.user}} -g {{cfg.group}}\
+               --paths "{{cfg.project_root}}/www"\
+               --users {{cfg.user}}:r-x \
+               --groups {{cfg.group}}:r-x \
+               --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
+             find "{{cfg.data_root}}/var/sites" -maxdepth 1 -mindepth 1|\
+              egrep "/(sites|run|private|tmp|log)"|while read f;do
                 {{locs.resetperms}} -q\
-                  --fmode 771 --dmode 771 \
+                  --fmode 440 --dmode 551 \
                   -u {{cfg.user}} -g {{cfg.group}}\
                   --paths "$f"\
                   --users {{cfg.user}}:rwx \
-                  --groups {{cfg.group}}:r-x \
+                  --groups {{cfg.group}}:rwx \
                   --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
              done
              find "{{cfg.data_root}}/var/run" -type s|while read f;do
@@ -86,19 +93,12 @@
                --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
              {{locs.resetperms}} -q --no-recursive\
                --fmode 771 --dmode 771 \
-               -u {{cfg.user}} -g {{cfg.group}}\
+               -u root -g root \
                --paths "{{cfg.data_root}}"\
                --paths "{{cfg.data_root}}/var"\
-               --users {{cfg.user}}:rwx \
-               --groups {{cfg.group}}:rwx \
+               --users {{cfg.user}}:r-x \
+               --groups {{cfg.group}}:r-x \
                --groups {{salt['mc_apache.settings']().httpd_user}}:r-x;
-            {{locs.resetperms}} -q --no-recursive\
-               --fmode 444 --dmode 661 \
-               -u {{cfg.user}} -g {{cfg.group}}\
-               --paths "{{cfg.project_root}}"/www/index.php\
-               --users {{cfg.user}}:r-- \
-               --groups {{cfg.group}}:r-- \
-               --groups {{salt['mc_apache.settings']().httpd_user}}:r--;
              {{locs.resetperms}} -q --no-recursive\
                --fmode 664 --dmode 661 \
                -u {{cfg.user}} -g {{cfg.group}}\
@@ -113,15 +113,15 @@
                --users {{cfg.user}}:r-- \
                --groups {{cfg.group}}:r-- \
                --groups {{salt['mc_apache.settings']().httpd_user}}:r--;
-             cd '{{cfg.data_root}}/var/sites'
-             for x in ./*/files;do
+             cd '{{cfg.data_root}}/var'
+             for x in sites/*/files private;do
                {{locs.resetperms}} -q\
-                 --fmode 660 --dmode 771\
+                 --fmode 770 --dmode 771\
                  -u {{cfg.user}} -g {{cfg.group}}\
                  --users {{cfg.user}}:rwx\
                  --groups {{cfg.group}}:rwx\
                  --groups {{salt['mc_apache.settings']().httpd_user}}:r-x\
-                 -u {{cfg.user}} -g {{cfg.group}} --paths "${x}";
+                 --paths "${x}";
              done
             fi
   cmd.run:
