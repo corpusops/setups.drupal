@@ -60,6 +60,9 @@ sbin/local_conf.sh
 # but really, you should not, either work on Nginx config files or real Apache config files
 #!www/.htaccess
 
+# npm modules
+node_modules
+
 # Documentation builds
 doc/_build
 
