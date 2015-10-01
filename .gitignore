@@ -2,15 +2,15 @@
 # Ignore all core Drupal files.
 # On a prodcution steps you may comment theses ignore to push the real code
 # in git.
-www/*.*
-www/includes
-www/misc
-www/modules
-www/scripts
-www/translations
-www/themes
-www/profiles/*
-www/sites
+# www/*.*
+# www/includes
+# www/misc
+# www/modules
+# www/scripts
+# www/translations
+# www/themes
+# www/profiles/*
+# www/sites
 
 # even after activating full project versioning in production you will still need
 # to ignore theses files:
@@ -27,19 +27,19 @@ www/sites/README.txt
 # But do not forget this common.settings.php is not the one used by salt
 # the real one should be in: .salt/files/common.settings.php
 /www/sites/*/files
-/www/sites/*/modules/*
+# /www/sites/*/modules/*
 /www/sites/*/*settings*
-/www/sites/*/libraries/*
-/www/sites/*/modules/*
-/www/sites/*/themes/*
+# /www/sites/*/libraries/*
+# /www/sites/*/modules/*
+# /www/sites/*/themes/*
 !/sites/*/common.settings.php
 !/sites/*/local.settings.*.php
 
 # Exceptions inside Drupal files (custom code).
-!www/sites/*/modules/custom
-!www/sites/*/themes/custom
-!www/sites/*/libraries/custom
-!www/monitor*
+# !www/sites/*/modules/custom
+# !www/sites/*/themes/custom
+# !www/sites/*/libraries/custom
+# !www/monitor*
 
 # WARNING: You will want to use your custom profile's real name below.
 !www/profiles/example
