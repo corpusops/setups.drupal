@@ -48,7 +48,7 @@ MAKE_MODULES_CHECK="{{data.modules_check}}"
 #
 # drush install related
 #
-FORCE_INSTALL_MARKER="{{cfg.data_root}}/force_make"
+FORCE_INSTALL_MARKER="{{cfg.data_root}}/force_install"
 # {% if force.get('install') %}
 FORCE_INSTALL="y"
 # {% else %}
