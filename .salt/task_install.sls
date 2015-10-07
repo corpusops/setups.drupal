@@ -12,7 +12,7 @@ include:
   cmd.run:
     - name: ../sbin/make.sh && rm -f "{{cfg.data_root}}/force_make"
     - cwd: {{cfg.project_root}}/www
-    - user: {{cfg.user}}
+    - user: root
     - use_vt: true
     - require:
       - mc_proxy: {{cfg.name}}-drush-activated-maintenance
@@ -26,7 +26,7 @@ include:
             touch "{{cfg.data_root}}/installed"
             rm -f "{{cfg.data_root}}/force_reinstall"
     - cwd: {{cfg.project_root}}/www
-    - user: {{cfg.user}}
+    - user: root
     - use_vt: true
     - require:
       - cmd: {{cfg.name}}-drush-make
