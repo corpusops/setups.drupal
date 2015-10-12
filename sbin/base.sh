@@ -27,10 +27,7 @@ function abspath() {
 
 # absolute path to "$dir/sbin" where
 # there are our maintainance scripts
-THIS_SCRIPT="${THIS_SCRIPT:-"$(pwd)/$(basename "${0}")"}"
-if echo "${0}" | egrep -q "/?sbin/.*\\.sh";then
-    THIS_SCRIPT="${0}"
-fi
+THIS_SCRIPT="${THIS_SCRIPT:-$(abspath "${0}")}"
 BINPATH="$(echo "$THIS_SCRIPT"|sed -re "s/sbin\/.*/sbin/g")"
 THE_DRUSH_WRAPPER="${BINPATH}/drush"
 ROOTPATH="${ROOTPATH:-"$(cd "${BINPATH}" && cd .. && pwd)"}"
