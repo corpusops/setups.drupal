@@ -3,7 +3,7 @@
 . "$(dirname "${0}")/base.sh"
 SETTINGS="${BINPATH}/profile_conf.sh"
 if [ ! -e "${SETTINGS}" ];then
-    echo "${SETTINGS} does not exists, create it from ${SETTINGS}.sample"
+    echo "${SETTINGS} does not exists, create it from ${SETTINGS}.example or ${SETTINGS}.prod"
     exit 1
 fi
 
@@ -46,10 +46,10 @@ PROFILE="$(drupal_profile)"
 PROFILE_PATH="$(dirname "${PROFILE}")"
 PROFILE_NAME="$(basename "${PROFILE_PATH}")"
 
-# remove www/robots.txt (this site use a module for that url)
-if [ -e "${ROOTPATH}/www/robots.txt" ];then
-    rm "${ROOTPATH}/www/robots.txt"
-fi
+# remove www/robots.txt (IF this site use a module for that url)
+#if [ -e "${ROOTPATH}/www/robots.txt" ];then
+#    rm "${ROOTPATH}/www/robots.txt"
+#fi
 
 #store session informations if site already installed
 SESSIONS="$(mktemp 'sessions_XXXXXXXXXX')"

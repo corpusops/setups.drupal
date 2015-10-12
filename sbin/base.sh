@@ -21,10 +21,18 @@ NONINTERACTIVE="${NONINTERACTIVE:-}"
 # Whether we are in dev mode or not...
 DEV_MODE="${DEV_MODE:-}"
 
+function abspath() {
+    python -c "import sys, os;sys.stdout.write(os.path.abspath(\"$@\"))"
+}
+
 # absolute path to "$dir/sbin" where
 # there are our maintainance scripts
 THIS_SCRIPT="${THIS_SCRIPT:-"$(pwd)/$(basename "${0}")"}"
-BINPATH="${BINPATH:-"$(cd "$(dirname ${0})" && pwd)"}"
+if echo "${0}" | egrep -q "/?sbin/.*\\.sh";then
+    THIS_SCRIPT="${0}"
+fi
+BINPATH="$(echo "$THIS_SCRIPT"|sed -re "s/sbin\/.*/sbin/g")"
+THE_DRUSH_WRAPPER="${BINPATH}/drush"
 ROOTPATH="${ROOTPATH:-"$(cd "${BINPATH}" && cd .. && pwd)"}"
 WWW_DIR="${WWW_DIR:-"${ROOTPATH}/www"}"
 SITES_DIR="${SITES_DIR:-"${WWW_DIR}/sites"}"
@@ -117,8 +125,11 @@ function git_checkout() {
 }
 
 function filter_drush() {
+    # Prevent fork bombs
     if [ "x${1}" != "x${THIS_SCRIPT}" ];then
-        echo "${1}"
+        if [ "x${1}" != "x${THE_DRUSH_WRAPPER}" ];then
+            echo "${1}"
+        fi
     fi
 }
 
@@ -208,6 +219,28 @@ function ask() {
     done
 }
 
+function replace_in_file() {
+  TAG=$1
+  # VALUE variable must contain escaped commas
+  VALUE=${2//,/\\,}
+  FILE=$3
+  # this is a
+  # sed -u 's, __FOO_BAR___, my value,g /in/this/file
+  echo "${YELLOW}   * ${FILE} : __${TAG}__ => ${GREEN}${VALUE}${NORMAL}"
+  sed -i 's,__'"${TAG}"'__,'"${VALUE}"',g' "${FILE}"
+}
+
+function replace_in_salt_file() {
+  TAG=$1
+  # VALUE variable must contain escaped commas
+  VALUE=${2//,/\\,}
+  FILE=$3
+  # this is a
+  # sed -u 's, {{ FOO_BAR }}, my value,g /in/this/file
+  echo "${YELLOW}   * ${FILE} : {{${TAG}}} => ${GREEN}${VALUE}${NORMAL}"
+  sed -i 's,{{'"${TAG}"'}},'"${VALUE}"',g' "${FILE}"
+}
+
 function backup_settings() {
     cd "${ROOTPATH}"
     NOW="$(date +"%Y-%m-%d-%S")"
@@ -287,7 +320,7 @@ function call_drush() {
 function verbose_call_drush() {
     echo "${YELLOW}+ drush ${@}${NORMAL}"
     call_drush "${@}"
-} 
+}
 
 function site_modules_dir() {
     echo "${WWW_DIR}/sites/all/modules"
