@@ -9,7 +9,7 @@
                 #!/usr/bin/env bash
                 LOG="{{cfg.data_root}}/cron.log"
                 lock="${0}.lock"
-                find "${lock}" -type f -mmin +1 -delete
+                find "${lock}" -type f -mmin +1 -delete 1>/dev/null 2>&1
                 if [ -e "${lock}" ];then
                   echo "Locked ${0}";exit 1
                 fi
