@@ -66,10 +66,6 @@ call_drush sql-drop -y
 
 cd "${WWW_DIR}"
 
-# Remove translations while installing... arf, @see https://www.drupal.org/node/1297438
-if [ -d "${PROFILE_PATH}/translations" ];then
-    mv "${PROFILE_PATH}/translations" "${PROFILE_PATH}/translations_back"
-fi
 DRUPAL_VERSION="$(call_drush status|grep "Drupal version"|cut -d: -f2| tr -d '[:space:]')"
 
 cd "${WWW_DIR}"
