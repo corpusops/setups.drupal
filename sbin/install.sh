@@ -100,10 +100,6 @@ if [ ! -f ${PROFILE_PATH}/translations/drupal-"${DRUPAL_VERSION}".${LOCALE}.po ]
         exit 1
     fi
 fi
-# restore translations
-if [ -d "${PROFILE_PATH}/translations_back" ];then
-    mv "${PROFILE_PATH}/translations_back" "${PROFILE_PATH}/translations"
-fi
 
 #restore sessions if they were saved
 test -f "${SESSIONS}" && call_drush sqlc < "${SESSIONS}" && echo "Sessions restored"
