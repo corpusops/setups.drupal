@@ -65,13 +65,6 @@
                chown "{{cfg.user}}:{{cfg.group}}" "${f}"
                chmod g+s,o+x "${f}"
              done
-             find "{{cfg.data_root}}/var/sites" -maxdepth 1 -mindepth 1|\
-              egrep "/(sites|run|private|tmp|log)"|while read f;do
-                {{locs.resetperms}} -q --no-acls\
-                  --fmode 440 --dmode 551 \
-                  -u {{cfg.user}} -g {{cfg.group}}\
-                  --paths "$f";
-             done
              {{locs.resetperms}} -q --no-acls\
                --fmode 770 --dmode 771 \
                -u {{cfg.user}} -g {{cfg.group}}\
