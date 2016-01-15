@@ -72,9 +72,8 @@ makina-projects.projectname:
     db_user: "{name}"
     db_port: "3306"
     db_url: "{db_type}://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
-    # the pipe syntax enforce litteral read (not interpreting \\)
-    db_namespace: |
-                  Drupal\\Core\\Database\\Driver\\mysql
+    # Be careful, use simple quotes for litteral interpretation
+    db_namespace: 'Drupal\\Core\\Database\\Driver\\mysql'
     db_collation: "utf8mb4_general_ci"
     var: "{data_root}/var"
     www_dir: "{project_root}/www"
