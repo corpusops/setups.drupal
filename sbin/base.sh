@@ -52,7 +52,8 @@ LOCALE="fr"
 
 # drush make force markers
 FORCE_MAKE="${FORCE_MAKE:-}"
-MAKE_MODULES_CHECK="ctools webform ckeditor_link field_timer me userpoints field_group_table views_secondary_row"
+# check for those module presence to force drush make
+MODULES_CHECK="ctools webform token pathauto"
 FORCE_MAKE_MARKER="${FORCE_MAKE_MARKER:-/a/non/existing/file}"
 
 # drush install related
@@ -60,8 +61,6 @@ INSTALL_MARKER="${FORCE_INSTALL_MARKER:-/a/non/existing/file}"
 FORCE_INSTALL_MARKER="${FORCE_INSTALL_MARKER:-/a/non/existing/file}"
 FORCE_INSTALL="${FORCE_INSTALL:-}"
 
-# check for those module presence to force drush make
-MODULES_CHECK="ctools webform token pathauto"
 
 # override the drush profile asbsolute path
 DRUPAL_PROFILE=""
@@ -320,7 +319,11 @@ function verbose_call_drush() {
 }
 
 function site_modules_dir() {
-    echo "${WWW_DIR}/sites/all/modules"
+    if [ "x8" = "x${DRUPAL_VERSION}" ]; then
+        echo "${WWW_DIR}/modules"
+    else
+        echo "${WWW_DIR}/sites/all/modules"
+    fi
 }
 
 function drupal_profile() {
