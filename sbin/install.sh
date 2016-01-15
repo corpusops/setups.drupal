@@ -69,18 +69,35 @@ cd "${WWW_DIR}"
 DRUPAL_VERSION="$(call_drush status|grep "Drupal version"|cut -d: -f2| tr -d '[:space:]')"
 
 cd "${WWW_DIR}"
-verbose_call_drush si -v -y "${PROFILE_NAME}" \
-  --account-mail="${MAIL}" \
-  --account-name="${NAME}" \
-  --account-pass="${PASS}" \
-  --db-url="${DB_TYPE}://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}" \
-  --site-mail="${SITE_MAIL}" \
-  --site-name="${SITE_NAME}" \
-  --locale="${LOCALE}" \
-  install_configure_form.site_default_country=${SITE_DEFAULT_COUNTRY} \
-  install_configure_form.date_default_timezone=${DATE_DEFAULT_TIMEZONE} \
-  install_configure_form.update_status_module=${UPDATE_STATUS_MODULE} \
-  --debug ${EXTRA_DRUSH_SITE_INSTALL_ARGS}
+if [ "x${DRUPAL_VERSION}" = "x8" ]; then
+    # Drupal 8 install
+    verbose_call_drush si -v -y "${PROFILE_NAME}" \
+      --account-mail="${MAIL}" \
+      --account-name="${NAME}" \
+      --account-pass="${PASS}" \
+      --db-url="${DB_TYPE}://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}" \
+      --site-mail="${SITE_MAIL}" \
+      --site-name="${SITE_NAME}" \
+      --locale="${LOCALE}" \
+      install_configure_form.site_default_country=${SITE_DEFAULT_COUNTRY} \
+      install_configure_form.date_default_timezone=${DATE_DEFAULT_TIMEZONE} \
+      install_configure_form.update_status_module=${UPDATE_STATUS_MODULE} \
+      --debug ${EXTRA_DRUSH_SITE_INSTALL_ARGS}
+else
+    # D7 or older install mode (default)
+    verbose_call_drush si -v -y "${PROFILE_NAME}" \
+      --account-mail="${MAIL}" \
+      --account-name="${NAME}" \
+      --account-pass="${PASS}" \
+      --db-url="${DB_TYPE}://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}" \
+      --site-mail="${SITE_MAIL}" \
+      --site-name="${SITE_NAME}" \
+      --locale="${LOCALE}" \
+      install_configure_form.site_default_country=${SITE_DEFAULT_COUNTRY} \
+      install_configure_form.date_default_timezone=${DATE_DEFAULT_TIMEZONE} \
+      install_configure_form.update_status_module=${UPDATE_STATUS_MODULE} \
+      --debug ${EXTRA_DRUSH_SITE_INSTALL_ARGS}
+fi
 
 # download locale
 DRUPAL_VERSION="$(call_drush status|grep "Drupal version"|cut -d: -f2| tr -d '[:space:]')"

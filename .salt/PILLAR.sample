@@ -13,6 +13,8 @@
 # with the relevant pillar
 makina-projects.projectname:
   data:
+    # set to 8 for d8, anything else for others
+    drupal_version: 8
     drupal_profile: example
     drush_make_opts: "--no-cache --translations={drupal_locale}"
     drush_make: profiles/{drupal_profile}/{drupal_profile}.make
@@ -24,7 +26,7 @@ makina-projects.projectname:
     drupal_xmlrpc_enabled: false
     drupal_authorize_enabled: false
     drupal_update_enabled: false
-    drush_ver: "6.*"
+    drush_spec: "drush/drush:8.*"
     drupal_uri: "http://{domain}"
     drush_make_args: "profiles/{drupal_profile}/{drupal_profile}.make"
     domain: "{fqdn}"
@@ -70,6 +72,10 @@ makina-projects.projectname:
     db_user: "{name}"
     db_port: "3306"
     db_url: "{db_type}://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+    # the pipe syntax enforce litteral read (not interpreting \\)
+    db_namespace: |
+                  Drupal\\Core\\Database\\Driver\\mysql
+    db_collation: "utf8mb4_general_ci"
     var: "{data_root}/var"
     www_dir: "{project_root}/www"
     fpm_sock: "{project_root}/var/run/fpm.sock"
@@ -141,6 +147,7 @@ makina-projects.projectname:
       preprocess_js: 0
       base_url: 'default'
       omit_vary_cookie: 'FALSE'
+      conf_sync_dir: '{project_root}/lib/config/sync'
       smtp:
         used: True
         host: '127.0.0.1'

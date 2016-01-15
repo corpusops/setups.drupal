@@ -15,6 +15,9 @@ WWW_DIR="{{cfg.project_root}}/www"
 DATA_DIR="{{cfg.data_root}}/var/sites"
 PROJECT_CONFIG_PATH="${ROOTPATH}/sbin/templates"
 
+DRUPAL_VERSION="{{cfg.data.drupal_version}}"
+DRUSH_SPEC="{{cfg.data.drush_spec}}"
+
 # System User
 USER="{{cfg.user}}"
 GROUP="{{cfg.group}}"

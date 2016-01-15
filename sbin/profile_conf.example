@@ -4,6 +4,9 @@ MAIL="sysadmin@localhost"
 NAME="admin"
 PASS="password"
 
+# values are 8 or anything else for previous versions
+DRUPAL_VERSION=8
+
 # Database info
 DB_USER="sampledevu"
 DB_PASS="sampledevp"
