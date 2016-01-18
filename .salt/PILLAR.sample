@@ -15,7 +15,7 @@ makina-projects.projectname:
   data:
     # set to 8 for d8, anything else for others
     drupal_version: 8
-    drupal_profile: example
+    drupal_profile: example_profile
     drush_make_opts: "--no-cache --translations={drupal_locale}"
     drush_make: profiles/{drupal_profile}/{drupal_profile}.make
     nginx_vhost: "salt://makina-projects/{name}/files/nginx.conf"
@@ -42,8 +42,8 @@ makina-projects.projectname:
     #cron_cmd: "cd {project_root}/www && ../sbin/drush --root={project_root}/www --uri={domain} --quiet cron -y"
     password: "secret"
     # if a special php is needed for drush, set the path here
-    modules_dir: "{project_root}/www/sites/all/modules"
-    modules_check: "ctools webform token pathauto" 
+    modules_dir: "{project_root}/www/modules"
+    modules_check: "linkit colorbox"
     php: ''
     force:
       # this will force a drush install
