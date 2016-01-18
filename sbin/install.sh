@@ -96,6 +96,12 @@ else
       --debug ${EXTRA_DRUSH_SITE_INSTALL_ARGS}
 fi
 
+# TODO: need tests
+# Force site uuid?
+# call_drush cset system.site uuid ee71155f-2485-4d21-8604-4b842a37c850
+# sync configuration
+# call_drush -y cim sync
+
 #restore sessions if they were saved
 test -f "${SESSIONS}" && call_drush sqlc < "${SESSIONS}" && echo "Sessions restored"
 
