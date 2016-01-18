@@ -1,0 +1,3 @@
+patterns:
+  node:
+    default: '/[node:content-type:machine-name]/[node:title]'
