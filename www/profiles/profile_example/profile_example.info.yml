@@ -1,0 +1,47 @@
+name: Example profile
+type: profile
+description: Drupal 8 demo
+description: 'Description of your D8 profile.'
+core: 8.x
+exclusive: TRUE
+version: '0.1'
+
+# Optional: Declare your installation profile as a distribution
+# This will make the installer auto-select this installation profile.
+# The distribution_name property is used in the installer and other places as
+# a label for the software being installed.
+distribution:
+  name: Distribution Name
+# Required modules
+dependencies:
+  - node
+  - block
+  - breakpoint
+  - ckeditor
+  - config
+  - contextual
+  - menu_link_content
+  - datetime
+  - block_content
+  - editor
+  - image
+  - menu_ui
+  - options
+  - path
+  - page_cache
+  - dynamic_page_cache
+  - taxonomy
+  - dblog
+  - search
+  - toolbar
+  - field_ui
+  - file
+  - views
+  - views_ui
+# contrib
+  - metatag
+  - pathauto
+  - redirect
+themes:
+  - bartik
+  - seven
