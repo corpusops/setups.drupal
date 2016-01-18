@@ -37,10 +37,14 @@ $conf['allow_authorize_operations'] = FALSE;
 
 // D8 config sync directory, better outside webroot than in a random directory in sites/default/files
 $config_directories = array(
-    CONFIG_SYNC_DIRECTORY => '{{data.conf_sync_dir}}',
+    'staging' => '{{data.conf_staging_dir}}',
+    'sync' => '{{data.conf_sync_dir}}',
 );
 
 $settings['install_profile'] = '{{ddata.drupal_profile}}';
+
+// TODO: manage site uuid (can we?)
+//$config['system.site']['uuid'] ='ee71155f-2485-4d21-8604-4b842a37c850';
 
 $commonsettingsfile = DRUPAL_ROOT . "/sites/default/common.settings.php";
 if (file_exists($commonsettingsfile)) {
