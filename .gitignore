@@ -68,7 +68,9 @@ doc/_build
 
 # ignore runtime files
 /bin/
-/lib/
+./lib
+!/lib/config/staging
+!/lib/config/sync
 /log
 /private
 /tmp
