@@ -148,6 +148,7 @@ makina-projects.projectname:
       omit_vary_cookie: 'FALSE'
       conf_sync_dir: '{project_root}/lib/config/sync'
       conf_staging_dir: '{project_root}/lib/config/staging'
+      conf_todev_dir: '{project_root}/lib/config/to_dev'
       smtp:
         used: True
         host: '127.0.0.1'

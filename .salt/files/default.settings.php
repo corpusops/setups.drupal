@@ -39,6 +39,7 @@ $conf['allow_authorize_operations'] = FALSE;
 $config_directories = array(
     'staging' => '{{data.conf_staging_dir}}',
     'sync' => '{{data.conf_sync_dir}}',
+    'to_dev' => '{{data.conf_todev_dir}}',
 );
 
 $settings['install_profile'] = '{{ddata.drupal_profile}}';
