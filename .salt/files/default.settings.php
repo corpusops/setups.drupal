@@ -20,6 +20,7 @@ $update_free_access = FALSE;
 $drupal_hash_salt = '{{data.get(
     'drupal_hash',
     salt['mc_utils.generate_stored_password']('drupal_salt_'+cfg.name))}}';
+$settings['hash_salt'] = $drupal_hash_salt;
 
 ini_set('session.gc_probability', 1);
 ini_set('session.gc_divisor', 100);
