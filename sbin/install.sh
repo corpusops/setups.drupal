@@ -66,9 +66,6 @@ call_drush sql-drop -y
 
 cd "${WWW_DIR}"
 
-DRUPAL_VERSION="$(call_drush status|grep "Drupal version"|cut -d: -f2| tr -d '[:space:]')"
-
-cd "${WWW_DIR}"
 verbose_call_drush si -v -y "${PROFILE_NAME}" \
   --account-mail="${MAIL}" \
   --account-name="${NAME}" \
@@ -81,21 +78,6 @@ verbose_call_drush si -v -y "${PROFILE_NAME}" \
   install_configure_form.date_default_timezone=${DATE_DEFAULT_TIMEZONE} \
   install_configure_form.update_status_module=${UPDATE_STATUS_MODULE} \
   --debug ${EXTRA_DRUSH_SITE_INSTALL_ARGS}
-
-# download locale
-DRUPAL_VERSION="$(call_drush status|grep "Drupal version"|cut -d: -f2| tr -d '[:space:]')"
-echo $DRUPAL_VERSION
-if [ "x${DRUPAL_VERSION}" = "x" ];then
-    echo  "cant install locale, unknown version, the site may have failed to install"
-    exit 1
-fi
-if [ ! -f ${PROFILE_PATH}/translations/drupal-"${DRUPAL_VERSION}".${LOCALE}.po ]; then
-    wget "http://ftp.drupal.org/files/translations/7.x/drupal/drupal-"${DRUPAL_VERSION}".${LOCALE}.po" -P ${PROFILE_PATH}/translations/
-    if [ "x${?}" != "x0" ];then
-        echo "Locale ${LOCALE} failed to download"
-        exit 1
-    fi
-fi
 
 #restore sessions if they were saved
 test -f "${SESSIONS}" && call_drush sqlc < "${SESSIONS}" && echo "Sessions restored"
