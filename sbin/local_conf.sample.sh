@@ -38,7 +38,7 @@ FORCE_MAKE_MARKER="${DATA_DIR}/force_make"
 # 
 FORCE_MAKE=""
 # 
-MAKE_MODULES_CHECK="ctools webform token pathauto"
+MODULES_CHECK="ctools webform token pathauto"
 
 #
 # drush install related
