@@ -43,7 +43,7 @@ FORCE_MAKE="y"
 # {% else %}
 FORCE_MAKE=""
 # {% endif%}
-MAKE_MODULES_CHECK="{{data.modules_check}}"
+MODULES_CHECK="{{data.modules_check}}"
 
 #
 # drush install related
