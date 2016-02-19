@@ -13,7 +13,9 @@
 # with the relevant pillar
 makina-projects.projectname:
   data:
-    drupal_profile: example
+    # set to 8 for d8, anything else for others
+    drupal_version: 7
+    drupal_profile: example_profile
     drush_make_opts: "--no-cache --translations={drupal_locale}"
     drush_make: profiles/{drupal_profile}/{drupal_profile}.make
     nginx_vhost: "salt://makina-projects/{name}/files/nginx.conf"
@@ -24,7 +26,8 @@ makina-projects.projectname:
     drupal_xmlrpc_enabled: false
     drupal_authorize_enabled: false
     drupal_update_enabled: false
-    drush_ver: "6.*"
+    drush_spec: "drush/drush:7.*"
+    drush_ver: "7.*"
     drupal_uri: "http://{domain}"
     drush_make_args: "profiles/{drupal_profile}/{drupal_profile}.make"
     domain: "{fqdn}"
