@@ -80,7 +80,7 @@ COMPOSER_PRETENDANTS="${COMPOSER_PRETENDANTS} /usr/local/bin/composer"
 COMPOSER_PRETENDANTS="${COMPOSER_PRETENDANTS} /usr/bin/composer"
 COMPOSER_PRETENDANTS="${COMPOSER_PRETENDANTS} $(which composer 2>/dev/null)"
 DRUSH="${BINPATH}/drush"
-DRUSH_SPEC="drush/drush:6.*"
+DRUSH_SPEC="drush/drush:7.*"
 # drush bare script abs path
 DRUSH_CMD="${DRUSH_CMD:-}"
 # drush vare script search path if not found
