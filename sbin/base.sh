@@ -34,6 +34,7 @@ ROOTPATH="${ROOTPATH:-"$(cd "${BINPATH}" && cd .. && pwd)"}"
 WWW_DIR="${WWW_DIR:-"${ROOTPATH}/www"}"
 SITES_DIR="${SITES_DIR:-"${WWW_DIR}/sites"}"
 PROJECT_CONFIG_PATH="${ROOTPATH}/sbin/templates"
+DRUPAL_CONFIG_PATH="${ROOTPATH}/lib/config/sync"
 # data dir (in salt/data_root) or $root/sites on non salt env.
 DATA_DIR="${DATA_DIR:-"${ROOTPATH}/sites"}"
 STOP_CRON_FLAG="${ROOTPATH}/var/tmp/suspend_drupal_cron_flag"

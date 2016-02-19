@@ -17,6 +17,9 @@ PROJECT_CONFIG_PATH="${ROOTPATH}/sbin/templates"
 
 DRUPAL_VERSION="{{cfg.data.drupal_version}}"
 DRUSH_SPEC="{{cfg.data.drush_spec}}"
+# Only for D8: first site or synchronised from an already first installed D8? -- for the UUID problems --
+# values are: "new_website"|"sync"
+D8_INSTALL_MODE="{{cfg.data.d8_install_mode}}"
 
 # System User
 USER="{{cfg.user}}"
