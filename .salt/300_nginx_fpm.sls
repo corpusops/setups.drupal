@@ -15,6 +15,21 @@ echo reboot:
       - mc_proxy: nginx-pre-hardrestart-hook
       - mc_proxy: makina-php-pre-restart
 
+# php-user, which is not the project user
+{{cfg.name}}-php-user:
+  user:
+    - present
+    - fullname: {{cfg.name}} php user
+    - name: {{cfg.name}}-php
+    - shell: /bin/bash
+    - gid: www-data
+    - remove_groups: True
+    - createhome: False
+    - empty_password: True
+    - watch_in:
+      - mc_proxy: makina-php-pre-restart
+
+
 {{nginx.virtualhost(data.domain,
                     data.www_dir,
                     vhost_basename="corpus"+cfg.name,
