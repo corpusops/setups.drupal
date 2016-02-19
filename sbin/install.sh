@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
-# install script for people not using saltstack to deploy
+# main install script
+# Note that you may need to populate local_conf.sh via
+# the 100_app.sls salt treatment to feed the real values
+# of variables (and not the ones from basE.sh)
 . "$(dirname "${0}")/base.sh"
-SETTINGS="${BINPATH}/profile_conf.sh"
-if [ ! -e "${SETTINGS}" ];then
-    echo "${SETTINGS} does not exists, create it from ${SETTINGS}.example or ${SETTINGS}.prod"
-    exit 1
-fi
-
-. "${SETTINGS}"
 
 # if installation was never done,
 # we will certainly have less than 10 tables in datase
