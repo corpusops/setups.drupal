@@ -7,14 +7,14 @@
     - makedirs: true
     - contents: |
                 #!/usr/bin/env bash
-                LOG="{{cfg.data_root}}/cron.log"
+                LOG="{{cfg.data_root}}/var/log/cron.log"
                 lock="${0}.lock"
-                find "${lock}" -type f -mmin +1 -delete 1>/dev/null 2>&1
+                find "${lock}" -type f -mmin +{{data.cron_lock_minutes}} -delete 1>/dev/null 2>&1
                 if [ -e "${lock}" ];then
                   echo "Locked ${0}";exit 1
                 fi
                 touch "${lock}"
-                {{data.cron_cmd}}
+                {{data.cron_cmd}} 2>&1 > ${LOG}
                 ret="${?}"
                 rm -f "${lock}"
                 if [ "x${ret}" != "x0" ];then
@@ -31,7 +31,7 @@
     - contents: |
                 #!/usr/bin/env bash
                 MAILTO="{{data.admins}}"
-                {{data.cron_periodicity}} root "{{cfg.data_root}}/bin/drupal_cron.sh"
+                {{data.cron_periodicity}} {{cfg.user}} "{{cfg.data_root}}/bin/drupal_cron.sh"
     - user: root
     - group: root
     - makedirs: true
