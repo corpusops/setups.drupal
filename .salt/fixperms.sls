@@ -14,6 +14,7 @@
             # in most cases
             datagroup="{{cfg.group}}"
             groupadd -r $datagroup || /bin/true
+            gpasswd -a {{cfg.user}} $datagroup || /bin/true
             gpasswd -a nginx $datagroup || /bin/true
             gpasswd -a www-data $datagroup || /bin/true
             # be sure to remove POSIX acls support
