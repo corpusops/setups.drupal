@@ -96,7 +96,7 @@ makina-projects.projectname:
       allow_url_fopen: 1
       upload_max_filesize: "500M"
       max_input_vars: 3000
-      fpm_user: "{user}-php"
+      fpm_user: "{name}-php"
       fpm_group: "{name}-grp"
       memory_limit: "256M"
       modules:
