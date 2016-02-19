@@ -8,6 +8,11 @@ $conf['reverse_proxy'] = {{data.reverse_proxy}};
 $conf['reverse_proxy_header'] = '{{data.reverse_proxy_header}}';
 $conf['reverse_proxy_addresses'] = {{data.reverse_proxy_addresses}};
 
+// Avoid testing loopback http request, we do not have the site name in /etc/hosts
+// enforcing False value will avoid loosing time on building report and showing false
+// failure in the admin config report
+$conf['drupal_http_request_fails'] = FALSE;
+
 /**
  * Vary Cookie: please Read
  *
