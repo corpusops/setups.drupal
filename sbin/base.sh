@@ -37,6 +37,7 @@ ROOTPATH="${ROOTPATH:-"$(cd "${BINPATH}" && cd .. && pwd)"}"
 WWW_DIR="${WWW_DIR:-"${ROOTPATH}/www"}"
 SITES_DIR="${SITES_DIR:-"${WWW_DIR}/sites"}"
 PROJECT_CONFIG_PATH="${ROOTPATH}/sbin/templates"
+DRUPAL_CONFIG_PATH="${ROOTPATH}/lib/config/sync"
 # data dir (in salt/data_root) or $root/sites on non salt env.
 DATA_DIR="${DATA_DIR:-"${ROOTPATH}/sites"}"
 STOP_CRON_FLAG="${ROOTPATH}/var/tmp/suspend_drupal_cron_flag"
@@ -63,6 +64,7 @@ FORCE_MAKE_MARKER="${FORCE_MAKE_MARKER:-/a/non/existing/file}"
 INSTALL_MARKER="${FORCE_INSTALL_MARKER:-/a/non/existing/file}"
 FORCE_INSTALL_MARKER="${FORCE_INSTALL_MARKER:-/a/non/existing/file}"
 FORCE_INSTALL="${FORCE_INSTALL:-}"
+
 
 # override the drush profile asbsolute path
 DRUPAL_PROFILE=""
@@ -321,7 +323,11 @@ function verbose_call_drush() {
 }
 
 function site_modules_dir() {
-    echo "${WWW_DIR}/sites/all/modules"
+    if [ "x8" = "x${DRUPAL_VERSION}" ]; then
+        echo "${WWW_DIR}/modules"
+    else
+        echo "${WWW_DIR}/sites/all/modules"
+    fi
 }
 
 function drupal_profile() {
