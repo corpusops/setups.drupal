@@ -14,6 +14,7 @@
             # in most cases
             datagroup="{{cfg.group}}"
             groupadd -r $datagroup || /bin/true
+            gpasswd -a {{cfg.user}} $datagroup || /bin/true
             gpasswd -a nginx $datagroup || /bin/true
             gpasswd -a www-data $datagroup || /bin/true
             # be sure to remove POSIX acls support
@@ -71,7 +72,7 @@
              cd '{{cfg.data_root}}/var'
              for x in sites/*/files private;do
                {{locs.resetperms}} -q --no-acls\
-                 --fmode 770 --dmode 2771\
+                 --fmode 660 --dmode 2771\
                  -u {{cfg.user}} -g {{cfg.group}}\
                  --paths "${x}";
              done
