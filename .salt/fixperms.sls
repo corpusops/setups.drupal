@@ -71,7 +71,7 @@
              cd '{{cfg.data_root}}/var'
              for x in sites/*/files private;do
                {{locs.resetperms}} -q --no-acls\
-                 --fmode 770 --dmode 2771\
+                 --fmode 660 --dmode 2771\
                  -u {{cfg.user}} -g {{cfg.group}}\
                  --paths "${x}";
              done
