@@ -49,13 +49,11 @@
     - defaults:
         cfg: "{{cfg.name}}"
 
-{% for i in ['local_conf.sh', 'profile_conf.sh'] %}
-
-{{cfg.name}}-sbin-{{i}}:
+{{cfg.name}}-sbin-local_conf.sh:
   file.managed:
     - makedirs: true
-    - source: salt://makina-projects/{{cfg.name}}/files/{{i}}
-    - name: {{cfg.project_root}}/sbin/{{i}}
+    - source: salt://makina-projects/{{cfg.name}}/files/local_conf.sh
+    - name: {{cfg.project_root}}/sbin/local_conf.sh
     - template: jinja
     - mode: 750
     - user: "{{cfg.user}}"
@@ -64,4 +62,3 @@
         cfg: "{{cfg.name}}"
     - require:
       - file: {{cfg.name}}-drupal-local-settings
-{% endfor %}

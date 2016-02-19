@@ -15,6 +15,13 @@ WWW_DIR="{{cfg.project_root}}/www"
 DATA_DIR="{{cfg.data_root}}/var/sites"
 PROJECT_CONFIG_PATH="${ROOTPATH}/sbin/templates"
 
+# values are 8 or anything else for previous versions
+DRUPAL_VERSION="{{cfg.data.drupal_version}}"
+DRUSH_SPEC="{{cfg.data.drush_spec}}"
+# Only for D8: first site or synchronised from an already first installed D8? -- for the UUID problems --
+# values are: "new_website"|"sync"
+D8_INSTALL_MODE="{{cfg.data.d8_install_mode}}"
+
 # System User
 USER="{{cfg.user}}"
 GROUP="{{cfg.group}}"
@@ -29,6 +36,27 @@ USER_RIGHTS="{{cfg.project_dir}}/global-reset-perms.sh"
 # Whether we are in dev mode or not...
 # {% set devmode = cfg.default_env in ['dev'] and '1' or '' %}
 DEV_MODE="${DEV_MODE:-{{devmode}}}"
+
+# profile and INSTALL related ----------------
+# Locale to set
+LOCALE="{{data.drupal_locale}}"
+# Used for admin account mail and site mail
+MAIL="{{data.local_settings.account_email}}"
+NAME="{{data.local_settings.account_name}}"
+PASS="{{data.local_settings.site_password}}"
+# Database info
+# warning 'localhost' means socket, unavailable in chroot
+DB_HOST="{{data.db_host}}"
+DB_NAME="{{data.db_name}}"
+DB_PORT="{{data.db_port}}"
+DB_USER="{{data.db_user}}"
+DB_PASS="{{data.db_password}}"
+DB_TYPE="mysql"
+SITE_DEFAULT_COUNTRY="{{data.country}}"
+DATE_DEFAULT_TIMEZONE="{{data.tz}}"
+UPDATE_STATUS_MODULE="{{data.update_status_module}}"
+SITE_NAME="{{data.local_settings.site_name}}"
+SITE_MAIL="{{data.local_settings.site_email}}"
 
 #
 # drush make related

@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
-
-# on first install you ll also have to have a look to override
-# things on profile_conf.sh.example -> profile_conf.sh
-# you can override any of those settings
-# by creating and editing a file named
-# local_conf.sh in this directory
+#
+# This is the main bash ressource file.
+#  - defautl variables values
+#  - fonctions used by others
+# Do NOT ALTER this file.
+# INSTEAD check local_conf.sh in same directory
+# Note that local_conf.sh is populated by the
+# .salt/100_app.sls salt function, using .salt/PILLAR.sample
+# and the local pillar.
 RED=$'\e[31;01m'
 BLUE=$'\e[36;01m'
 YELLOW=$'\e[33;01m'
@@ -457,6 +460,13 @@ function default_user_rights() {
 
 # LOAD USER DEFINED VARS and OVERRIDEN FUNCTIONS !!!
 ENV_SET=""
+
+SETTINGS="${BINPATH}/local_conf.sh"
+if [ ! -e "${SETTINGS}" ];then
+    echo "${SETTINGS} does not exists, create it from ${SETTINGS}.example or the salt 100_app.sls step!"
+    exit 1
+fi
+
 #  override any environment settings via local shell files
 for i in "${BINPATH}/local_conf.sh";do
     if [ -e "${i}" ];then
@@ -464,6 +474,7 @@ for i in "${BINPATH}/local_conf.sh";do
         ENV_SET="1"
     fi
 done
+
 # overriding (even just touching a settings file) is mandatory
 # to ensure that user has configured his environment
 if [ "x${ENV_SET}" = "x" ];then
