@@ -17,8 +17,7 @@ echo reboot:
 
 # php-user, which is not the project user
 {{cfg.name}}-php-user:
-  user:
-    - present
+  user.present:
     - fullname: {{cfg.name}} php user
     - name: {{cfg.name}}-php
     - shell: /bin/bash
