@@ -14,7 +14,7 @@
                   echo "Locked ${0}";exit 1
                 fi
                 touch "${lock}"
-                {{data.cron_cmd}} 2>&1 > ${LOG}
+                {{data.cron_cmd}} >${LOG} 2>&1
                 ret="${?}"
                 rm -f "${lock}"
                 if [ "x${ret}" != "x0" ];then
