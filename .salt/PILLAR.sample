@@ -33,8 +33,12 @@ makina-projects.projectname:
     # cron_periodicity: "* */3 * * *"
     # cron_cmd: "cd {project_root}/www && ../bin/drush cron -y"
     # uncomment if you use -- elysia cron --
-    cron_periodicity: "0 */3 * * *"
+    cron_periodicity: "0/5 * * * *"
     fixperms_cron_periodicity: "*/30 * * * *"
+    # how many minutes before rmoving lock file of a currently running cro
+    # this can be used outside of drupal, to avoid internal locks and messages
+    # about cron already running
+    cron_lock_minutes: 60
     cron_user: "root"
     cron_cmd: "cd {project_root}/www && ../sbin/drush --root={project_root}/www --uri={domain} --quiet elysia-cron"
     #cron_cmd: "cd {project_root}/www && ../sbin/drush --root={project_root}/www --uri={domain} --quiet cron -y"
@@ -92,7 +96,7 @@ makina-projects.projectname:
       allow_url_fopen: 1
       upload_max_filesize: "500M"
       max_input_vars: 3000
-      fpm_user: "{user}-php"
+      fpm_user: "{name}-php"
       fpm_group: "{name}-grp"
       memory_limit: "256M"
       modules:
