@@ -34,6 +34,7 @@ makina-projects.projectname:
     drush_make_args: "profiles/{drupal_profile}/{drupal_profile}.make"
     domain: "{fqdn}"
     server_aliases: []
+    redirect_aliases: true
     # uncomment if you use default -- cron --
     # cron_periodicity: "* */3 * * *"
     # cron_cmd: "cd {project_root}/www && ../bin/drush cron -y"
@@ -83,6 +84,8 @@ makina-projects.projectname:
     www_dir: "{project_root}/www"
     fpm_sock: "{project_root}/var/run/fpm.sock"
     fpm_pool:
+      display_errors: 0
+      xdebug_profiler_enable_trigger: 0
       open_basedir:
         - "{data_root}/sites"
         - "{data_root}/var/sites"
