@@ -45,7 +45,7 @@ makina-projects.projectname:
     # this can be used outside of drupal, to avoid internal locks and messages
     # about cron already running
     cron_lock_minutes: 60
-    cron_user: "root"
+    cron_user: "{name}-php"
     cron_cmd: "cd {project_root}/www && ../sbin/drush --root={project_root}/www --uri={domain} --quiet elysia-cron"
     #cron_cmd: "cd {project_root}/www && ../sbin/drush --root={project_root}/www --uri={domain} --quiet cron -y"
     password: "secret"
