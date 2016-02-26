@@ -35,6 +35,7 @@ echo reboot:
                     server_aliases=data.server_aliases,
                     vh_top_source=data.nginx_top,
                     vh_content_source=data.nginx_vhost,
+                    redirect_aliases=data.redirect_aliases,
                     cfg=cfg) }}
 
 {{php.fpm_pool(cfg.data.domain,
