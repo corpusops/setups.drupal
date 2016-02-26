@@ -35,6 +35,7 @@ makina-projects.projectname:
     domain: "{fqdn}"
     server_aliases: []
     redirect_aliases: true
+    use_etc_hosts: true
     # uncomment if you use default -- cron --
     # cron_periodicity: "* */3 * * *"
     # cron_cmd: "cd {project_root}/www && ../bin/drush cron -y"

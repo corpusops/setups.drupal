@@ -1,5 +1,33 @@
 {% set cfg = opts.ms_project %}
 {% set data = cfg.data %}
+{% set hostsentries = [] %}
+{% for alias in data.server_aliases -%}
+{%    do hostsentries.append(('127.0.0.1', alias))%}
+{% endfor %}
+{% do hostsentries.append(('127.0.0.1', data.domain )) %}
+{% do hostsentries.append(('127.0.0.1', data.drupal_uri )) %}
+{% if data.use_etc_hosts %}
+{{cfg.name}}-etc-hosts-main-names:
+  file.blockreplace:
+    - name: /etc/hosts
+    - marker_start: '#-- start local main name resolution :: DO NOT EDIT --'
+    - marker_end: '#-- end local main name resolution :: DO NOT EDIT --'
+    - append_if_not_found: True
+    - backup: '.bak'
+    - show_changes: True
+{{cfg.name}}-etc-hosts-main-names-accumulation:
+  file.accumulated:
+    - watch_in:
+      - file: {{cfg.name}}-etc-hosts-main-names
+    - filename: /etc/hosts
+    - name: {{cfg.name}}-etc-hosts-main-names-entires
+    - text: |
+            {% for ip, text in hostsentries %}{{-ip}} {{text}}
+            {% endfor %}
+    - ip: 127.0.0.1
+    - names:
+      - "{{cfg.data.drupal_uri}}"
+{% endif %}
 
 {{cfg.name}}-drupal-settings:
   file.managed:
