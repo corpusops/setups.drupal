@@ -49,6 +49,11 @@
     - defaults:
         cfg: "{{cfg.name}}"
 
+{# This file should not be used anymore, all content is merged in local_conf.sh #}
+{{cfg.name}}-remove-sbin-profile_conf.sh:
+  file.absent:
+    - name: {{cfg.project_root}}/sbin/profile_conf.sh
+
 {{cfg.name}}-sbin-local_conf.sh:
   file.managed:
     - makedirs: true
@@ -62,3 +67,4 @@
         cfg: "{{cfg.name}}"
     - require:
       - file: {{cfg.name}}-drupal-local-settings
+      - file: {{cfg.name}}-remove-sbin-profile_conf.sh
