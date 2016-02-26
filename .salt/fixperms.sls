@@ -59,8 +59,13 @@
              #  --dmode 2771 -u root -g root \
              #  --paths "{{cfg.data_root}}"\
              #  --paths "{{cfg.data_root}}/var";
+             {{locs.resetperms}} -q --no-acls\
+                --fmode 640 --dmode 2751\
+                -u {{cfg.user}} -g {{cfg.group}}\
+                --paths "{{cfg.project_root}}/www"\
+                --excludes=".*files.+";
              {{locs.resetperms}} -q --no-recursive --no-acls\
-               --fmode  664 -u {{cfg.user}} -g {{cfg.group}}\
+               --fmode  644 -u {{cfg.user}} -g {{cfg.group}}\
                --paths "{{cfg.project_root}}"/www/sites/default/settings.php\
                --paths "{{cfg.project_root}}"/www/sites/default/common.settings.php\
                --paths "{{cfg.project_root}}"/www/sites/default/local.settings.php\
