@@ -199,6 +199,11 @@ function ask() {
     echo "${NORMAL}"
     while :
     do
+        if [ "x${ASK}" = "xyauto" ]; then
+          echo " * ${1} [o/n]: ${GREEN}y (auto)${NORMAL}"
+          USER_CHOICE=ok
+          break
+        fi
         read -r -p " * ${1} [o/n]: " USER_CHOICE
         if [ "x${USER_CHOICE}" == "xn" ]; then
             echo "${BLUE}  --> ok, step avoided.${NORMAL}"
