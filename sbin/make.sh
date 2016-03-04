@@ -11,7 +11,7 @@ if [ "x${FORCE_MAKE}" != "x0" ] && [ "x${FORCE_MAKE}" != "x" ];then
     do_make="y"
 elif test -e "${FORCE_MAKE_MARKER}";then
     do_make="y"
-elif [ ! -e "${WWW_DIR}/sites/all/modules" ];then
+elif [ "x8" != "x${DRUPAL_VERSION}" ] && [ ! -e "${WWW_DIR}/sites/all/modules" ];then
     do_make="y"
 else
     mdir="$(site_modules_dir)"

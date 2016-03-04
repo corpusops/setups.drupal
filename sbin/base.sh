@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
-
-# on first install you ll also have to have a look to override
-# things on profile_conf.sh.example -> profile_conf.sh
-# you can override any of those settings
-# by creating and editing a file named
-# local_conf.sh in this directory
+#
+# This is the main bash ressource file.
+#  - defautl variables values
+#  - fonctions used by others
+# Do NOT ALTER this file.
+# INSTEAD check local_conf.sh in same directory
+# Note that local_conf.sh is populated by the
+# .salt/100_app.sls salt function, using .salt/PILLAR.sample
+# and the local pillar.
 RED=$'\e[31;01m'
 BLUE=$'\e[36;01m'
 YELLOW=$'\e[33;01m'
@@ -34,6 +37,7 @@ ROOTPATH="${ROOTPATH:-"$(cd "${BINPATH}" && cd .. && pwd)"}"
 WWW_DIR="${WWW_DIR:-"${ROOTPATH}/www"}"
 SITES_DIR="${SITES_DIR:-"${WWW_DIR}/sites"}"
 PROJECT_CONFIG_PATH="${ROOTPATH}/sbin/templates"
+DRUPAL_CONFIG_PATH="${ROOTPATH}/lib/config/sync"
 # data dir (in salt/data_root) or $root/sites on non salt env.
 DATA_DIR="${DATA_DIR:-"${ROOTPATH}/sites"}"
 STOP_CRON_FLAG="${ROOTPATH}/var/tmp/suspend_drupal_cron_flag"
@@ -60,6 +64,7 @@ FORCE_MAKE_MARKER="${FORCE_MAKE_MARKER:-/a/non/existing/file}"
 INSTALL_MARKER="${FORCE_INSTALL_MARKER:-/a/non/existing/file}"
 FORCE_INSTALL_MARKER="${FORCE_INSTALL_MARKER:-/a/non/existing/file}"
 FORCE_INSTALL="${FORCE_INSTALL:-}"
+
 
 # override the drush profile asbsolute path
 DRUPAL_PROFILE=""
@@ -194,6 +199,11 @@ function ask() {
     echo "${NORMAL}"
     while :
     do
+        if [ "x${ASK}" = "xyauto" ]; then
+          echo " * ${1} [o/n]: ${GREEN}y (auto)${NORMAL}"
+          USER_CHOICE=ok
+          break
+        fi
         read -r -p " * ${1} [o/n]: " USER_CHOICE
         if [ "x${USER_CHOICE}" == "xn" ]; then
             echo "${BLUE}  --> ok, step avoided.${NORMAL}"
@@ -318,7 +328,11 @@ function verbose_call_drush() {
 }
 
 function site_modules_dir() {
-    echo "${WWW_DIR}/sites/all/modules"
+    if [ "x8" = "x${DRUPAL_VERSION}" ]; then
+        echo "${WWW_DIR}/modules"
+    else
+        echo "${WWW_DIR}/sites/all/modules"
+    fi
 }
 
 function drupal_profile() {
@@ -457,6 +471,13 @@ function default_user_rights() {
 
 # LOAD USER DEFINED VARS and OVERRIDEN FUNCTIONS !!!
 ENV_SET=""
+
+SETTINGS="${BINPATH}/local_conf.sh"
+if [ ! -e "${SETTINGS}" ];then
+    echo "${SETTINGS} does not exists, create it from ${SETTINGS}.example or the salt 100_app.sls step!"
+    exit 1
+fi
+
 #  override any environment settings via local shell files
 for i in "${BINPATH}/local_conf.sh";do
     if [ -e "${i}" ];then
@@ -464,6 +485,7 @@ for i in "${BINPATH}/local_conf.sh";do
         ENV_SET="1"
     fi
 done
+
 # overriding (even just touching a settings file) is mandatory
 # to ensure that user has configured his environment
 if [ "x${ENV_SET}" = "x" ];then

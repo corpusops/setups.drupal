@@ -1,0 +1,6 @@
+{% set cfg = salt['mc_project.get_configuration'](cfg) %}
+{
+    "require": {
+            "{{cfg.data.drush_spec | replace(':','": "') }}"
+     }
+}

@@ -13,7 +13,11 @@
 # with the relevant pillar
 makina-projects.projectname:
   data:
-    drupal_profile: example
+    # set to 8 for d8, anything else for others
+    drupal_version: 7
+    # This is "new_site" for the 1st player, and "sync" after that (to get the same UUIDs)
+    d8_install_mode: "sync"
+    drupal_profile: example_profile
     drush_make_opts: "--no-cache --translations={drupal_locale}"
     drush_make: profiles/{drupal_profile}/{drupal_profile}.make
     nginx_vhost: "salt://makina-projects/{name}/files/nginx.conf"
@@ -24,11 +28,14 @@ makina-projects.projectname:
     drupal_xmlrpc_enabled: false
     drupal_authorize_enabled: false
     drupal_update_enabled: false
-    drush_ver: "6.*"
+    drush_spec: "drush/drush:7.*"
+    drush_ver: "7.*"
     drupal_uri: "http://{domain}"
     drush_make_args: "profiles/{drupal_profile}/{drupal_profile}.make"
     domain: "{fqdn}"
     server_aliases: []
+    redirect_aliases: true
+    use_etc_hosts: true
     # uncomment if you use default -- cron --
     # cron_periodicity: "* */3 * * *"
     # cron_cmd: "cd {project_root}/www && ../bin/drush cron -y"
@@ -39,7 +46,7 @@ makina-projects.projectname:
     # this can be used outside of drupal, to avoid internal locks and messages
     # about cron already running
     cron_lock_minutes: 60
-    cron_user: "root"
+    cron_user: "{name}-php"
     cron_cmd: "cd {project_root}/www && ../sbin/drush --root={project_root}/www --uri={domain} --quiet elysia-cron"
     #cron_cmd: "cd {project_root}/www && ../sbin/drush --root={project_root}/www --uri={domain} --quiet cron -y"
     password: "secret"
@@ -78,6 +85,8 @@ makina-projects.projectname:
     www_dir: "{project_root}/www"
     fpm_sock: "{project_root}/var/run/fpm.sock"
     fpm_pool:
+      display_errors: 0
+      xdebug_profiler_enable_trigger: 0
       open_basedir:
         - "{data_root}/sites"
         - "{data_root}/var/sites"
@@ -145,6 +154,9 @@ makina-projects.projectname:
       preprocess_js: 0
       base_url: 'default'
       omit_vary_cookie: 'FALSE'
+      conf_sync_dir: '{project_root}/lib/config/sync'
+      conf_staging_dir: '{project_root}/lib/config/staging'
+      conf_todev_dir: '{project_root}/lib/config/to_dev'
       smtp:
         used: True
         host: '127.0.0.1'
