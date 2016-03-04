@@ -39,9 +39,9 @@
       - {{cfg.project_root}}/www/sites/{{data.local_settings.base_url}}/settings.php
       {% endif %}
     - template: jinja
-    - mode: 660
+    - mode: 640
     - user: "{{cfg.user}}"
-    - group: "root"
+    - group: "{{cfg.group}}"
     - defaults:
         cfg: "{{cfg.name}}"
 
@@ -55,9 +55,9 @@
       - {{cfg.project_root}}/www/sites/{{data.local_settings.base_url}}/common.settings.php
       {% endif %}
     - template: jinja
-    - mode: 660
+    - mode: 640
     - user: "{{cfg.user}}"
-    - group: "root"
+    - group: "{{cfg.group}}"
     - defaults:
         cfg: "{{cfg.name}}"
 
@@ -71,9 +71,9 @@
       - {{cfg.project_root}}/www/sites/{{data.local_settings.base_url}}/local.settings.php
       {% endif %}
     - template: jinja
-    - mode: 660
+    - mode: 640
     - user: "{{cfg.user}}"
-    - group: "root"
+    - group: "{{cfg.group}}"
     - defaults:
         cfg: "{{cfg.name}}"
 
