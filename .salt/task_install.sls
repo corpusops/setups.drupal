@@ -24,7 +24,7 @@ include:
             set -e
             ../sbin/install.sh
             touch "{{cfg.data_root}}/installed"
-            rm -f "{{cfg.data_root}}/force_reinstall"
+            rm -f "{{cfg.data_root}}/force_install"
     - cwd: {{cfg.project_root}}/www
     - user: root
     - use_vt: true
