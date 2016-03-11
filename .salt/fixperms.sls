@@ -69,10 +69,14 @@
                while read i; do
                    if [ ! -h "${i}" ]; then
                        if [ -d "${i}" ]; then
-                           chmod 2751 "${i}"
+                           chmod g-s "${i}"
+                           chmod 751 "${i}"
+                           chmod g+s "${i}"
                        fi
                        if [ -f "${i}" ]; then
+                           chmod g-s "$(dirname "${i}")"
                            chmod 0640 "${i}"
+                           chmod g+s "$(dirname "${i}")"
                        fi
                    fi
                done
