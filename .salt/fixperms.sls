@@ -59,11 +59,10 @@
              #  --dmode 2771 -u root -g root \
              #  --paths "{{cfg.data_root}}"\
              #  --paths "{{cfg.data_root}}/var";
-             {{locs.resetperms}} -q --no-acls\
-                --fmode 640 --dmode 2751\
-                -u {{cfg.user}} -g {{cfg.group}}\
-                --paths "{{cfg.project_root}}/www"\
-                --excludes=".*files.+";
+             find "{{cfg.project_root}}/www" -type d -path "{{cfg.project_root}}/www/*/files" -prune -o -type d -exec chmod 2751 "{}" \;
+             find "{{cfg.project_root}}/www" -path "{{cfg.project_root}}/www/*/files" -prune -o -type f -exec chmod 0640 "{}" \;
+             chown {{cfg.user}}:{{cfg.group}} "{{cfg.project_root}}/www"
+             chown -R {{cfg.user}}:{{cfg.group}} "{{cfg.project_root}}/www/*"
              {{locs.resetperms}} -q --no-recursive --no-acls\
                --fmode  644 -u {{cfg.user}} -g {{cfg.group}}\
                --paths "{{cfg.project_root}}"/www/sites/default/settings.php\
