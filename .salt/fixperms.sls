@@ -23,6 +23,29 @@
               --user root --group "{{cfg.group}}" \
               --dmode '0770' --fmode '0770' \
               --paths "{{cfg.pillar_root}}";
+             # web directory loop (user and groups rights)
+             find -H \
+               "{{cfg.project_root}}/www" \
+               \(\
+                    \( -type f -and \( -not -perm 0640 \) -and \( -not -path "{{cfg.project_root}}/www/sites/*/files*" \) \)\
+                -or \( -type d -and \( -not -perm 2751 \) -and \( -not -path "{{cfg.project_root}}/www/sites/*/files*" \) \)\
+               \)\
+               |\
+               while read i; do
+                   if [ ! -h "${i}" ]; then
+                       if [ -d "${i}" ]; then
+                           chmod g-s "${i}"
+                           chmod 751 "${i}"
+                           chmod g+s "${i}"
+                       fi
+                       if [ -f "${i}" ]; then
+                           chmod g-s "$(dirname "${i}")"
+                           chmod 0640 "${i}"
+                           chmod g+s "$(dirname "${i}")"
+                       fi
+                   fi
+               done
+            # general loop (ownership and setgid for directories)
             find -H \
               "{{cfg.project_root}}" \
               "{{cfg.data_root}}" {%if not cfg.remote_less %}"{{cfg.git_root}}"{% endif %} \
@@ -60,7 +83,7 @@
              #  --paths "{{cfg.data_root}}"\
              #  --paths "{{cfg.data_root}}/var";
              {{locs.resetperms}} -q --no-recursive --no-acls\
-               --fmode  664 -u {{cfg.user}} -g {{cfg.group}}\
+               --fmode  644 -u {{cfg.user}} -g {{cfg.group}}\
                --paths "{{cfg.project_root}}"/www/sites/default/settings.php\
                --paths "{{cfg.project_root}}"/www/sites/default/common.settings.php\
                --paths "{{cfg.project_root}}"/www/sites/default/local.settings.php\
