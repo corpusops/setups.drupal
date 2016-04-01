@@ -28,21 +28,12 @@ echo reboot:
     - watch_in:
       - mc_proxy: makina-php-pre-restart
 
+{% set nginx_params = data.get('nginx', {}) %}
+{{nginx.virtualhost(cfg=cfg, **nginx_params) }}
 
-{{nginx.virtualhost(data.domain,
-                    data.www_dir,
-                    vhost_basename="corpus"+cfg.name,
-                    server_aliases=data.server_aliases,
-                    vh_top_source=data.nginx_top,
-                    vh_content_source=data.nginx_vhost,
-                    redirect_aliases=data.redirect_aliases,
-                    cfg=cfg) }}
-
-{{php.fpm_pool(cfg.data.domain,
-               cfg.data.www_dir,
-               pool_name=cfg.name,
-               cfg=cfg,
-               **cfg.data.fpm_pool)}}
+{% set phpfpm_params = data.get('fpm_pool', {}) %}
+{% do phpfpm_params.setdefault('pool_name', cfg.name) %}
+{{php.fpm_pool(cfg=cfg, **phpfpm_params)}}
 
 {{cfg.name}}-htaccess:
   file.managed:
