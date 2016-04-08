@@ -1,7 +1,7 @@
 {% set cfg = opts.ms_project %}
 {% set data = cfg.data %}
 {% set hostsentries = [] %}
-{% for alias in data.server_aliases -%}
+{% for alias in data.nginx.server_aliases -%}
 {%    do hostsentries.append(('127.0.0.1', alias))%}
 {% endfor %}
 {% do hostsentries.append(('127.0.0.1', data.domain )) %}
