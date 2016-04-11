@@ -26,7 +26,7 @@ echo reboot:
     - createhome: False
     - empty_password: True
     - watch_in:
-      - mc_proxy: makina-php-pre-restart
+      - mc_proxy: makina-php-pre-repo
 
 {% set nginx_params = data.get('nginx', {}) %}
 {{nginx.virtualhost(cfg=cfg, **nginx_params) }}
