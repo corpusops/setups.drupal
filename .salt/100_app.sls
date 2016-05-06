@@ -5,7 +5,9 @@
 {%    do hostsentries.append(('127.0.0.1', alias))%}
 {% endfor %}
 {% do hostsentries.append(('127.0.0.1', data.domain )) %}
-{% do hostsentries.append(('127.0.0.1', data.drupal_uri )) %}
+{% do hostsentries.append((
+   '127.0.0.1',
+   data.drupal_uri.replace('http://', '').replace('https://', '') )) %}
 {% if data.use_etc_hosts %}
 {{cfg.name}}-etc-hosts-main-names:
   file.blockreplace:
