@@ -8,7 +8,7 @@
     - contents: |
                 #!/usr/bin/env bash
                 LOG="{{cfg.data_root}}/var/log/cron.log"
-                lock="${0}.lock"
+                lock="{{cfg.data_root}}/var/tmp/run_cron.lock"
                 find "${lock}" -type f -mmin +{{data.cron_lock_minutes}} -delete 1>/dev/null 2>&1
                 if [ -e "${lock}" ];then
                   echo "Locked ${0}";exit 1
