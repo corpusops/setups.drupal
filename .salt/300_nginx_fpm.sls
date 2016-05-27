@@ -27,7 +27,7 @@ echo reboot:
     - createhome: False
     - empty_password: True
     - watch_in:
-      - mc_proxy: makina-php-pre-restart
+      - mc_proxy: makina-php-pre-repo
 
 
 {{nginx.virtualhost(data.domain,
