@@ -73,8 +73,8 @@ if [ "x${DRUPAL_VERSION}" = "x8" ]; then
     # @see PILLAR.sample to set this to 'new_site' if you are the 1st player
     # else you will have to sync your conf with the 1st installed website
     # Pillar goes to local_conf.sh which set this varaiable
-    # D8_INSTALL_MODE="new_website"|"sync"
-    if [ "x${D8_INSTALL_MODE}" = "xnew_website" ]; then
+    # D8_INSTALL_MODE="new_site"|"sync"
+    if [ "x${D8_INSTALL_MODE}" = "xnew_site" ]; then
         # First install (no exported conf), use the real profile
         verbose_call_drush site-install -v -y "${PROFILE_NAME}" \
           --account-mail="${MAIL}" \
