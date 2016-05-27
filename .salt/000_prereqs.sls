@@ -24,7 +24,8 @@ prepreqs-{{cfg.name}}:
       - {{ php.packages.ldap }}
       - {{ php.packages.dev }}
       - {{ php.packages.json }}
-      - php5-pgsql
+      - {{ php.packages.postgresql }}
+      - {{ php.packages.redis }}
       - sqlite3
       - libsqlite3-dev
       - mysql-client
@@ -68,6 +69,20 @@ prepreqs-{{cfg.name}}:
       - tk8.5-dev
       - wv
       - zlib1g-dev
+
+
+prepreqs-{{cfg.name}}-extra-php7-only-php-mbstring:
+  pkg.installed:
+    - require_in:
+      - mc_proxy: makina-php-pre-inst
+    - require:
+      - pkg: prepreqs-{{cfg.name}}
+    - pkgs:
+      # this will only work with php7, before it was in the php main package
+      - php-mbstring
+    - onlyif:
+      - apt-cache search php-mbstring|grep mbstring
+
 
 {#
 This produce the default layout
