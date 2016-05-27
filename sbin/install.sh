@@ -5,6 +5,12 @@
 # of variables (and not the ones from basE.sh)
 . "$(dirname "${0}")/base.sh"
 
+# test mysql availability
+if ! call_drush sqlq "SELECT 'TEST_MYSQL_CONN'" 2>&1 | egrep -q "^TEST_MYSQL_CONN$"; then
+    echo "Mysql server is not available"
+    exit 1
+fi
+
 # if installation was never done,
 # we will certainly have less than 10 tables in datase
 NB_TABLES=$(call_drush sqlq --extra="-N" "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '${DB_NAME}';" 2>/dev/null)
