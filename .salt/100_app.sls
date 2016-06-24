@@ -33,22 +33,6 @@
     - defaults:
         cfg: "{{cfg.name}}"
 
-{{cfg.name}}-drupal-local-settings:
-  file.managed:
-    - makedirs: true
-    - source: salt://makina-projects/{{cfg.name}}/files/local.settings.php
-    - names:
-      - {{cfg.project_root}}/www/sites/default/local.settings.php
-      {% if data.local_settings.base_url != 'default' %}
-      - {{cfg.project_root}}/www/sites/{{data.local_settings.base_url}}/local.settings.php
-      {% endif %}
-    - template: jinja
-    - mode: 660
-    - user: "{{cfg.user}}"
-    - group: "root"
-    - defaults:
-        cfg: "{{cfg.name}}"
-
 {{cfg.name}}-sbin-local_conf.sh:
   file.managed:
     - makedirs: true
