@@ -95,6 +95,36 @@ $conf['page_compression'] = {{ data.page_compression }};
 // Define Drupal cache settings:--------------
 // this will be in Cache-Control: public max-age
 $config['system.performance']['cache']['page']['max_age'] = {{ data.page_cache_maximum_age }};
+//FIXME: check in D8 for theses settings: (are theses settings still present? )
+// --- response.gzip (was page_compression)
+// --- cache.page.enabled (was cache)
+// $settings['cache']['bins']['dynamic_page_cache'] = 'cache.backend.null'; <-- or what?
+//+cache:
+//+    page:
+//+        enabled: '0'
+//+        max_age: '0'
+//
+// dev: null cache service:
+// $settings['container_yamls'][] = DRUPAL_ROOT . '/sites/development.services.yml';
+// in this file:
+// parameters:
+//  twig.config:
+//    debug: true
+//    auto_reload: true
+//    cache: false
+// -- OR
+//services:
+//  cache.backend.null:
+//    class: Drupal\Core\Cache\NullBackendFactory
+//parameters:
+//  twig.config:
+//    debug: true
+//    auto_reload: true
+//    cache: false
+// $settings['cache']['bins']['render'] = 'cache.backend.null';
+// $settings['cache']['bins']['dynamic_page_cache'] = 'cache.backend.null';
+
+
 
 // AVOID SENDING emails if not in production env -------------------------------
 $config['reroute_email.settings']['reroute_email_enable'] = {{ data.reroute_email_enable }};
