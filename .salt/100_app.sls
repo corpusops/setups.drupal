@@ -22,7 +22,7 @@
     - watch_in:
       - file: {{cfg.name}}-etc-hosts-main-names
     - filename: /etc/hosts
-    - name: {{cfg.name}}-etc-hosts-main-names-entires
+    - name: {{cfg.name}}-etc-hosts-main-names-entries
     - text: |
             {% for ip, text in hostsentries %}{{-ip}} {{text}}
             {% endfor %}
