@@ -26,6 +26,7 @@ prepreqs-{{cfg.name}}:
       - {{ php.packages.json }}
       - {{ php.packages.postgresql }}
       - {{ php.packages.redis }}
+      - php-gmp
       - sqlite3
       - libsqlite3-dev
       - mysql-client
