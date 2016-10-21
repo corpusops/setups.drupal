@@ -13,10 +13,10 @@
             # hack to be sure that nginx is in www-data
             # in most cases
             datagroup="{{cfg.group}}"
-            groupadd -r $datagroup || /bin/true
-            gpasswd -a {{cfg.user}} $datagroup || /bin/true
-            gpasswd -a nginx $datagroup || /bin/true
-            gpasswd -a www-data $datagroup || /bin/true
+            groupadd -r $datagroup >/dev/null 2>&1 || /bin/true
+            gpasswd -a {{cfg.user}} $datagroup >/dev/null 2>&1 || /bin/true
+            gpasswd -a nginx $datagroup >/dev/null 2>&1 || /bin/true
+            gpasswd -a www-data $datagroup >/dev/null 2>&1 || /bin/true
             # be sure to remove POSIX acls support
             setfacl -P -R -b -k "{{cfg.project_dir}}"
             "{{locs.resetperms}}" -q --no-acls\
@@ -60,7 +60,8 @@
              #  --paths "{{cfg.data_root}}"\
              #  --paths "{{cfg.data_root}}/var";
              {{locs.resetperms}} -q --no-recursive --no-acls\
-               --fmode  664 -u {{cfg.user}} -g {{cfg.group}}\
+               --fmode  644 --dmode 751 -u {{cfg.user}} -g {{cfg.group}}\
+               --paths "{{cfg.data_root}}"/var/sites/default\
                --paths "{{cfg.project_root}}"/www/sites/default/settings.php\
                --paths "{{cfg.project_root}}"/www/sites/default/common.settings.php\
                --paths "{{cfg.project_root}}"/www/sites/default/local.settings.php\
