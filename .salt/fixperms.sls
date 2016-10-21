@@ -84,7 +84,8 @@
              #  --paths "{{cfg.data_root}}"\
              #  --paths "{{cfg.data_root}}/var";
              {{locs.resetperms}} -q --no-recursive --no-acls\
-               --fmode  644 -u {{cfg.user}} -g $datagroup\
+               --fmode  644 --dmode 751 -u {{cfg.user}} -g $datagroup\
+               --paths "{{cfg.data_root}}"/var/sites/default\
                --paths "{{cfg.project_root}}"/www/sites/default/settings.php\
                --paths "{{cfg.project_root}}"/www/sites/default/common.settings.php\
                --paths "{{cfg.project_root}}"/www/sites/default/local.settings.php\
