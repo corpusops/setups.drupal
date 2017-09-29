@@ -1,0 +1,33 @@
+---
+# Alter /etc/hosts with main domain and alternative domains
+- blockinfile:
+    dest: /etc/hosts
+    marker: "# {mark} {{cops_drupal_name}} local main name resolution :: DO NOT EDIT --"
+    insertafter: EOF
+    block: |
+           {% set hostsentries = [] %}
+           {% for alias in corpus_drupal_vars.nginx.server_aliases -%}
+           {%    do hostsentries.append(('127.0.0.1', alias))%}
+           {% endfor %}
+           {% set _ = hostsentries.append(('127.0.0.1', corpus_drupal_vars.domain )) %}
+           {% for ip, text in hostsentries %}{{-ip}} {{text}}
+           {% endfor %}
+  when: 'corpus_drupal_vars.use_etc_hosts'
+
+# install drush via composer (in sbin), that's not the main project composer stuff
+#- shell: |
+#         set -e
+#         cd {{cops_drupal_vars.project_root}}/sbin
+#         {{cops_drupal_vars.project_root}}/sbin/composer install
+#  become: true
+#  become_user: "{{cops_drupal_vars.user}}"
+
+# Check that composer and drush wrappers in sbin are WORKING
+# The wrapper for drush will download the right version if needed
+- shell: |
+         set -e
+         cd {{cops_drupal_vars.project_root}}/sbin
+         {{cops_drupal_vars.project_root}}/sbin/{{item}} --version
+  become: true
+  become_user: "{{cops_drupal_vars.user}}"
+  with_items: ['composer', 'drush']

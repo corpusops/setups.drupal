@@ -1,0 +1,12 @@
+- name: configs
+  template:
+    dest: "{{item.dest}}"
+    src: "{{item.src|default('../templates{0}'.format(item.dest))}}"
+    mode: "{{item.mode|default(omit)}}"
+    force: "{{item.force|default(True)}}"
+    owner: "{{item.owner|default(omit)}}"
+    group: "{{item.group|default(omit)}}"
+  with_list: "{{cops_drupal_ep_configs}}"
+  tags: [drupal,
+         entrypoint_configs,
+         drupal_entrypoint_configs]

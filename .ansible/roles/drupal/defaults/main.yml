@@ -1,0 +1,409 @@
+---
+corpusops_core_projects_path: /srv/projects
+# users than have full right to edit file in the container
+# When this is enabled, the project user/group is also granted full perms
+# (attention, uids!)
+cops_drupal__supereditors_paths: [
+  "{{ cops_drupal_project_root }}",
+  "{{ cops_drupal_data_root }}",
+  /var, /home, /opt, /srv]
+cops_drupal__supereditors: >-
+  {{ ansible_env.get('SUPEREDITORS', '') | copsf_splitstrip | to_json }}
+cops_drupal_supereditors_paths: "{{cops_drupal__supereditors_paths}}"
+cops_drupal_supereditors: "{{cops_drupal__supereditors}}"
+cops_drupal_deb_packages:
+    - unzip
+    - xsltproc
+    - curl
+    - {{ corpusops_services_php_vars.php_packages_postgresql }}
+    - {{ corpusops_services_php_vars.php_packages_gd }}
+    - {{ corpusops_services_php_vars.php_packages_cli }}
+    - {{ corpusops_services_php_vars.php_packages_curl }}
+    - {{ corpusops_services_php_vars.php_packages_ldap }}
+    - {{ corpusops_services_php_vars.php_packages_dev }}
+    - {{ corpusops_services_php_vars.php_packages_json }}
+    - {{ corpusops_services_php_vars.php_packages_drupal }}
+    - {{ corpusops_services_php_vars.php_packages_redis }}
+    - {{ corpusops_services_php_vars.php_packages_gmp }}
+    - {{ corpusops_services_php_vars.php_packages_postgresql }}
+    - {{ corpusops_services_php_vars.php_packages_mbstring }}
+    - sqlite3
+    - libsqlite3-dev
+    - apache2-utils
+    - autoconf
+    - automake
+    - build-essential
+    - bzip2
+    - gettext
+    - git
+    - groff
+    - libbz2-dev
+    - libcurl4-openssl-dev
+    - libdb-dev
+    - libgdbm-dev
+    - libreadline-dev
+    - libfreetype6-dev
+    - libsigc++-2.0-dev
+    - libsqlite0-dev
+    - libsqlite3-dev
+    - libtiff5
+    - libtiff5-dev
+    - libwebp5
+    - libwebp-dev
+    - libssl-dev
+    - libtool
+    - libxml2-dev
+    - libxslt1-dev
+    - libopenjpeg-dev
+    - m4
+    - man-db
+    - pkg-config
+    - poppler-utils
+    - python-dev
+    - python-imaging
+    - python-setuptools
+    - tcl8.4
+    - tcl8.4-dev
+    - tcl8.5
+    - tcl8.5-dev
+    - tk8.5-dev
+    - wv
+    - zlib1g-dev
+
+cops_drupal_rh_packages: []
+# extra conf to add to pgconf (directly added to a tuning conf file (string))
+cops_drupal_sysctls: []
+cops_drupal_domain: "{{ansible_fqdn}}"
+# for internal monitoring
+cops_drupal_query_host: "127.0.0.1"
+cops_drupal_name: 'drupal'
+cops_drupal_user: "{{cops_drupal_name}}-user"
+cops_drupal_group: "{{cops_drupal_name}}-group"
+cops_drupal_projects_dir: '{{corpusops_vars.projects_path}}'
+cops_drupal_project_dir: '{{cops_drupal_projects_dir}}/{{cops_drupal_name}}'
+cops_drupal_project_root: "{{cops_drupal_project_dir}}/project"
+cops_drupal_data_root: "{{cops_drupal_project_dir}}/data"
+cops_drupal_cfg: "{{cops_drupal_data_root}}/config"
+cops_drupal_fixperms: "{{cops_drupal_project_dir}}/fixperms.sh"
+cops_drupal_fixperms_cron_periodicity: "0 */2 * * *"
+#cops_drupal_fixperms_cron_periodicity: ""
+cops_drupal_fixperms_cron: "/etc/cron.d/{{cops_drupal_name}}-fixperms"
+cops_drupal_admins: 'sysadmin@{domain}'
+cops_drupal_tz: "Europe/Paris"
+cops_drupal_country: "FR"
+cops_drupal_update_status_module: 0
+cops_drupal_local_settings_cache: 0
+cops_drupal_local_settings_cache_block: 0
+cops_drupal_local_settings_reverse_proxy_header: 'HTTP_X_FORWARDED_FOR'
+cops_drupal_local_settings_page_compression: 0
+cops_drupal_local_settings_js_gzip_compression: 1
+cops_drupal_local_settings_css_gzip_compression: 1
+cops_drupal_local_settings_page_cache_maximum_age: 21600
+cops_drupal_local_settings_site_password: "{{
+  lookup('password',
+        (cops_drupal_cfg + '/pwd_admin '
+        'length=15 chars=ascii_letters,digits')) }}"
+cops_drupal_local_settings_account_name: 'admin'
+cops_drupal_local_settings_account_email: 'root@{{ansible_fqdn}}'
+cops_drupal_local_settings_site_email: 'root@{{ansible_fqdn}}'
+cops_drupal_local_settings_site_name: "{{cops_drupal_name}}"
+cops_drupal_local_settings_reverse_proxy: 'TRUE'
+cops_drupal_local_settings_reverse_proxy_addresses: "array('127.0.0.1', '10.5.0.1')"
+cops_drupal_local_settings_image_allow_insecure_derivatives: 0
+cops_drupal_local_settings_reroute_email_enable: 0
+cops_drupal_local_settings_reroute_email_address: 'sysadmin@{{ansible_fqdn}}'
+cops_drupal_local_settings_image_jpeg_quality: 100
+cops_drupal_local_settings_locale_cache_length: 204800
+cops_drupal_local_settings_cookie_cache_bypass_adv_cache_lifetime: 300
+cops_drupal_local_settings_file_chmod_directory: '02770'
+cops_drupal_local_settings_file_chmod_file: '0660'
+cops_drupal_local_settings_error_level: 0
+cops_drupal_local_settings_preprocess_css: 0
+cops_drupal_local_settings_preprocess_js: 0
+cops_drupal_local_settings_base_url: 'default'
+cops_drupal_local_settings_omit_vary_cookie: 'FALSE'
+cops_drupal_local_settings_conf_sync_dir: '{{cops_drupal_project_root}}/lib/config/sync'
+cops_drupal_local_settings_conf_staging_dir: '{{cops_drupal_project_root}}/lib/config/staging'
+cops_drupal_local_settings_conf_todev_dir: '{{cops_drupal_project_root}}}/lib/config/to_dev'
+cops_drupal_local_settings_smtp_used: True
+cops_drupal_local_settings_smtp_host: '127.0.0.1'
+cops_drupal_local_settings_smtp_from: 'root@{{ansible_fqdn}}'
+cops_drupal_local_settings_smtp_fromname: ''
+cops_drupal_local_settings_block_cache_bypass_node_grants: 1
+cops_drupal_use_etc_hosts: true
+    # set to 8 for d8, anything else for others
+    drupal_version: 7
+    # This is "new_site" for the 1st player, and "sync" after that (to get the same UUIDs)
+    d8_install_mode: "sync"
+    drupal_profile: example_profile
+    drush_make_opts: "--no-cache --translations={drupal_locale}"
+    drush_make: profiles/{drupal_profile}/{drupal_profile}.make
+    use_microcache: false
+    drupal_locale: fr
+    drupal_cron_enabled: true
+    drupal_xmlrpc_enabled: false
+    drupal_authorize_enabled: false
+    drupal_update_enabled: false
+    drush_spec: "drush/drush:7.*"
+    drush_ver: "7.*"
+    drupal_uri: "http://{domain}"
+    drush_make_args: "profiles/{drupal_profile}/{drupal_profile}.make"
+    domain: "{fqdn}"
+    use_etc_hosts: true
+    # uncomment if you use default -- cron --
+    # cron_periodicity: "* */3 * * *"
+    # cron_cmd: "cd {project_root}/www && ../bin/drush cron -y"
+    # uncomment if you use -- elysia cron --
+    cron_periodicity: "*/5 * * * *"
+    fixperms_cron_periodicity: "*/30 * * * *"
+    # how many minutes before rmoving lock file of a currently running cro
+    # this can be used outside of drupal, to avoid internal locks and messages
+    # about cron already running
+    cron_lock_minutes: 60
+    cron_user: "{name}-php"
+    cron_cmd: "cd {project_root}/www && ../sbin/drush --root={project_root}/www --uri={domain} --quiet elysia-cron"
+    #cron_cmd: "cd {project_root}/www && ../sbin/drush --root={project_root}/www --uri={domain} --quiet cron -y"
+    password: "secret"
+    # if a special php is needed for drush, set the path here
+    modules_dir: "{project_root}/www/sites/all/modules"
+    modules_check: "ctools webform token pathauto"
+    php: ''
+    force:
+      # this will force a drush install
+      # you can also use a data/force_install file for one-time things
+      install: 0
+      # this will force a drush make
+      # you can also use a data/force_make file for one-time things
+      make: 0
+      # this will force a "drush fra" after code update
+      # (set to 0 for special manual updates)
+      feature_revert: 1
+      # this will force a "drush updb" after code update
+      #  (set to 0 for special manual updates)
+      update_db: 1
+      # this will remove maintenance mode after code update
+      #  (set to 0 for special manual updates, then do not forget the "drush vset maintenance_mode 0")
+      remove_maintenance: 1
+      # this will remove the cron suspension after code update
+      # (set to 0 for special manual updates, then rm data/suspend_cron to re-enable crons)
+      remove_suspend_cron: 1
+    db_prefix: ""
+    db_type: mysql
+    db_host: "127.0.0.1"
+    db_password: "{password}"
+    db_name: "{name}"
+    db_user: "{name}"
+    db_port: "3306"
+    db_url: "{db_type}://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+
+
+# overrides this dir with values of cops_drupal_env !
+cops_drupal_env_overrides: {}
+cops_drupal_env: {}
+#  PGPASSWORD: foobar
+cops_drupal_drupal_bind_host: '127.0.0.1'
+# templates
+## entry point
+cops_drupal_ep_template: "../templates/app_entry_point"
+# entrypoint settings
+cops_drupal_ep_playbook: "site.yml"
+cops_drupal_ep_skip_tags: "{{(
+  'drupal_users,'
+  'drupal_first_fixperms,'
+  'drupal_prerequisites,'
+  'drupal_do_setup,'
+  'drupal_workers,'
+  'drupal_entry_point,'
+  'drupal_manage_content,'
+  'drupal_end_fixperms'
+  )}}"
+cops_drupal_ep_post_start_skip_tags: "{{(
+  'drupal_users,'
+  'drupal_first_fixperms,'
+  'drupal_prerequisites,'
+  'drupal_do_setup,'
+  'drupal_entry_point'
+  )}}"
+cops_drupal_ep_main_ep: "/entry_point"
+cops_drupal_php_version: "7.1"
+# service
+cops_drupal_service: "php{{cops_drupal_php_version}}-fpm"
+cops_drupal_services:
+- "{{cops_drupal_service}}"
+- "nginx"
+cops_drupal_reconfigure_services:
+- "post-start-{{cops_drupal_service}}"
+cops_drupal_rhandlers: ["restart_cops_{{cops_drupal_service}}"]
+cops_drupal_activated: true
+cops_drupal_stickymode: "2"
+#
+cops_drupal_files:
+  - {path: "{{cops_drupal_projects_dir}}",
+     owner: root, group: root, state: directory}
+  - {path: "{{cops_drupal_project_dir}}",
+     owner: root, group: root, state: directory}
+  - {path: "{{cops_drupal_project_root}}",
+     owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+     state: directory, mode: "{{cops_drupal_stickymode}}755"}
+  - {path: "{{cops_drupal_data_root}}",
+     owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+     state: directory, mode: "{{cops_drupal_stickymode}}755"}
+  - {path: "{{cops_drupal_cfg}}",
+     owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+     state: directory, mode: "{{cops_drupal_stickymode}}755"}
+  - {path: "{{cops_drupal_project_root}}/lib",
+     owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+     state: directory, mode: "{{cops_drupal_stickymode}}755"}
+  - {path: "{{cops_drupal_project_root}}/bin",
+     owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+     state: directory, mode: "{{cops_drupal_stickymode}}755"}
+  - {path: "{{cops_drupal_project_root}}/www",
+     owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+     state: directory, mode: "{{cops_drupal_stickymode}}755"}
+  - {path: "{{cops_drupal_data_root}}/var",
+     owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+     state: directory, mode: "{{cops_drupal_stickymode}}755"}
+  - {path: "{{cops_drupal_data_root}}/var/sites",
+     owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+     state: directory, mode: "{{cops_drupal_stickymode}}755"}
+  - {path: "{{cops_drupal_data_root}}/var/sites/default/files",
+     owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+     state: directory, mode: "{{cops_drupal_stickymode}}755"}
+  - {path: "{{cops_drupal_data_root}}/var/log",
+     owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+     state: directory, mode: "{{cops_drupal_stickymode}}755"}
+  - {path: "{{cops_drupal_data_root}}/var/log/cron/{{ansible_fqdn}}",
+     owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+     state: directory, mode: "{{cops_drupal_stickymode}}755"}
+ #- {path: "{{cops_drupal_data_root}}/var/log/nginx",
+ #    owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+ #    state: directory, mode: "{{cops_drupal_stickymode}}755"}
+ # - {path: "{{cops_drupal_data_root}}/var/log/php",
+ #    owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+ #    state: directory, mode: "{{cops_drupal_stickymode}}755"}
+  - {path: "{{cops_drupal_data_root}}/var/private",
+     owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+     state: directory, mode: "{{cops_drupal_stickymode}}755"}
+  - {path: "{{cops_drupal_data_root}}/var/tmp",
+     owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+     state: directory, mode: "{{cops_drupal_stickymode}}755"}
+  - {path: "{{cops_drupal_data_root}}/var/run",
+     owner: "{{cops_drupal_user}}", group: "{{cops_drupal_group}}",
+     state: directory, mode: "{{cops_drupal_stickymode}}755"}
+  - {path: "{{cops_drupal_project_root}}/lib",  src: "{{cops_drupal_data_root}}/lib", state: link, force: true}
+  - {path: "{{cops_drupal_project_root}}/bin",  src: "{{cops_drupal_data_root}}/bin", state: link, force: true}
+  - {path: "{{cops_drupal_project_root}}/www",  src: "{{cops_drupal_data_root}}/www", state: link, force: true}
+  - {path: "{{cops_drupal_project_root}}/www/sites/default",  src: "{{cops_drupal_data_root}}/var/site/default", state: link, force: true}
+  - {path: "{{cops_drupal_project_root}}/var",  src: "{{cops_drupal_data_root}}/var", state: link, force: true}
+  - {path: "{{cops_drupal_project_root}}/log",  src: "{{cops_drupal_data_root}}/var/log", state: link, force: true}
+  - {path: "{{cops_drupal_project_root}}/private",  src: "{{cops_drupal_data_root}}/var/private", state: link, force: true}
+  - {path: "{{cops_drupal_project_root}}/tmp",  src: "{{cops_drupal_data_root}}/var/tmp", state: link, force: true}
+  # check these files are NOT present
+  - {path: "{{cops_drupal_project_root}}/sbin/profile_conf.sh", state: absent, force: true}
+  - {path: "{{cops_drupal_project_root}}/sbin/composer.lock", state: absent, force: true}
+
+cops_drupal_reconfigure: "{{cops_drupal_project_dir}}/reconfigure.sh"
+cops_drupal_reconfigure_passenv: "ANSIBLE_PLAY ANSIBLE_FOLDER"
+cops_drupal_configs:
+  # script to reconfigure image before and after systemd is launched
+  - {src: "../templates/reconfigure.sh",
+     dest: "{{cops_drupal_reconfigure}}",
+     mode: "0755",
+     owner: "root",
+     group: "root"}
+  - {src: "../templates/post-start-reconfigure.service",
+     dest: "/etc/systemd/system/post-start-{{cops_drupal_service}}.service",
+     mode: "0644",
+     owner: "root",
+     group: "root"}
+  - {src: "../templates/optim.conf",
+     dest: "/etc/drupal/{{cops_drupal_version}}/main/conf.d/optim.conf",
+     mode: "0644",
+     owner: "root",
+     group: "root"}
+  - {src: "../templates/default.settings.php",
+     dest: "{{cops_drupal_project_root}}/www/sites/default/settings.php",
+     mode: "0640",
+     owner: "{{cops_drupal_user}}",
+     group: "{{cops_drupal_group}}"}
+  - {src: "../templates/common.settings.php",
+     dest: "{{cops_drupal_project_root}}/www/sites/default/common.settings.php",
+     mode: "0640",
+     owner: "{{cops_drupal_user}}",
+     group: "{{cops_drupal_group}}"}
+  - {src: "../templates/local.settings.php",
+     dest: "{{cops_drupal_project_root}}/www/sites/default/local.settings.php",
+     mode: "0640",
+     owner: "{{cops_drupal_user}}",
+     group: "{{cops_drupal_group}}"}
+  - {src: "../templates/local_conf.sh",
+     dest: "{{cops_drupal_project_root}}/sbin/local_conf.sh",
+     mode: "0750",
+     owner: "{{cops_drupal_user}}",
+     group: "root"}
+#  - {src: "../templates/sbincomposer.json",
+#     dest: "{{cops_drupal_project_root}}/sbin/composer.json",
+#     mode: "0640",
+#     owner: "{{cops_drupal_user}}",
+#     group: {{cops_drupal_group}}"}
+cops_drupal_fixperms_configs:
+  - {src: "../templates/fixperms.sh",
+     dest: "{{cops_drupal_fixperms}}", mode: "0755",
+     owner: root, group: root}
+cops_drupal_ep_configs:
+  - {src: "{{cops_drupal_ep_template}}",
+     dest: "/app_entry_point", mode: "0755",
+     owner: root, group: root}
+
+
+# Reverse proxy Nginx
+cops_drupal_default_vhost_is_default_server: false
+cops_drupal_nginx_domain: "{{cops_drupal_domain}}"
+cops_drupal_nginx_server_aliases:
+  - www.{{cops_drupal_domain}}
+cops_drupal_nginx_redirect_aliases: true
+cops_drupal_htpasswd: "/etc/nginx/{{cops_drupal_name}}-htpasswd"
+cops_drupal_ssl_protected: false
+cops_drupal_nginx: {}
+cops_drupal_nginx_port: "80"
+cops_drupal_nginx_basename: "corpus-{{cops_drupal_name}}"
+cops_drupal_nginx_is_default_server: true
+cops_drupal_nginx_ssl_protected: "{{cops_drupal_ssl_protected}}"
+cops_drupal_nginx_htpasswd: "{{cops_drupal_htpasswd}}"
+cops_drupal_nginx_force_reload: true
+cops_drupal_nginx_ssl_cert: ""
+cops_drupal_nginx_ssl_key: ""
+cops_drupal_nginx_loglevel: crit
+cops_drupal_nginx_upstream_name: "{{cops_drupal_name}}"
+cops_drupal_stickymode: "2"
+
+# PHP-Fpm
+cops_drupal_fpm_ping: "/ping"
+cops_drupal_fpm_domain: "{{cops_drupal_domain}}"
+cops_drupal_fpm_doc_root: "{{cops_drupal_project_root}}/www"
+cops_drupal_fpm_pool_name: "{{cops_drupal_name}}"
+cops_drupal_fpm_display_errors: 0
+cops_drupal_fpm_xdebug_profiler_enable_trigger: 0
+cops_drupal_fpm_open_basedir:
+  - "{{cops_drupal_data_root}}/sites"
+  - "{{cops_drupal_data_root}}/var/sites"
+  - "{{cops_drupal_data_root}}/var/log"
+  - "{{cops_drupal_data_root}}/var/tmp"
+  - "{{cops_drupal_data_root}}var/private"
+  - "{{cops_drupal_project_root}}/www"
+  - "{{cops_drupal_project_root}}/lib"
+  - "{{cops_drupal_project_root}}/var/tmp"
+  - "{{cops_drupal_project_root}}/var/private"
+cops_drupal_fpm_include_path:
+  - "{{cops_drupal_project_root}}/www"
+  - "{{cops_drupal_project_root}}/lib"
+cops_drupal_fpm_socket: "{{cops_drupal_project_root}}/var/run/fpm.sock"
+cops_drupal_fpm_session_auto_start: 0
+cops_drupal_fpm_allow_url_fopen: 0
+cops_drupal_fpm_upload_max_filesize: "50M"
+cops_drupal_fpm_max_input_vars: 2000
+cops_drupal_fpm_fpm_user: "{{cops_drupal_name}}-php"
+cops_drupal_fpm_fpm_group: "{{cops_drupal_name}}-grp"
+cops_drupal_fpm_memory_limit: "256M"
+cops_drupal_fpm_modules: {}
+# vim:set ft=sls:

@@ -1,0 +1,5 @@
+---
+- include_role:
+    name: corpusops.roles/drupal_db
+  vars:
+    _cops_drupal_db: "{{item}}"

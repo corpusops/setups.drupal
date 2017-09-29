@@ -21,6 +21,8 @@ www/sites/example.sites.php
 www/sites/sites.php
 www/sites/README.txt
 
+/local
+
 # In case you manage non salted /data directory in a /sites directory
 # with symlinks from www/sites/default to /sites/default
 # We do not want to store in git most of this content. Except the common.settings.php

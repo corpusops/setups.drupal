@@ -1,0 +1,11 @@
+# {{ansible_managed}}}
+[Unit]
+Description=cops {{ cops_drupal_name }} reconfigure on restart
+After=network.target{% for s in cops_drupal_services %} {{s}}.service{%endfor%}
+
+[Service]
+Type=forking
+ExecStart={{cops_drupal_reconfigure}} post
+PassEnvironment={{cops_drupal_reconfigure_passenv}}
+TimeoutSec=0
+RemainAfterExit=yes

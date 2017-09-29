@@ -1,0 +1,57 @@
+---
+# dont forget that all script embed a lot of condition for them to really run
+# drush make or site-install.
+# you can force or postpone the execution via marker files or
+# environment variables.
+
+# FIXME: suspend crons and MAINTENANCE (file triggers)
+
+- shell: |
+         set -e
+         cd {{cops_drupal_vars.project_root}}/www
+         ../sbin/make.sh && rm -f "{{cops_drupal_vars.data_root}}/force_make"
+
+- shell: |
+         set -e
+         cd {{cops_drupal_vars.project_root}}/www
+         ../sbin/install.sh
+         touch "{{cops_drupal_vars.data_root}}/installed"
+         rm -f "{{cops_drupal_vars.data_root}}/force_reinstall"
+
+
+{{cfg.name}}-cron-cmd:
+  file.managed:
+    - name: "{{cfg.data_root}}/bin/drupal_cron.sh"
+    - makedirs: true
+    - contents: |
+                #!/usr/bin/env bash
+                LOG="{{cfg.data_root}}/cron.log"
+                lock="${0}.lock"
+                find "${lock}" -type f -mmin +1 -delete 1>/dev/null 2>&1
+                if [ -e "${lock}" ];then
+                  echo "Locked ${0}";exit 1
+                fi
+                touch "${lock}"
+                {{data.cron_cmd}}
+                ret="${?}"
+                rm -f "${lock}"
+                if [ "x${ret}" != "x0" ];then
+                  cat "${LOG}"
+                fi
+                exit "${ret}"
+    - user: {{cfg.user}}
+    - group: {{cfg.group}}
+    - mode: 750
+
+{{cfg.name}}-cron:
+  file.managed:
+    - name: "/etc/cron.d/{{cfg.name}}drupalcron"
+    - contents: |
+                #!/usr/bin/env bash
+                MAILTO="{{data.admins}}"
+                {{data.cron_periodicity}} root "{{cfg.data_root}}/bin/drupal_cron.sh"
+    - user: root
+    - group: root
+    - makedirs: true
+    - require:
+      - file: {{cfg.name}}-cron-cmd
