@@ -1,0 +1,4 @@
+---
+- include_tasks: A0000_vars.yml
+  tags: [drupal, vars, drupal_vars]
+  when: "cops_drupal_s_vars"

@@ -1,0 +1,3 @@
+---
+- set_fact:
+    cops_drupal_lifecycle_all: "{{cops_drupal_lifecycle_all|default(True)}}"

@@ -1,0 +1,34 @@
+---
+# Check that composer wrapper is WORKING
+# composer should have been installed system wide by precedent provision
+- name: Composer test
+  shell: |
+         set -e
+         cd {{cops_drupal_vars.project_root}}/sbin
+         {{cops_drupal_vars.project_root}}/sbin/{{item}} --version
+  become: true
+  become_user: "{{cops_drupal_vars.user}}"
+  changed_when: false
+  with_items: ['composer']
+
+# Run composer install
+- name: Composer install
+  shell: |
+         set -e
+         cd {{cops_drupal_vars.project_root}}
+         sbin/composer install {{cops_drupal_vars.composer_install_args}}
+  become: true
+  changed_when: false
+  become_user: "{{cops_drupal_vars.user}}"
+
+# Check that drush wrapper in sbin is WORKING
+# drush will come through composer install or artifact extraction
+- name: drush test
+  shell: |
+         set -e
+         cd {{cops_drupal_vars.project_root}}/sbin
+         {{cops_drupal_vars.project_root}}/sbin/{{item}} --version
+  become: true
+  become_user: "{{cops_drupal_vars.user}}"
+  changed_when: false
+  with_items: ['drush']

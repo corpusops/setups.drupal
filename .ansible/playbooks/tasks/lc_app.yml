@@ -1,0 +1,5 @@
+---
+# compute app settings
+- include_role: {name: ./roles/drupal}
+  become: true
+  when: cops_drupal_lifecycle_app|default(True)

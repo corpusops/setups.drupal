@@ -1,0 +1,4 @@
+---
+# install nginx http server
+- name: project - pre install nginx
+  include_tasks: "{{cops_playbooks}}/provision/{{cops_installer_mode}}/tasks/nginx.yml"

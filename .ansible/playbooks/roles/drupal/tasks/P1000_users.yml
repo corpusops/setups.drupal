@@ -1,0 +1,32 @@
+---
+- group:
+    name: "{{cops_drupal_vars.group}}"
+    state: present
+  tags: [drupal,
+         group, drupal_group,
+         users, drupal_users]
+- user:
+    group: "{{cops_drupal_vars.group}}"
+    name: "{{cops_drupal_vars.user}}"
+    state: present
+    append: true
+    generate_ssh_key: true
+  tags: [drupal,
+         user, drupal_user,
+         users, drupal_users]
+- group:
+    name: "{{cops_drupal_vars.fpm_group}}"
+    state: present
+  tags: [drupal,
+         group, drupal_group,
+         users, drupal_users]
+  when: "cops_drupal_vars.group != cops_drupal_vars.fpm_group"
+- user:
+    group: "{{cops_drupal_vars.fpm_group}}"
+    name: "{{cops_drupal_vars.fpm_user}}"
+    state: present
+    append: true
+    generate_ssh_key: true
+  tags: [drupal,
+         user, drupal_user,
+         users, drupal_users]

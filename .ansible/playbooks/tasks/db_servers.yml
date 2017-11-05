@@ -1,0 +1,2 @@
+---
+- import_tasks: "{{cops_playbooks}}/provision/{{cops_installer_mode}}/tasks/postgresql.yml"

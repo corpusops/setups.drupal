@@ -1,0 +1,26 @@
+---
+- import_playbook: ./db_site.yml
+  tags: [vagrant_db]
+- hosts: all
+  tags: [vagrant_drupal]
+  tasks:
+  - include_tasks: "{{cops_playbooks}}/provision/vagrant/tasks/load_vars.yml"
+  - include_role: {name: drupal_vars}
+    become: true
+  - shell: /bin/false
+    failed_when: false
+    changed_when: false
+    register: cops_drupal_test1
+    no_log: true
+  - shell: /bin/false
+    register: cops_drupal_test2
+    changed_when: false
+    failed_when: false
+    no_log: true
+  - include_tasks: ./tasks/lc.yml
+    when: >-
+     (((not vars.get('SKIP_INSTALL_DRUPAL', False)) and
+      ((cops_no_app_db) or
+       (cops_drupal_test1 !=0) or
+       (cops_drupal_test2 !=0))) or
+      (vars.get('FORCE_INSTALL_DRUPAL', False)))

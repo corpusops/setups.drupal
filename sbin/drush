@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # A drush wrapper for local project environment.
+# see call_drush comments inside ./base.sh
 . "$(dirname "${0}")/base.sh"
 call_drush "${@}"
 exit ${?}

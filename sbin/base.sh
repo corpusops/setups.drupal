@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#
 # This is the main bash ressource file.
 #  - defautl variables values
 #  - fonctions used by others
@@ -8,11 +7,15 @@
 # Note that local_conf.sh is populated by the
 # .salt/100_app.sls salt function, using .salt/PILLAR.sample
 # and the local pillar.
+
+shopt -s extglob
+
 RED=$'\e[31;01m'
 BLUE=$'\e[36;01m'
 YELLOW=$'\e[33;01m'
 GREEN=$'\e[32;01m';
 NORMAL=$'\e[0m'
+CYAN="\\e[0;36m"
 
 # exit codes
 END_SUCCESS=0
@@ -21,10 +24,7 @@ END_RECVSIG=3
 END_BADUSAGE=65
 NONINTERACTIVE="${NONINTERACTIVE:-}"
 
-# Whether we are in dev mode or not...
-DEV_MODE="${DEV_MODE:-}"
-
-function abspath() {
+abspath() {
     python -c "import sys, os;sys.stdout.write(os.path.abspath(\"$@\"))"
 }
 
@@ -32,20 +32,14 @@ function abspath() {
 # there are our maintainance scripts
 THIS_SCRIPT="${THIS_SCRIPT:-$(abspath "${0}")}"
 BINPATH="$(echo "$THIS_SCRIPT"|sed -re "s/sbin\/.*/sbin/g")"
-THE_DRUSH_WRAPPER="${BINPATH}/drush"
 ROOTPATH="${ROOTPATH:-"$(cd "${BINPATH}" && cd .. && pwd)"}"
 WWW_DIR="${WWW_DIR:-"${ROOTPATH}/www"}"
 SITES_DIR="${SITES_DIR:-"${WWW_DIR}/sites"}"
-PROJECT_CONFIG_PATH="${ROOTPATH}/sbin/templates"
 DRUPAL_CONFIG_PATH="${ROOTPATH}/lib/config/sync"
 # data dir (in salt/data_root) or $root/sites on non salt env.
 DATA_DIR="${DATA_DIR:-"${ROOTPATH}/sites"}"
 STOP_CRON_FLAG="${ROOTPATH}/var/tmp/suspend_drupal_cron_flag"
-PRIVATE_PATH="${ROOTPATH}/var/private"
-TMP_PATH="${ROOTPATH}/var/tmp"
-SOCKET_PATH="${ROOTPATH}/var/fcgi"
-CACHE_PATH="${ROOTPATH}/var/cache"
-UPGRADES_MARKER="${BINPATH}/.upgrades.done"
+COMPOSER_SET=""
 
 # System User
 USER="${USER:-$(whoami)}"
@@ -54,17 +48,10 @@ GROUP="${GROUP:-$(groups|awk '{print $0}')}"
 # Locale to set
 LOCALE="fr"
 
-# drush make force markers
-FORCE_MAKE="${FORCE_MAKE:-}"
-# check for those module presence to force drush make
-MODULES_CHECK="ctools webform token pathauto"
-FORCE_MAKE_MARKER="${FORCE_MAKE_MARKER:-/a/non/existing/file}"
-
 # drush install related
 INSTALL_MARKER="${FORCE_INSTALL_MARKER:-/a/non/existing/file}"
 FORCE_INSTALL_MARKER="${FORCE_INSTALL_MARKER:-/a/non/existing/file}"
 FORCE_INSTALL="${FORCE_INSTALL:-}"
-
 
 # override the drush profile asbsolute path
 DRUPAL_PROFILE=""
@@ -79,19 +66,136 @@ RSYNC="$(which rsync)"
 # drush preconfigured wrapper
 LOCALCOMPOSER="${BINPATH}/composer.phar"
 COMPOSER_URL="https://getcomposer.org/composer.phar"
-COMPOSER_PRETENDANTS="${COMPOSER_PRETENDANTS} /usr/local/bin/composer"
-COMPOSER_PRETENDANTS="${COMPOSER_PRETENDANTS} /usr/bin/composer"
-COMPOSER_PRETENDANTS="${COMPOSER_PRETENDANTS} $(which composer 2>/dev/null)"
+
+THE_DRUSH_WRAPPER="${BINPATH}/drush"
 DRUSH="${BINPATH}/drush"
-DRUSH_SPEC="drush/drush:7.*"
 # drush bare script abs path
 DRUSH_CMD="${DRUSH_CMD:-}"
 # drush vare script search path if not found
-DRUSH_PRETENDANTS="${DRUSH_PRETENDANTS:-"${ROOTPATH}/sbin/vendor/drush/drush/drush $(which drush) /usr/local/bin/drush /usr/bin/drush drush"}"
+DRUSH_PRETENDANTS="${DRUSH_PRETENDANTS:-"${ROOTPATH}/vendor/drush/drush/drush ${ROOTPATH}/lib/vendor/drush/drush/drush ${ROOTPATH}/sbin/vendor/drush/drush/drush $(which drush) /usr/local/bin/drush /usr/bin/drush drush"}"
 #DRUSH_EXTRA_ARGS="--include="${COMMAND_DIRS}" --uri="${DRUPAL_URI}""
 DRUSH_CALL=""
 
-function sync_src() {
+
+has_command() {
+    ret=1
+    if which which >/dev/null 2>/dev/null;then
+      if which "${@}" >/dev/null 2>/dev/null;then
+        ret=0
+      fi
+    else
+      if command -v "${@}" >/dev/null 2>/dev/null;then
+        ret=0
+      else
+        if hash -r "${@}" >/dev/null 2>/dev/null;then
+            ret=0
+        fi
+      fi
+    fi
+    return ${ret}
+}
+
+get_command() {
+    local p=
+    local cmd="${@}"
+    if which which >/dev/null 2>/dev/null;then
+        p=$(which "${cmd}" 2>/dev/null)
+    fi
+    if [ "x${p}" = "x" ];then
+        p=$(export IFS=:;
+            echo "${PATH-}" | while read -ra pathea;do
+                for pathe in "${pathea[@]}";do
+                    pc="${pathe}/${cmd}";
+                    if [ -x "${pc}" ]; then
+                        p="${pc}"
+                    fi
+                done
+                if [ "x${p}" != "x" ]; then echo "${p}";break;fi
+            done )
+    fi
+    if [ "x${p}" != "x" ];then
+        echo "${p}"
+    fi
+}
+
+reset_colors() {
+    if [[ -n ${NO_COLOR} ]]; then
+        BLUE=""
+        YELLOW=""
+        RED=""
+        CYAN=""
+    fi
+}
+
+log_() {
+    reset_colors
+    logger_color=${1:-${RED}}
+    msg_color=${2:-${YELLOW}}
+    shift;shift;
+    logger_slug="${logger_color}[${LOGGER_NAME}]${NORMAL} "
+    if [[ -n ${NO_LOGGER_SLUG} ]];then
+        logger_slug=""
+    fi
+    printf "${logger_slug}${msg_color}$(echo "${@}")${NORMAL}\n" >&2;
+    printf "" >&2;  # flush
+}
+
+log() {
+    log_ "${RED}" "${CYAN}" "${@}"
+}
+
+warn() {
+    log_ "${RED}" "${CYAN}" "${YELLOW}[WARN] ${@}${NORMAL}"
+}
+
+may_die() {
+    reset_colors
+    thetest=${1:-1}
+    rc=${2:-1}
+    shift
+    shift
+    if [ "x${thetest}" != "x0" ]; then
+        if [[ -z "${NO_HEADER-}" ]]; then
+            NO_LOGGER_SLUG=y log_ "" "${CYAN}" "Problem detected:"
+        fi
+        NO_LOGGER_SLUG=y log_ "${RED}" "${RED}" "$@"
+        exit $rc
+    fi
+}
+
+die() {
+    may_die 1 1 "${@}"
+}
+
+die_in_error_() {
+    ret=${1}
+    shift
+    msg="${@:-"$ERROR_MSG"}"
+    may_die "${ret}" "${ret}" "${msg}"
+}
+
+die_in_error() {
+    die_in_error_ "${?}" "${@}"
+}
+
+debug() {
+    if [[ -n "${DEBUG// }" ]];then
+        log_ "${YELLOW}" "${YELLOW}" "${@}"
+    fi
+}
+
+vvv() {
+    debug "${@}"
+    "${@}"
+}
+
+vv() {
+    log "${@}"
+    "${@}"
+}
+
+
+sync_src() {
     cd "${ROOTPATH}"
     echo "${YELLOW}+ Running ${ROOTPATH}/sbin/sync-sources-and-settings.sh${NORMAL}"
     # store choice for underlying script interaction
@@ -99,19 +203,19 @@ function sync_src() {
     "${BINPATH}/sync-sources-and-settings.sh"
 }
 
-function settings_folder_write_fix() {
+settings_folder_write_fix() {
     cd "${ROOTPATH}"
     echo "${YELLOW}+ Check Write rights in ${ROOTPATH}/sites/default${NORMAL}"
     chmod u+w "${ROOTPATH}/sites/default"
     chown ${USER}:${GROUP} "${ROOTPATH}/sites/default"
 }
 
-function test_drush_status()  {
+test_drush_status()  {
     call_drush status --format=yaml|grep -q "bootstrap: Successful"
     return $?
 }
 
-function git_checkout() {
+git_checkout() {
     cd "${ROOTPATH}"
     echo "${YELLOW}+ git status${NORMAL}"
     git status
@@ -124,7 +228,7 @@ function git_checkout() {
     git checkout ${GIT_BRANCH}
 }
 
-function filter_drush() {
+filter_drush() {
     # Prevent fork bombs
     if [ "x${1}" != "x${THIS_SCRIPT}" ];then
         if [ "x${1}" != "x${THE_DRUSH_WRAPPER}" ];then
@@ -133,18 +237,12 @@ function filter_drush() {
     fi
 }
 
-function install_drush() {
+install_drush() {
     cd "${BINPATH}"
     call_composer require "${DRUSH_SPEC}"
 }
 
-function set_drush() {
-    norec=""
-    for i in ${@};do
-        if [ "x${i}" = "xnorec" ];then
-            norec="1"
-        fi
-    done
+set_drush() {
     if [ "x${DRUSH_CALL}" = "x" ];then
         search=""
         if [ ! -x "${DRUSH_CMD}" ];then
@@ -161,48 +259,50 @@ function set_drush() {
             done
         fi
         if [ ! -x "${DRUSH_CMD}" ];then
-            install_drush
-        else
-            # we didnt install, no chance to refind it on
-            # next call
-            norec=""
-        fi
-        if [ ! -x "${DRUSH_CMD}" ];then
-            # if not found but installed, try to find the cmd
-            if [ "x${norec}" = "x" ];then
-                set_drush norec
-            else
-                echo "no drush"
-                exit 1
-            fi
+            die "no drush found"
         fi
         DRUSH_CALL="${DRUSH_CMD} --root="${WWW_DIR}" ${DRUSH_EXTRA_ARGS}"
     fi
 }
 
-function bad_exit() {
+bad_exit() {
         echo ;
         echo "${RED} ERROR: ${1}" >&2;
         echo "${NORMAL}" >&2;
         exit ${END_FAIL};
 }
 
-function check_conf_arg() {
+check_conf_arg() {
     CONFARG=${1}
     if [ "x${!CONFARG}" == "x" ]; then
         bad_exit "${CONFARG} is not defined in configuration file"
     fi
 }
 
-function ask() {
+ask() {
+    local ask=${ASK:-}
+    if [[ -n $NONINTERACTIVE ]];then
+        ask=${ask:-yauto}
+    fi
     UNDONE=1
+    NO_AVOID=${2}
     echo "${NORMAL}"
     while :
     do
+        if [ "x${ask}" = "xyauto" ]; then
+          echo " * ${1} [o/n]: ${GREEN}y (auto)${NORMAL}"
+          USER_CHOICE=ok
+          break
+        fi
         read -r -p " * ${1} [o/n]: " USER_CHOICE
         if [ "x${USER_CHOICE}" == "xn" ]; then
-            echo "${BLUE}  --> ok, step avoided.${NORMAL}"
-            USER_CHOICE=abort
+            if [ "x${NO_AVOID}" == "xNO_AVOID_MESSAGE" ]; then
+                echo "${GREEN}  --> no${NORMAL}"
+                USER_CHOICE=abort
+            else
+                echo "${BLUE}  --> ok, step avoided.${NORMAL}"
+                USER_CHOICE=abort
+            fi
             break
         else
             if [ "x${USER_CHOICE}" == "xo" ]; then
@@ -217,40 +317,6 @@ function ask() {
         fi
         echo "${RED}Please answer \"o\",\"y\" (yes|oui) or \"n\" (no|non).${NORMAL}"
     done
-}
-
-function replace_in_file() {
-  TAG=$1
-  # VALUE variable must contain escaped commas
-  VALUE=${2//,/\\,}
-  FILE=$3
-  # this is a
-  # sed -u 's, __FOO_BAR___, my value,g /in/this/file
-  echo "${YELLOW}   * ${FILE} : __${TAG}__ => ${GREEN}${VALUE}${NORMAL}"
-  sed -i 's,__'"${TAG}"'__,'"${VALUE}"',g' "${FILE}"
-}
-
-function replace_in_salt_file() {
-  TAG=$1
-  # VALUE variable must contain escaped commas
-  VALUE=${2//,/\\,}
-  FILE=$3
-  # this is a
-  # sed -u 's, {{ FOO_BAR }}, my value,g /in/this/file
-  echo "${YELLOW}   * ${FILE} : {{${TAG}}} => ${GREEN}${VALUE}${NORMAL}"
-  sed -i 's,{{'"${TAG}"'}},'"${VALUE}"',g' "${FILE}"
-}
-
-function backup_settings() {
-    cd "${ROOTPATH}"
-    NOW="$(date +"%Y-%m-%d-%S")"
-    if [ ! -d ../backups ]; then
-        mkdir ../backups
-    fi
-    echo "${YELLOW}+ backup settings.php in ../backups/settings.php.${NOW} ${NORMAL}"
-    cp sites/default/settings.php "../backups/settings.php.${NOW}";
-    echo "${YELLOW}+ backup local.settings.php in ../backups/local.settings.php.${NOW} ${NORMAL}"
-    cp sites/default/local.settings.php "../backups/local.settings.php.${NOW}";
 }
 
 download() {
@@ -269,11 +335,13 @@ download() {
 
 }
 
-COMPOSER_SET=""
-function set_composer() {
+set_composer() {
+    composer_pretendants="${COMPOSER_PRETENDANTS} /usr/local/bin/composer"
+    composer_pretendants="${composer_pretendants} /usr/bin/composer"
+    composer_pretendants="${composer_pretendants} $(get_command composer)"
     if [ "x${COMPOSER_SET}" = "x" ];then
         composer=""
-        for c in ${COMPOSER_PRETENDANTS};do
+        for c in ${composer_pretendants};do
             if [ -x "${c}" ];then
                 if "${c}" --version 1>/dev/null 2>&1;then
                     composer="${c}"
@@ -303,80 +371,82 @@ function set_composer() {
     fi
 }
 
-function call_composer() {
+call_composer() {
     set_composer
     "${COMPOSER_SET}" "${@}"
 }
 
-function call_drush() {
+call_drush() {
     set_drush
     # Always cd in drupal www dir before running drush !
     cwd="$(pwd)"
     cd "${WWW_DIR}"
     ${DRUSH_CALL} "${@}"
+    ret=$?
     cd "${cwd}"
+    return $ret
 }
 
-function verbose_call_drush() {
+verbose_call_drush() {
     echo "${YELLOW}+ drush ${@}${NORMAL}"
     call_drush "${@}"
 }
 
-function site_modules_dir() {
-    if [ "x8" = "x${DRUPAL_VERSION}" ]; then
-        echo "${WWW_DIR}/modules"
-    else
-        echo "${WWW_DIR}/sites/all/modules"
-    fi
-}
-
-function drupal_profile() {
+drupal_profile() {
     echo "${DRUPAL_PROFILE:-"${WWW_DIR}/profiles/${PROJECT_NAME}/${PROJECT_NAME}.make"}"
 }
 
-function suspend_cron() {
+suspend_cron() {
     echo "${YELLOW}+ touch ${STOP_CRON_FLAG}${NORMAL}"
     touch "${STOP_CRON_FLAG}"
 }
 
-function unsuspend_cron() {
+unsuspend_cron() {
     echo "${YELLOW}+ rm -f  ${STOP_CRON_FLAG}${NORMAL}"
     rm -f "${STOP_CRON_FLAG}"
 }
 
-function maintenance_mode() {
+maintenance_mode() {
     echo "${YELLOW}+ drush vset maintenance_mode 1${NORMAL}"
     ${BINPATH}/drush vset maintenance_mode 1
 }
 
-function undo_maintenance_mode() {
+undo_maintenance_mode() {
     echo "${YELLOW}+ drush vset maintenance_mode 0${NORMAL}"
     ${BINPATH}/drush vset maintenance_mode 0
 }
 
-function activate_maintenance() {
+activate_maintenance() {
     maintenance_mode
     suspend_cron
 }
 
-function deactivate_maintenance() {
+deactivate_maintenance() {
     undo_maintenance_mode
     unsuspend_cron
 }
 
-function drush_updb() {
+drush_updb() {
     verbose_call_drush -y updb
 }
 
-function drush_fra() {
+drush_fra() {
     verbose_call_drush -y fr-all
 }
 
-function drush_cc_all() {
+drush_cc_all() {
     verbose_call_drush -y cc all
 }
 
-function do_sync() {
+drush_cim() {
+    verbose_call_drush -y cim
+}
+
+drush_cr() {
+    verbose_call_drush -y cr
+}
+
+do_sync() {
     dest="$(basename ${1})"
     fdest="${1}"
     ftarget="${2}"
@@ -386,17 +456,22 @@ function do_sync() {
     "${RSYNC}" -e 'ssh -i "${SSH_PATH}"' -av --stats --del --ignore-errors --force ${@} "${fdest}" "${ftarget}"
 }
 
-function die() {
+die() {
     echo "$@"
     exit 1
 }
 
-function has_db() {
-    NBTABLES="$(${DRUSH} sqlq "SHOW TABLES" | wc -l | sed -e "s/ //g")"
-    test "${NBTABLES}" -gt "25"
+has_ignited_db() {
+    case $DB_TYPE in
+        postgres*|pgsql)
+            NB_TABLES=$(call_drush sqlq --extra="-N" "SELECT COUNT(*) FROM information_schema.tables WHERE table_catalog = "'"'"${DB_NAME}"'"'";" 2>/dev/null);;
+        *)
+            NB_TABLES=$(call_drush sqlq --extra="-N" "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '${DB_NAME}';" 2>/dev/null);;
+    esac
+    test "${NBTABLES}" -gt "10"
 }
 
-function rsync_www() {
+rsync_www() {
     # WARNING: never sync ${ROOTPATH}/sites/default/files and ${ROOTPATH}/var
     # Also fake a git sync status between front servers
     # End with real sources
@@ -421,7 +496,7 @@ function rsync_www() {
     done
 }
 
-function check_default_symlink() {
+check_default_symlink() {
     cd "${ROOTPATH}"
     if [ ! -d "${DATA_DIR}/default" ]; then
         echo "${YELLOW}+ Creating ${DATA_DIR}/default${NORMAL}";
@@ -456,31 +531,16 @@ function check_default_symlink() {
     fi
 }
 
-function default_user_rights() {
-    USER_RIGHTS="${BINPATH}/user_rights ${USER} ${GROUP}"
-    if  [ "${DEV_MODE}" != "x" ];then
-        USER_RIGHTS="${USER_RIGHTS} DEV"
-    fi
-    echo "${USER_RIGHTS}"
-}
-
 # LOAD USER DEFINED VARS and OVERRIDEN FUNCTIONS !!!
 ENV_SET=""
-
 SETTINGS="${BINPATH}/local_conf.sh"
-if [ ! -e "${SETTINGS}" ];then
-    echo "${SETTINGS} does not exists, create it from ${SETTINGS}.example or the salt 100_app.sls step!"
-    exit 1
-fi
-
-#  override any environment settings via local shell files
+# override any environment settings via local shell files
 for i in "${BINPATH}/local_conf.sh";do
     if [ -e "${i}" ];then
         . "${i}"
         ENV_SET="1"
     fi
 done
-
 # overriding (even just touching a settings file) is mandatory
 # to ensure that user has configured his environment
 if [ "x${ENV_SET}" = "x" ];then
@@ -488,18 +548,4 @@ if [ "x${ENV_SET}" = "x" ];then
     echo "create (even empty) ${BINPATH}/local_conf.sh"
     exit 1
 fi
-
-# POST PROCESS SOME VARIABLES
-# disabling user_rights is by setting USER_RIGHTS=no
-# user right bash script path
-# It should be absolute
-# 1st arg is the file editor user,
-# 2nd argument is the web server/php-fpm group (which may need some write rights on specific places)
-# 3rd argument CAN be DEV or empty
-if [ "x${USER_RIGHTS}" = "xno" ];then
-    USER_RIGHTS=""
-elif [ "x${USER_RIGHTS}" = "x" ];then
-    USER_RIGHTS=$(default_user_rights)
-fi
-DEVMODE="${DEV_MODE}"
 # vim:set et sts=4 ts=4 tw=80:

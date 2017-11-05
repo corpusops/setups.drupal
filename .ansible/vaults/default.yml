@@ -1,0 +1,26 @@
+---
+dbservers: dbservers
+cops_app_name: drupal
+cops_installer_mode: lazy
+cops_postgresql_roles:
+- name: "{{cops_app_name}}"
+  password: "{{cops_app_name}}"
+cops_postgresql_databases:
+- db: "{{cops_postgresql_roles[0].name}}"
+  owner: "{{cops_postgresql_roles[0].name}}"
+cops_drupal_name: "{{cops_app_name}}"
+cops_drupal_db_user: "{{cops_postgresql_roles[0].name}}"
+cops_drupal_db_name: "{{cops_postgresql_databases[0].db}}"
+cops_drupal_db_password: "{{cops_postgresql_roles[0].password}}"
+cops_drupal_push_codes:
+  - path: "{project_root}/"
+    origin_path: "{{cops_drupal_vagrant_origin_path|default(''|copsf_cwd)}}/"
+    origin: "{{cops_drupal_vagrant_origin|default('localhost')}}"
+    rsync_opts: "{{cops_drupal_vagrant_rsync_opts|default([])}}"
+    owner: "{user}"
+    group: "{group}"
+    file_tests:
+      - "composer.json"
+      - "composer.lock"
+      - ".git"
+      - "local/setups.drupal/sbin/install_corpusops.sh"

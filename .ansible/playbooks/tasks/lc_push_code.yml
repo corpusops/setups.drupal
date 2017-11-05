@@ -1,0 +1,5 @@
+---
+- become: true
+  block:
+  - include_tasks: "./_push_code.yml"
+    with_items: "{{cops_drupal_vars.push_codes}}"

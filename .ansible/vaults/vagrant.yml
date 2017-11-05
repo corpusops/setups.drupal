@@ -1,0 +1,3 @@
+---
+cops_installer_mode: vagrant
+dbservers: all

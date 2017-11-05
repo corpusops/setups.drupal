@@ -1,0 +1,9 @@
+---
+- name: "suspend new cron tasks with file lock"
+  shell: |
+      touch {{cops_drupal_vars.project_root}}/var/tmp/run_cron.lock
+- name: "switch to MAINTENANCE mode and wait 30s for open_file_cache to detect file trigger"
+  shell: |
+    set -e
+    touch {{cops_drupal_vars.project_root}}/www/sites/default/MAINTENANCE
+    sleep 30

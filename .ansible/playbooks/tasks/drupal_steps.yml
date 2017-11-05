@@ -1,0 +1,26 @@
+---
+# Preconfigured playbook to slectivily call subparts of the main drupal role
+# eg:
+#  ansible-playbook .ansible/playbooks/drupal_steps.yml -e "cops_drupal_s_setup_maintenance_on=false cops_drupal_s_setup=True"
+- become: "{{become|default(true)}}"
+  block:
+  - include_role: {name: drupal}
+    vars:
+      cops_drupal_s_vars: True
+      cops_drupal_s_users: False
+      cops_drupal_s_layout: False
+      cops_drupal_s_first_fixperms: False
+      cops_drupal_s_prerequisites: False
+      cops_drupal_s_setup: False
+      cops_drupal_s_setup_maintenance_on: True
+      cops_drupal_s_setup_configs: True
+      cops_drupal_s_setup_hosts: True
+      cops_drupal_s_setup_composer: True
+      cops_drupal_s_setup_app: True
+      cops_drupal_s_setup_cron: True
+      cops_drupal_s_setup_maintenance_off: True
+      cops_drupal_s_reverse_proxy: False
+      cops_drupal_s_workers: False
+      cops_drupal_s_entry_point: False
+      cops_drupal_s_manage_content: False
+      cops_drupal_s_end_fixperms: False
