@@ -1,6 +1,6 @@
 # {{ansible_managed}}
-{% set data = corpus_drupal_vars %}
+{% set data = cops_drupal_vars %}
 {% if data.cron_mail %}
 MAILTO="{{data.admins}}"
 {% endif %}
-{{data.cron_periodicity}} {{corpus_drupal_vars.cron_user}} "{{cfg.data_root}}/bin/drupal_cron.sh"
+{{data.cron_periodicity}} {{data.cron_user}} "{{data_root}}/bin/drupal_cron.sh"

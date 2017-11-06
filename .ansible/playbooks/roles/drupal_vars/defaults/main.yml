@@ -172,12 +172,12 @@ cops_drupal_force_remove_maintenance: 1
 # (set to 0 for special manual updates, then rm data/suspend_cron to re-enable crons)
 remove_suspend_cron: 1
 cops_drupal_db_prefix: ""
-cops_drupal_db_type: postgresql
+cops_drupal_db_type: pgsql
 cops_drupal_db_host: "127.0.0.1"
 cops_drupal_db_name: "{name}"
 cops_drupal_db_password: "{db_name}"
 cops_drupal_db_user: "{db_name}"
-cops_drupal_db_port: "{% if cops_drupal_db_type == 'postgresql'%}5432{%else%}3306{%endif%}"
+cops_drupal_db_port: "{% if cops_drupal_db_type in ['pgsql', 'postgresql']%}5432{%else%}3306{%endif%}"
 cops_drupal_db_url: "{db_type}://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 # overrides this dir with values of cops_drupal_env !
 cops_drupal_env_overrides: {}
@@ -262,7 +262,7 @@ cops_drupal_files:
      state: directory, mode: "{stickymode}750"}
   - {path: "{cfg}",
      owner: "{user}", group: "{group}",
-     state: directory, mode: "{stickymode}750"} 
+     state: directory, mode: "{stickymode}750"}
   - {path: "{project_root}/vendor",
      owner: "{user}", group: "{group}",
      state: directory, mode: "{stickymode}750"}

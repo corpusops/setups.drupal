@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # this one uses a per fqdn directory on NFS
-LOG="{{corpus_drupal_vars.data_root}}/var/log/cron/$(hostname -s)/cron.log"
-LOCK="{{corpus_drupal_vars.data_root}}/var/tmp/run_cron.lock"
+LOG="{{cops_drupal_vars.data_root}}/var/log/cron/$(hostname -s)/cron.log"
+LOCK="{{cops_drupal_vars.data_root}}/var/tmp/run_cron.lock"
 #
-MINS="{{corpus_drupal_vars.cron_lock_minutes}}"
+MINS="{{cops_drupal_vars.cron_lock_minutes}}"
 LOCKD="$(dirname $LOCK)"
 LOGD="$(dirname "$LOG")"
 find "${LOCK}" -type f -mmin +${MINS} -delete 1>/dev/null 2>&1
