@@ -16,6 +16,7 @@ DB_HOST="127.0.0.1"
 DB_NAME="sampledev"
 DB_PORT="3306"
 
+PROFILE_NAME="drupal"
 SITE_NAME="SAMPLE"
 SITE_MAIL="contact@localhost"
 SITE_DEFAULT_COUNTRY="FR"

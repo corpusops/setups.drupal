@@ -41,9 +41,9 @@ $settings['allow_authorize_operations'] = FALSE;
 
 // D8 config sync directory, better outside webroot than in a random directory in sites/default/files
 $config_directories = array(
-    'staging' => '{{data.conf_staging_dir}}',
     'sync' => '{{data.conf_sync_dir}}',
-    'to_dev' => '{{data.conf_todev_dir}}',
+    // 'staging' => '{{data.conf_staging_dir}}',
+    // 'to_dev' => '{{data.conf_todev_dir}}',
 );
 
 $settings['install_profile'] = '{{ddata.drupal_profile}}';

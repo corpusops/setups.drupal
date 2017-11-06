@@ -35,7 +35,8 @@ BINPATH="$(echo "$THIS_SCRIPT"|sed -re "s/sbin\/.*/sbin/g")"
 ROOTPATH="${ROOTPATH:-"$(cd "${BINPATH}" && cd .. && pwd)"}"
 WWW_DIR="${WWW_DIR:-"${ROOTPATH}/www"}"
 SITES_DIR="${SITES_DIR:-"${WWW_DIR}/sites"}"
-DRUPAL_CONFIG_PATH="${ROOTPATH}/lib/config/sync"
+SITES_SUBDIR="${SITES_SUBDIR:-"default"}"
+#DRUPAL_CONFIG_PATH="${ROOTPATH}/lib/config/sync"
 # data dir (in salt/data_root) or $root/sites on non salt env.
 DATA_DIR="${DATA_DIR:-"${ROOTPATH}/sites"}"
 STOP_CRON_FLAG="${ROOTPATH}/var/tmp/suspend_drupal_cron_flag"
@@ -53,8 +54,9 @@ INSTALL_MARKER="${FORCE_INSTALL_MARKER:-/a/non/existing/file}"
 FORCE_INSTALL_MARKER="${FORCE_INSTALL_MARKER:-/a/non/existing/file}"
 FORCE_INSTALL="${FORCE_INSTALL:-}"
 
-# override the drush profile asbsolute path
-DRUPAL_PROFILE=""
+# name of the base profile to use
+# override it in local_conf.sh !
+PROFILE_NAME="drupal"
 
 # CODE SOURCE SYNC
 SSH_PATH="${HOME}/.ssh/id_dsa"
@@ -377,11 +379,19 @@ call_composer() {
 }
 
 call_drush() {
+    local pre=""
+    if [ "x${DB_TYPE}" = "xpgsql" ] && [ "x${DB_PASS}" != "x" ];then
+        export PGPASSWORD="$DB_PASS"
+    fi
+    if [ "x$1" == "xstrace" ];then
+        pre="strace -f"
+        shift
+    fi
     set_drush
     # Always cd in drupal www dir before running drush !
     cwd="$(pwd)"
     cd "${WWW_DIR}"
-    ${DRUSH_CALL} "${@}"
+    ${pre} ${DRUSH_CALL} "${@}"
     ret=$?
     cd "${cwd}"
     return $ret
@@ -391,9 +401,16 @@ verbose_call_drush() {
     echo "${YELLOW}+ drush ${@}${NORMAL}"
     call_drush "${@}"
 }
-
 drupal_profile() {
-    echo "${DRUPAL_PROFILE:-"${WWW_DIR}/profiles/${PROJECT_NAME}/${PROJECT_NAME}.make"}"
+    echo "${DRUPAL_PROFILE:-"${WWW_DIR}/profiles/${PROFILE_NAME}"}"
+}
+
+drupal_profile_config() {
+    echo "${DRUPAL_PROFILE_CONFIG:-"$(drupal_profile)/config"}"
+}    
+
+drupal_profile_config_sync() {
+    echo "${DRUPAL_PROFILE_CONFIG_SYNC:-"$(drupal_profile_config)/sync"}"
 }
 
 suspend_cron() {
@@ -464,11 +481,11 @@ die() {
 has_ignited_db() {
     case $DB_TYPE in
         postgres*|pgsql)
-            NB_TABLES=$(call_drush sqlq --extra="-N" "SELECT COUNT(*) FROM information_schema.tables WHERE table_catalog = "'"'"${DB_NAME}"'"'";" 2>/dev/null);;
+            NB_TABLES=$( call_drush sqlq --extra="-t" "SELECT COUNT(*) FROM information_schema.tables WHERE table_catalog ='${DB_NAME}' AND table_schema NOT IN ('pg_catalog', 'information_schema');" 2>/dev/null; );;
         *)
             NB_TABLES=$(call_drush sqlq --extra="-N" "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '${DB_NAME}';" 2>/dev/null);;
     esac
-    test "${NBTABLES}" -gt "10"
+    test "${NB_TABLES}" -gt "10"
 }
 
 rsync_www() {
@@ -548,4 +565,4 @@ if [ "x${ENV_SET}" = "x" ];then
     echo "create (even empty) ${BINPATH}/local_conf.sh"
     exit 1
 fi
-# vim:set et sts=4 ts=4 tw=80:
+# vim:set et sts=4 ts=4 tw=0:

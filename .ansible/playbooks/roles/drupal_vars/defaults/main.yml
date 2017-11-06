@@ -5,8 +5,7 @@ corpusops_core_projects_path: /srv/projects
 # (attention, uids!)
 cops_drupal__supereditors_paths: [
   "{project_root}",
-  "{data_root}",
-  /var, /home, /opt, /srv]
+  "{data_root}"]
 # space separated string of uids to allow to write inside
 # projetct directories (used in development through posix ACLS setter)
 cops_drupal__supereditors: >-
@@ -19,8 +18,7 @@ cops_drupal_deb_packages:
     - unzip
     - xsltproc
     - curl
-    - "{{ corpusops_localsettings_php_vars.spackages_postgresql }}"
-    #- "{{ corpusops_localsettings_php_vars.spackages_myŝql }}"
+    - "{{corpusops_localsettings_php_vars['spackages_{0}'.format(cops_drupal_db_type)]}}"
     - "{{ corpusops_localsettings_php_vars.spackages_gd }}"
     - "{{ corpusops_localsettings_php_vars.spackages_cli }}"
     - "{{ corpusops_localsettings_php_vars.spackages_curl }}"
