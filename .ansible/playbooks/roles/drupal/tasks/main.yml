@@ -1,31 +1,32 @@
 ---
+- include_role: {name: drupal_vars, allow_duplicates: false}
 - include_tasks: P1000_users.yml
-  tags: [drupal, users, drupal_users]
+  tags: [drupal, users, drupal_users, cops_drupal_s_users]
   when: "cops_drupal_s_users"
 - include_tasks: P2000_layout.yml
-  tags: [drupal, layout, drupal_layout]
+  tags: [drupal, layout, drupal_layout, cops_drupal_s_layout]
   when: "cops_drupal_s_layout"
 - include_tasks: G9000_fixperms.yml
-  tags: [drupal, first_fixperms, drupal_first_fixperms]
+  tags: [drupal, first_fixperms, drupal_first_fixperms, cops_drupal_s_first_fixperms]
   when: "cops_drupal_s_first_fixperms"
 - include_tasks: P4000_prerequisites.yml
-  tags: [drupal, prerequisites, drupal_prerequisites]
+  tags: [drupal, prerequisites, drupal_prerequisites, cops_drupal_s_prerequisites]
   when: "cops_drupal_s_prerequisites"
 - include_tasks: P4500_setup.yml
-  tags: [drupal, setup, drupal_setup]
+  tags: [drupal, setup, drupal_setup, cops_drupal_s_setup]
   when: "cops_drupal_s_setup"
 - include_tasks: P6000_reverse_proxy.yml
-  tags: [drupal, reverse_proxy, drupal_reverse_proxy]
+  tags: [drupal, reverse_proxy, drupal_reverse_proxy, cops_drupal_s_reverse_proxy]
   when: "cops_drupal_s_reverse_proxy"
 - include_tasks: P7000_workers.yml
-  tags: [drupal, workers, drupal_workers]
+  tags: [drupal, workers, drupal_workers, cops_drupal_s_workers]
   when: "cops_drupal_s_workers"
 - include_tasks: P8000_entry_point.yml
-  tags: [drupal, entry_point, drupal_entry_point]
+  tags: [drupal, entry_point, drupal_entry_point, cops_drupal_s_entry_point]
   when: "cops_drupal_s_entry_point"
 - include_tasks: P8500_manage_content.yml
-  tags: [drupal, manage_content, drupal_manage_content]
+  tags: [drupal, manage_content, drupal_manage_content, cops_drupal_s_manage_content]
   when: "cops_drupal_s_manage_content"
 - include_tasks: G9000_fixperms.yml
-  tags: [drupal, end_fixperms, drupal_end_fixperms]
+  tags: [drupal, end_fixperms, drupal_end_fixperms, cops_drupal_s_end_fixperms]
   when: "cops_drupal_s_end_fixperms"

@@ -407,7 +407,7 @@ drupal_profile() {
 
 drupal_profile_config() {
     echo "${DRUPAL_PROFILE_CONFIG:-"$(drupal_profile)/config"}"
-}    
+}
 
 drupal_profile_config_sync() {
     echo "${DRUPAL_PROFILE_CONFIG_SYNC:-"$(drupal_profile_config)/sync"}"

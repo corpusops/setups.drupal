@@ -1,0 +1,6 @@
+---
+- hosts: all
+  tasks:
+    - import_tasks: "./tasks/drupal_steps.yml"
+      vars:
+        cops_drupal_s_reverse_proxy: True

@@ -1,10 +1,12 @@
 ---
 # set the cops_drupal_vars var from defaults/main.yml
-- include_role: {name: corpusops.roles/vars_registry}
+- name: "drupal registry init"
+  include_role: {name: corpusops.roles/vars_registry}
   vars:
     cops_vars_registry_target: cops_drupal
   tags: [drupal, vars, drupal_vars]
-- include_jinja_vars:
+- name: "drupal registry - pre"
+  include_jinja_vars:
     name: __GLOBAL__
     content: |
       ---
@@ -24,47 +26,34 @@
       {{ _vars | to_json }}
   tags: [drupal, vars, drupal_vars]
   no_log: true
-# generate password on remote box if not found
-- include_role:
-    name: corpusops.roles/get_secret_variable
-  vars:
-    _cops_get_secret_variable:
-      name: cops_drupal_local_settings_drupal_hash
-      path: "{{cops_drupal_vars.data_root}}/secrets"
-  when: not cops_drupal_vars.local_settings_drupal_hash
-- include_role:
-    name: corpusops.roles/get_secret_variable
-  vars:
-    _cops_get_secret_variable:
-      name: cops_drupal_local_settings_site_password
-      path: "{{cops_drupal_vars.data_root}}/secrets"
-  when: not cops_drupal_vars.local_settings_site_password
-- include_jinja_vars:
+- name: "drupal registry - first resolve"
+  include_jinja_vars:
     name: __GLOBAL__
     content: |
       ---
       {% set p = 'cops_drupal_vars' %}
       {% set _vars = {p: vars[p]} %}
-      {% set _ = vars[p].update({
-          'local_settings_site_password': cops_drupal_local_settings_site_password,
-          'local_settings_drupal_hash': cops_drupal_local_settings_drupal_hash
-      }) %}
+      {% set _ = _vars.update({p: vars[p]|copsf_format_resolve}) %}
       {{ _vars | to_json }}
   tags: [drupal, vars, drupal_vars]
-  when: >-
-    (not cops_drupal_vars.local_settings_site_password or
-     not cops_drupal_vars.local_settings_drupal_hash)
   no_log: true
-- include_jinja_vars:
+
+# generate password on remote box if not found
+- name: "drupal secrets -- {{drupalsecret}}}"
+  include_tasks: _set_secret_variable.yml
+  loop_control: {loop_var: drupalsecret}
+  with_items: "{{cops_drupal_vars.secret_variables}}"
+  tags: [drupal, vars, drupal_vars]
+
+- name: "Finalize drupal registry"
+  include_jinja_vars:
     name: __GLOBAL__
     content: |
       ---
       {% set p = 'cops_drupal_vars' %}
       {% set _vars = {p: vars[p]} %}
       #
-      {% for n in ['nginx', 'fpm', 'smtp',
-                   'local_settings_smtp',
-                   'local_settings', 'force'] %}
+      {% for n in vars[p]['nested_configs'] %}
       {%  set _n = _vars[p].setdefault(n, {}) %}
       {%  for i, val in _vars[p].items() %}
       {%    set pref = n+'_' %}
@@ -74,11 +63,9 @@
       {%    endif %}
       {%  endfor %}
       {% endfor %}
-      {% set _ = _vars.update({p: vars[p]|copsf_format_resolve}) %}
       #
       {{ _vars | to_json }}
   tags: [drupal, vars, drupal_vars]
   no_log: true
+
 #- debug: {msg: "{{cops_drupal_vars}}"}
-#  failed_when: "cops_drupal_vars_debug|default(False)"
-#  no_log: "not (cops_drupal_vars_debug|default(False))"

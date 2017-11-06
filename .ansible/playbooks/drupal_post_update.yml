@@ -3,10 +3,7 @@
   tasks:
     - import_tasks: "./tasks/drupal_step.yml"
       vars:
-        cops_drupal_s_users: False
         cops_drupal_s_layout: True
-        cops_drupal_s_first_fixperms: False
-        cops_drupal_s_prerequisites: False
         cops_drupal_s_setup: True
         cops_drupal_s_setup_maintenance_on: True
         cops_drupal_s_setup_configs: True
@@ -18,5 +15,4 @@
         cops_drupal_s_reverse_proxy: True
         cops_drupal_s_workers: True
         cops_drupal_s_entry_point: True
-        cops_drupal_s_manage_content: False
         cops_drupal_s_end_fixperms: True

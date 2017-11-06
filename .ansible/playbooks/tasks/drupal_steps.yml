@@ -4,23 +4,24 @@
 #  ansible-playbook .ansible/playbooks/drupal_steps.yml -e "cops_drupal_s_setup_maintenance_on=false cops_drupal_s_setup=True"
 - become: "{{become|default(true)}}"
   block:
+  - set_fact:
+      cops_drupal_s_vars: "{{cops_drupal_s_vars|default(true)}}"
+      cops_drupal_s_users: "{{cops_drupal_s_users|default(false)}}"
+      cops_drupal_s_layout: "{{cops_drupal_s_layout|default(false)}}"
+      cops_drupal_s_first_fixperms: "{{cops_drupal_s_first_fixperms|default(false)}}"
+      cops_drupal_s_prerequisites: "{{cops_drupal_s_prerequisites|default(false)}}"
+      cops_drupal_s_setup: "{{cops_drupal_s_setup|default(false)}}"
+      cops_drupal_s_setup_maintenance_on: "{{cops_drupal_s_setup_maintenance_on|default(false)}}"
+      cops_drupal_s_setup_configs: "{{cops_drupal_s_setup_configs|default(false)}}"
+      cops_drupal_s_setup_hosts: "{{cops_drupal_s_setup_hosts|default(false)}}"
+      cops_drupal_s_setup_composer: "{{cops_drupal_s_setup_composer|default(false)}}"
+      cops_drupal_s_setup_app: "{{cops_drupal_s_setup_app|default(false)}}"
+      cops_drupal_s_setup_cron: "{{cops_drupal_s_setup_cron|default(false)}}"
+      cops_drupal_s_setup_maintenance_off: "{{cops_drupal_s_setup_maintenance_off|default(false)}}"
+      cops_drupal_s_reverse_proxy: "{{cops_drupal_s_reverse_proxy|default(false)}}"
+      cops_drupal_s_workers: "{{cops_drupal_s_workers|default(false)}}"
+      cops_drupal_s_entry_point: "{{cops_drupal_s_entry_point|default(false)}}"
+      cops_drupal_s_manage_content: "{{cops_drupal_s_manage_content|default(false)}}"
+      cops_drupal_s_end_fixperms: "{{cops_drupal_s_end_fixperms|default(false)}}"
+  - include_role: {name: drupal_vars}
   - include_role: {name: drupal}
-    vars:
-      cops_drupal_s_vars: True
-      cops_drupal_s_users: False
-      cops_drupal_s_layout: False
-      cops_drupal_s_first_fixperms: False
-      cops_drupal_s_prerequisites: False
-      cops_drupal_s_setup: False
-      cops_drupal_s_setup_maintenance_on: True
-      cops_drupal_s_setup_configs: True
-      cops_drupal_s_setup_hosts: True
-      cops_drupal_s_setup_composer: True
-      cops_drupal_s_setup_app: True
-      cops_drupal_s_setup_cron: True
-      cops_drupal_s_setup_maintenance_off: True
-      cops_drupal_s_reverse_proxy: False
-      cops_drupal_s_workers: False
-      cops_drupal_s_entry_point: False
-      cops_drupal_s_manage_content: False
-      cops_drupal_s_end_fixperms: False

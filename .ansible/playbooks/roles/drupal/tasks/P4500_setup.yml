@@ -1,30 +1,32 @@
 ---
 - include_tasks: _maintenance_on.yml
   tags: [setup_maintenance, setup_maintenance_on,
+        cops_drupal_s_setup_maintenance_on,
          drupal_setup_maintenance, drupal_setup_maintenance_on]
   when: "cops_drupal_s_setup_maintenance_on"
 - include_tasks: _setup_configs.yml
-  tags: [setup_configs, drupal_setup_configs]
+  tags: [setup_configs, drupal_setup_configs, +cops_drupal_s_setup_configs]
   when: "cops_drupal_s_setup_configs"
 
 - include_tasks: _setup_hosts.yml
-  tags: [setup_hosts, drupal_setup_hosts]
+  tags: [setup_hosts, drupal_setup_hosts, cops_drupal_s_setup_hosts]
   when: "cops_drupal_s_setup_hosts"
 
 - include_tasks: _setup_composer.yml
-  tags: [setup_composer, drupal_setup_composer]
+  tags: [setup_composer, drupal_setup_composer, cops_drupal_s_setup_composer]
   when: "cops_drupal_s_setup_composer"
 
 - include_tasks: _setup_app.yml
-  tags: [setup_app, drupal_setup_app]
+  tags: [setup_app, drupal_setup_app, cops_drupal_s_setup_app]
   when: "cops_drupal_s_setup_app"
 
 - include_tasks: _setup_cron.yml
-  tags: [setup_cron, drupal_setup_cron]
+  tags: [setup_cron, drupal_setup_cron, cops_drupal_s_setup_cron]
   when: "cops_drupal_s_setup_cron"
 
 - include_tasks: _maintenance_off.yml
   tags: [setup_maintenance, drupal_setup_maintenance,
+        cops_drupal_s_setup_maintenance_off,
          setup_maintenance_off, drupal_setup_maintenance_off]
   when: "cops_drupal_s_setup_maintenance_off"
 

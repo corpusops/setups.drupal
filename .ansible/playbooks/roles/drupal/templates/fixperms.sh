@@ -24,9 +24,9 @@ vv() { log "${@}"; "$@"; }
 in_group() {
     local user=$1
     local group=$2
-    groups $user \
-        | sed -e "s/^[^:]\+: \+//g" | xargs -n1 \
-        | egrep -q  "^${group}$"
+    groups $user 2>/dev/null\
+        | sed -e "s/^[^:]\+: \+//g" | xargs -n1 2>/dev/null\
+        | egrep -q "^${group}$"
     return $?
 }
 user_exists() { ( getent passwd $i >/dev/null 2>&1; );return $?; }

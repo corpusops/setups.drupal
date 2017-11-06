@@ -3,27 +3,24 @@
     name: "corpusops.roles/services_http_nginx"
   vars:
     corpusops_services_http_nginx_default_vhost_is_default_server: "{{cops_drupal_vars.default_vhost_is_default_server}}"
-  tags: [drupal,
-         reverseproxy, reverseproxy_install,
+  tags: [drupal, reverseproxy, reverseproxy_install,
          drupal_reverseproxy, drupal_reverseproxy_install]
 - htpasswd:
     path: "{{cops_drupal_vars.htpasswd}}"
-    name: "{{item.key}}"
-    password: "{{item.value.password}}"
+    name: "{{item.user}}"
+    password: "{{item.password}}"
     state: present
-  with_dict: "{{cops_drupal_vars.users}}"
-  when: "(cops_drupal_vars.users is not none and
-          cops_drupal_vars.users.keys()|length > 0)"
-  tags: [drupal,
-         reverseproxy, reverseproxy_users,
+  with_items: "{{cops_drupal_vars.http_users}}"
+  when: "(cops_drupal_vars.http_users is not none and
+          cops_drupal_vars.http_users|length > 0)"
+  tags: [drupal, reverseproxy, reverseproxy_users,
          drupal_reverseproxy, drupal_reverseproxy_users]
 - include_jinja_vars:
     name: __GLOBAL__
     content: {_corpusops_nginx_vhost: "{{cops_drupal_vars.nginx}}"}
 - include_role:
     name: "corpusops.roles/nginx_vhost"
-  tags: [drupal,
-         reverseproxy, reverseproxy_config,
+  tags: [drupal, reverseproxy, reverseproxy_config,
          drupal_reverseproxy, drupal_reverseproxy_config]
 - include_jinja_vars:
     name: __GLOBAL__

@@ -1,23 +1,23 @@
 ---
 - copy:
-    path: "{{corpus_drupal_vars.data_root}}/bin/drupal_cron.sh"
+    dest: "{{cops_drupal_vars.data_root}}/bin/drupal_cron.sh"
     src: "../templates/cron_command"
-    owner: "{{corpus_drupal_vars.user}}"
+    owner: "{{cops_drupal_vars.user}}"
     force: true
-    group: "{{corpus_drupal_vars.group}}"
+    group: "{{cops_drupal_vars.group}}"
     mode: "0750"
-  when: corpus_drupal_vars.cron_activated
+  when: cops_drupal_vars.cron_activated
 
 - copy:
-    path: "/etc/cron.d/{{corpus_drupal_vars.name}}drupalcron"
+    dest: "/etc/cron.d/{{cops_drupal_vars.name}}drupalcron"
     src: "../templates/cron"
     owner: "root"
     force: true
     group: "root"
     mode: "0644"
-  when: corpus_drupal_vars.cron_activated
+  when: cops_drupal_vars.cron_activated
 
 - file:
     state: absent
     path: "{{item}}"
-  when: not corpus_drupal_vars.cron_activated
+  when: not cops_drupal_vars.cron_activated
