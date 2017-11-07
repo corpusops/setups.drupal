@@ -1,5 +1,4 @@
 ---
-- include_role: {name: drupal_vars, allow_duplicates: false}
 - include_tasks: P1000_users.yml
   tags: [drupal, users, drupal_users, cops_drupal_s_users]
   when: "cops_drupal_s_users"
