@@ -4,38 +4,38 @@
     enabled: "{{cops_drupal_vars.activated | ternary(True, False)}}"
     name: "{{item}}"
   with_items: "{{cops_drupal_vars.services}}"
-  when: "corpusops_vars.has_services_manager"
-  tags: [drupal, workers_services, drupal_workers_services]
+  when: "cops_drupal_s_workers_service and corpusops_vars.has_services_manager"
+  tags: [cops_drupal_s_workers_service]
 - systemd:
     enabled: "{{cops_drupal_vars.activated | ternary(True, False)}}"
     daemon_reload: yes
     name: "{{item}}"
   with_items: "{{cops_drupal_vars.reconfigure_services}}"
-  when: "corpusops_vars.has_services_manager"
-  tags: [drupal, workers_services, drupal_workers_reconfigure_services]
+  when: "cops_drupal_s_workers_service and corpusops_vars.has_services_manager"
+  tags: [cops_drupal_s_workers_service]
 
 # Check reverse proxy is listening
 - uri:
     url: "http://{{cops_drupal_vars.query_host}}:{{cops_drupal_vars.nginx.port}}/"
     return_content: true
-  when: "(corpusops_vars.has_services_manager and
+  when: "cops_drupal_s_workers_checks and (
+          corpusops_vars.has_services_manager and
           cops_drupal_vars.activated)"
   register: cops_drupal_check
   # TODO: @kiorky check we only have an HTTP response (any status)
   until: "'<html>' in cops_drupal_check.content"
   retries: 10
   delay: 1
-  tags: [drupal, workers_configs,
-         drupal_workers_configs]
+  tags: [cops_drupal_s_workers_checks]
 # Check php-fpm is listening
 - uri:
     url: "http://{{cops_drupal_vars.query_host}}:{{cops_drupal_vars.nginx.port}}/{{cops_drupal_vars.fpm.ping}}"
     return_content: true
-  when: "(corpusops_vars.has_services_manager and
+  when: "cops_drupal_s_workers_checks and (
+          corpusops_vars.has_services_manager and
           cops_drupal_vars.activated)"
   register: cops_drupal_check
   until: "'pong' in cops_drupal_check.content"
   retries: 10
   delay: 1
-  tags: [drupal, workers_configs,
-         drupal_workers_configs]
+  tags: [cops_drupal_s_workers_checks]

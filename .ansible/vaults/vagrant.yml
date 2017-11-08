@@ -1,3 +1,4 @@
 ---
 cops_installer_mode: vagrant
 dbservers: all
+cops_drupal_ep_playbook: "vagrant_site.yml"

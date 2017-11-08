@@ -1,0 +1,4 @@
+---
+dbservers: ""
+cops_drupal_ep_playbook: "docker_site.yml"
+cops_drupal_reconfigure_services: ["post-start-{service}"]

@@ -7,6 +7,7 @@
     force: "{{item.force|default(True)}}"
     owner: "{{item.owner|default(omit)}}"
     group: "{{item.group|default(omit)}}"
+    trim_blocks: "{{item.trim_blocks|default(False)}}"
   with_list: "{{cops_drupal_ep_configs}}"
   tags: [drupal,
          entrypoint_configs,

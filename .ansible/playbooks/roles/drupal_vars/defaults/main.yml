@@ -194,55 +194,71 @@ cops_drupal_env: {}
 cops_drupal_drupal_bind_host: '127.0.0.1'
 # templates
 ## entry point
+cops_drupal_ep_vaults:
+  - /setup/reconfigure.yml
 cops_drupal_ep_template: "../templates/app_entry_point"
 # entrypoint settings, tags for cli and vars for playbook reuse via
 # conditionals
 cops_drupal_ep_playbook: "site.yml"
 cops_drupal_ep_skip_tags: "{{(
-  'drupal_users,'
-  'drupal_first_fixperms,'
-  'drupal_prerequisites,'
-  'drupal_do_setup,'
-  'drupal_workers,'
-  'drupal_entry_point,'
-  'drupal_manage_content,'
-  'drupal_end_fixperms'
+  'cops_drupal_s_users,'
+  'cops_drupal_s_first_fixperms,'
+  'cops_drupal_s_prerequisites,'
+  'cops_drupal_s_setup,'
+  'cops_drupal_s_workers,'
+  'cops_drupal_s_entry_point,'
+  'cops_drupal_s_manage_content,'
+  'cops_drupal_s_end_fixperms'
   )}}"
 cops_drupal_ep_post_start_skip_tags: "{{(
-  'drupal_users,'
-  'drupal_first_fixperms,'
-  'drupal_prerequisites,'
-  'drupal_do_setup,'
-  'drupal_entry_point'
+  'cops_drupal_s_users,'
+  'cops_drupal_s_first_fixperms,'
+  'cops_drupal_s_prerequisites,'
+  'cops_drupal_s_setup_composer,'
+  'cops_drupal_s_workers,'
+  'cops_drupal_s_entry_point,'
   )}}"
 # global orchestration steps (db, code sync, web & workers prereqs, drupal config)
 cops_drupal_lifecycle_all_drupal: true
 cops_drupal_lifecycle_all_db: true
-cops_drupal_lifecycle_push_code: True
-cops_drupal_lifecycle_db_servers: True
-cops_drupal_lifecycle_db_objects: True
-cops_drupal_lifecycle_nginx: True
-cops_drupal_lifecycle_fpm: True
-cops_drupal_lifecycle_app: True
+cops_drupal_lifecycle_push_code: true
+cops_drupal_lifecycle_db_servers: true
+cops_drupal_lifecycle_db_objects: true
+cops_drupal_lifecycle_nginx: true
+cops_drupal_lifecycle_fpm: true
+cops_drupal_lifecycle_app: true
 # drupal & project deployment steps
-cops_drupal_s_vars: True
-cops_drupal_s_users: True
-cops_drupal_s_layout: True
-cops_drupal_s_first_fixperms: True
-cops_drupal_s_prerequisites: True
-cops_drupal_s_setup: True
-cops_drupal_s_setup_maintenance_on: True
-cops_drupal_s_setup_configs: True
-cops_drupal_s_setup_hosts: True
-cops_drupal_s_setup_composer: True
-cops_drupal_s_setup_app: True
-cops_drupal_s_setup_cron: True
-cops_drupal_s_setup_maintenance_off: True
-cops_drupal_s_reverse_proxy: True
-cops_drupal_s_workers: True
-cops_drupal_s_entry_point: True
-cops_drupal_s_manage_content: True
-cops_drupal_s_end_fixperms: True
+cops_drupal_s_vars: true
+cops_drupal_s_users: true
+cops_drupal_s_users_user: true
+cops_drupal_s_users_group: true
+cops_drupal_s_users_fpm_user: true
+cops_drupal_s_users_fpm_group: true
+cops_drupal_s_layout: true
+cops_drupal_s_layout_layout: true
+cops_drupal_s_first_fixperms: true
+cops_drupal_s_fixperms_configs: true
+cops_drupal_s_fixperms_run: true
+cops_drupal_s_prerequisites: true
+cops_drupal_s_prerequisites_pkgs: true
+cops_drupal_s_setup: true
+cops_drupal_s_setup_maintenance_on: true
+cops_drupal_s_setup_configs: true
+cops_drupal_s_setup_hosts: true
+cops_drupal_s_setup_composer: true
+cops_drupal_s_setup_app: true
+cops_drupal_s_setup_cron: true
+cops_drupal_s_setup_maintenance_off: true
+cops_drupal_s_reverse_proxy: true
+cops_drupal_s_reverse_proxy_install: true
+cops_drupal_s_reverse_proxy_users: true
+cops_drupal_s_reverse_proxy_config: true
+cops_drupal_s_workers: true
+cops_drupal_s_workers_service: true
+cops_drupal_s_workers_checks: true
+cops_drupal_s_entry_point: true
+cops_drupal_s_manage_content: true
+cops_drupal_s_end_fixperms: true
 #
 cops_drupal_ep_main_ep: "/entry_point"
 cops_drupal_php_version: "7.1"
@@ -251,8 +267,9 @@ cops_drupal_service: "php{{cops_drupal_php_version}}-fpm"
 cops_drupal_services:
 - "{service}"
 - "nginx"
-cops_drupal_reconfigure_services:
-- "post-start-{service}"
+cops_drupal_reconfigure_services: []
+# use in docker (via a vault):
+# cops_drupal_reconfigure_services: ["post-start-{service}"]
 cops_drupal_rhandlers: [restart_cops_drupal]
 cops_drupal_activated: true
 #
@@ -377,8 +394,8 @@ cops_drupal_nginx_server_aliases:
 cops_drupal_nginx_redirect_aliases: true
 cops_drupal_htpasswd: "/etc/nginx/{name}-htpasswd"
 #cops_drupal_http_users: []
-cops_drupal_http_users:
-  - {user: name, password: foobar}
+cops_drupal_http_users: []
+#  - {user: name, password: foobar}
 cops_drupal_ssl_protected: false
 cops_drupal_nginx: {}
 cops_drupal_nginx_port: "80"

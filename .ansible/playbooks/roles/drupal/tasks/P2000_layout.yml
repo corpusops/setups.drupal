@@ -10,4 +10,5 @@
     group: "{{item.group|default(omit)}}"
     recurse: "{{item.recurse|default(omit)}}"
   with_items: "{{cops_drupal_vars.files}}"
-  tags: [drupal, layout, drupal_layout]
+  tags: [cops_drupal_s_layout_layout]
+  when: cops_drupal_s_layout_layout
