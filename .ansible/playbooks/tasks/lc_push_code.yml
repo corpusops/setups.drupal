@@ -1,5 +1,10 @@
 ---
 - become: true
   block:
+  - include_tasks: "./tasks/drupal_steps.yml"
+    vars:
+      cops_drupal_s_vars: true
+      cops_drupal_s_users: true
+      cops_drupal_s_layout: true
   - include_tasks: "./_push_code.yml"
     with_items: "{{cops_drupal_vars.push_codes}}"
