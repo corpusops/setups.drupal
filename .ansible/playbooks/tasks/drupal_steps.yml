@@ -23,5 +23,7 @@
       cops_drupal_s_entry_point: "{{cops_drupal_s_entry_point|default(false)}}"
       cops_drupal_s_manage_content: "{{cops_drupal_s_manage_content|default(false)}}"
       cops_drupal_s_end_fixperms: "{{cops_drupal_s_end_fixperms|default(false)}}"
-  - include_role: {name: drupal_vars}
+  - include_role: {name: drupal_vars, allow_duplicates: true}
+    tags: [sync_code]
   - include_role: {name: drupal, allow_duplicates: true}
+    tags: [sync_code]
