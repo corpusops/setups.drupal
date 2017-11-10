@@ -1,10 +1,38 @@
 ---
+# generate the app vhost(s) before nginx install itself
+# as if we have syntax errors, we wont have any chance to regenerate the
+# vhost before the general nginx role will run (syntax check -> deploy KO)
+#
+# Configure nginx default vhost
+- block:
+    - name: Generate default virtualhost
+      include_role:
+        name: "corpusops.roles/nginx_default_vhost"
+      vars:
+        _corpusops_nginx_default_vhost:
+          is_default_server: "{{
+              cops_drupal_vars.default_vhost_is_default_server}}"
+          check_config: false
+      tags: [cops_drupal_s_reverse_proxy_config_dvhost]
+      when: "cops_drupal_s_reverse_proxy_config_dvhost"
+    - name: Generate APP virtualhost
+      include_role:
+        name: "corpusops.roles/nginx_vhost"
+        allow_duplicates: true
+      vars:
+        _corpusops_nginx_vhost: "{{cops_drupal_vars.nginx}}"
+      tags: [cops_drupal_s_reverse_proxy_config_vhost]
+      when: "cops_drupal_s_reverse_proxy_config_vhost"
+  tags: [cops_drupal_s_reverse_proxy_config]
+  when: "cops_drupal_s_reverse_proxy_config"
+
+# Configure nginx itself
 - include_role:
     name: "corpusops.roles/services_http_nginx"
-  vars:
-    corpusops_services_http_nginx_default_vhost_is_default_server: "{{cops_drupal_vars.default_vhost_is_default_server}}"
   tags: [cops_drupal_s_reverse_proxy_install]
   when: "cops_drupal_s_reverse_proxy_install"
+
+# Configure http users
 - htpasswd:
     path: "{{cops_drupal_vars.htpasswd}}"
     name: "{{item.user}}"
@@ -15,15 +43,3 @@
             cops_drupal_vars.http_users is not none and
             cops_drupal_vars.http_users|length > 0)"
   tags: [cops_drupal_s_reverse_proxy_users]
-- name: Generate drupal virtualhost
-  block:
-    - include_jinja_vars:
-        name: __GLOBAL__
-        content: {_corpusops_nginx_vhost: "{{cops_drupal_vars.nginx}}"}
-    - include_role:
-        name: "corpusops.roles/nginx_vhost"
-    - include_jinja_vars:
-        name: __GLOBAL__
-        content: {_corpusops_nginx_vhost: {}, corpusops_nginx_vhost: {}}
-  tags: [cops_drupal_s_reverse_proxy_config]
-  when: "cops_drupal_s_reverse_proxy_config"

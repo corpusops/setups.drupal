@@ -1,11 +1,37 @@
 ---
-# set the cops_drupal_vars var from defaults/main.yml
+# compute some defaults
+- set_fact:
+    # Set absolute path to app role (for templates path)
+    cops_drupal_vrole_path: "{{role_path.replace('_vars', '')}}"
+    # port depending on db
+    cops_drupal_db__port: |-
+        {% if cops_drupal_db_port %}
+        {{ cops_drupal_db_port }}
+        {% elif cops_drupal_db_type in ['pgsql', 'postgresql'] %}
+        5432
+        {%else%}
+        3306
+        {%endif%}
+- set_fact:
+    cops_drupal_db_port: "{{cops_drupal_db__port.strip()}}"
+# Set the cops_drupal_vars var from defaults/main.yml
 - name: "drupal registry init"
   include_role: {name: corpusops.roles/vars_registry}
   vars:
     cops_vars_registry_target: cops_drupal
   tags: [drupal, vars, drupal_vars]
-- name: "drupal registry - pre"
+  no_log: "{{not (cops_vars_debug|default(false))}}"
+
+# Generate passwords on remote box if not found in registry
+- name: "drupal secrets -- {{drupalsecret}}}"
+  include_tasks: _set_secret_variable.yml
+  loop_control: {loop_var: drupalsecret}
+  with_items: "{{cops_drupal_vars.secret_variables}}"
+  tags: [drupal, vars, drupal_vars]
+  no_log: "{{not (cops_vars_debug|default(false))}}"
+
+# Post process some variables
+- name: "drupal registry - postprocess"
   include_jinja_vars:
     name: __GLOBAL__
     content: |
@@ -14,6 +40,7 @@
       {% set _vars = {p: vars[p]} %}
       {% set env = _vars[p].env %}
       {% set _ = env.update(_vars[p].env_overrides) %}
+      {# filter user env #}
       {% for i, val in vars.get('ansible_env', {}).items() %}
       {%  if not i.startswith(
               ('OLDPWD', 'CWD', 'PWD',
@@ -22,50 +49,6 @@
       {%    set _ = env.update({i: val})%}
       {%  endif %}
       {% endfor %}
-      #
       {{ _vars | to_json }}
   tags: [drupal, vars, drupal_vars]
-  no_log: true
-- name: "drupal registry - first resolve"
-  include_jinja_vars:
-    name: __GLOBAL__
-    content: |
-      ---
-      {% set p = 'cops_drupal_vars' %}
-      {% set _vars = {p: vars[p]} %}
-      {% set _ = _vars.update({p: vars[p]|copsf_format_resolve}) %}
-      {{ _vars | to_json }}
-  tags: [drupal, vars, drupal_vars]
-  no_log: true
-
-# generate password on remote box if not found
-- name: "drupal secrets -- {{drupalsecret}}}"
-  include_tasks: _set_secret_variable.yml
-  loop_control: {loop_var: drupalsecret}
-  with_items: "{{cops_drupal_vars.secret_variables}}"
-  tags: [drupal, vars, drupal_vars]
-
-- name: "Finalize drupal registry"
-  include_jinja_vars:
-    name: __GLOBAL__
-    content: |
-      ---
-      {% set p = 'cops_drupal_vars' %}
-      {% set _vars = {p: vars[p]} %}
-      #
-      {% for n in vars[p]['nested_configs'] %}
-      {%  set _n = _vars[p].setdefault(n, {}) %}
-      {%  for i, val in _vars[p].items() %}
-      {%    set pref = n+'_' %}
-      {%    if i.startswith(pref) and i not in [pref] %}
-      {%      set _ = _n.update({
-                pref.join(i.split(pref)[1:]): val}) %}
-      {%    endif %}
-      {%  endfor %}
-      {% endfor %}
-      #
-      {{ _vars | to_json }}
-  tags: [drupal, vars, drupal_vars]
-  no_log: true
-
-#- debug: {msg: "{{cops_drupal_vars}}"}
+  no_log: "{{not (cops_vars_debug|default(false))}}"

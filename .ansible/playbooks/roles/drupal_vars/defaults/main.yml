@@ -3,17 +3,17 @@ corpusops_core_projects_path: /srv/projects
 # users than have full right to edit file in the container
 # When this is enabled, the project user/group is also granted full perms
 # (attention, uids!)
-cops_drupal__supereditors_paths: [
-  "{project_root}",
-  "{data_root}"]
+cops_drupal__supereditors_paths:
+  - "{project_root}"
+  - "{data_root}"
 # space separated string of uids to allow to write inside
 # projetct directories (used in development through posix ACLS setter)
 cops_drupal__supereditors: >-
   {{ ansible_env.get(
       'SUPEREDITORS', cops_supereditors|default('')
      ) | copsf_splitstrip | to_json }}
-cops_drupal_supereditors_paths: "{{cops_drupal__supereditors_paths}}"
-cops_drupal_supereditors: "{{cops_drupal__supereditors}}"
+cops_drupal_supereditors_paths: "{_supereditors_paths}"
+cops_drupal_supereditors: "{_supereditors}"
 cops_drupal_deb_packages:
     - unzip
     - xsltproc
@@ -123,9 +123,15 @@ cops_drupal_local_settings_block_cache_bypass_node_grants: 1
 cops_drupal_secret_variables:
   - local_settings_site_password
   - local_settings_drupal_hash
-cops_drupal_nested_configs: [
-  nginx, fpm, smtp, local_settings_smtp,
-  local_settings, force]
+cops_drupal_cops_format_resolve_topdb: false
+cops_drupal_cops_do_format_resolve: true
+cops_drupal_cops_sub_namespaces:
+  nginx: {}
+  fpm: {}
+  s: {}
+  lifecycle: {}
+  local_settings: {smtp: {}}
+  force: {}
 cops_drupal_use_etc_hosts: true
 # set to 8 for d8, anything else for others
 cops_drupal_drupal_version: 8
@@ -157,7 +163,7 @@ cops_drupal_cron_elysia_cmd: >-
   ../sbin/drush --root={project_root}/www
   --uri={domain} elysia-cron run >${LOG} 2>&1
 cops_drupal_cron_mail: true
-cops_drupal_cron_cmd:  "{{cops_drupal_cron_elysia_cmd}}"
+cops_drupal_cron_cmd:  "{cron_elysia_cmd}"
 cops_drupal_cron_stock_cmd: >-
   cd {project_root}/www &&
   ../sbin/drush --root={project_root}/www
@@ -185,7 +191,7 @@ cops_drupal_db_host: "127.0.0.1"
 cops_drupal_db_name: "{name}"
 cops_drupal_db_password: "{db_name}"
 cops_drupal_db_user: "{db_name}"
-cops_drupal_db_port: "{% if cops_drupal_db_type in ['pgsql', 'postgresql']%}5432{%else%}3306{%endif%}"
+cops_drupal_db_port: null
 cops_drupal_db_url: "{db_type}://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 # overrides this dir with values of cops_drupal_env !
 cops_drupal_env_overrides: {}
@@ -250,9 +256,11 @@ cops_drupal_s_setup_app: true
 cops_drupal_s_setup_cron: true
 cops_drupal_s_setup_maintenance_off: true
 cops_drupal_s_reverse_proxy: true
+cops_drupal_s_reverse_proxy_config: true
+cops_drupal_s_reverse_proxy_config_dvhost: true
+cops_drupal_s_reverse_proxy_config_vhost: true
 cops_drupal_s_reverse_proxy_install: true
 cops_drupal_s_reverse_proxy_users: true
-cops_drupal_s_reverse_proxy_config: true
 cops_drupal_s_workers: true
 cops_drupal_s_workers_service: true
 cops_drupal_s_workers_checks: true
@@ -263,7 +271,7 @@ cops_drupal_s_end_fixperms: true
 cops_drupal_ep_main_ep: "/entry_point"
 cops_drupal_php_version: "7.1"
 # service
-cops_drupal_service: "php{{cops_drupal_php_version}}-fpm"
+cops_drupal_service: "php{php_version}-fpm"
 cops_drupal_services:
 - "{service}"
 - "nginx"
@@ -399,6 +407,8 @@ cops_drupal_http_users: []
 cops_drupal_ssl_protected: false
 cops_drupal_nginx: {}
 cops_drupal_nginx_port: "80"
+cops_drupal_nginx_content_template: "{vrole_path}/templates/nginx.conf"
+cops_drupal_nginx_top_template: "{vrole_path}/templates/nginx.top.conf"
 cops_drupal_nginx_basename: "corpus-{name}"
 cops_drupal_nginx_is_default_server: true
 cops_drupal_nginx_ssl_protected: "{ssl_protected}"
@@ -408,6 +418,7 @@ cops_drupal_nginx_ssl_cert: ""
 cops_drupal_nginx_ssl_key: ""
 cops_drupal_nginx_loglevel: crit
 cops_drupal_nginx_upstream_name: "{name}"
+cops_drupal_nginx_doc_root: "{project_root}/www"
 cops_drupal_nginx_maintenance_page: "/index_maintenance.html"
 cops_drupal_stickymode: "2"
 # PHP-Fpm
@@ -433,7 +444,7 @@ cops_drupal_fpm_include_path:
   - "{project_root}/www"
   - "{project_root}/lib"
   - "{project_root}/vendor"
-cops_drupal_listen: "127.0.0.1:9000"
+cops_drupal_fpm_listen: "127.0.0.1:9000"
 cops_drupal_fpm_session_auto_start: 0
 cops_drupal_fpm_allow_url_fopen: 0
 cops_drupal_fpm_upload_max_filesize: "50M"

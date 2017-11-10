@@ -21,9 +21,9 @@
   when: "cops_drupal_s_workers_checks and (
           corpusops_vars.has_services_manager and
           cops_drupal_vars.activated)"
-  register: cops_drupal_check
+  register: cops_drupal_check1
   # TODO: @kiorky check we only have an HTTP response (any status)
-  until: "'<html>' in cops_drupal_check.content"
+  until: "'<html>' in cops_drupal_check1.content"
   retries: 10
   delay: 1
   tags: [cops_drupal_s_workers_checks]
@@ -34,8 +34,8 @@
   when: "cops_drupal_s_workers_checks and (
           corpusops_vars.has_services_manager and
           cops_drupal_vars.activated)"
-  register: cops_drupal_check
-  until: "'pong' in cops_drupal_check.content"
+  register: cops_drupal_check2
+  until: "'pong' in cops_drupal_check2.content"
   retries: 10
   delay: 1
   tags: [cops_drupal_s_workers_checks]
