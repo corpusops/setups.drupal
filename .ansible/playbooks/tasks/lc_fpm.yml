@@ -2,3 +2,4 @@
 # install php-fpm
 - name: project - pre install fpm
   include_tasks: "{{cops_playbooks}}/provision/{{cops_installer_mode}}/tasks/fpm.yml"
+  become: "{{cops_drupal_vars.become}}"

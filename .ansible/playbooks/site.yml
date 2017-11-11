@@ -1,6 +1,6 @@
 ---
-- import_playbook: load_vars.yml
-
 - import_playbook: db_site.yml
+  tags: [play_db]
 
 - import_playbook: app.yml
+  tags: [play_app]

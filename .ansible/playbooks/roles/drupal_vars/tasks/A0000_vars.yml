@@ -1,6 +1,7 @@
 ---
 # compute some defaults
 - set_fact:
+    cacheable: false
     # Set absolute path to app role (for templates path)
     cops_drupal_vrole_path: "{{role_path.replace('_vars', '')}}"
     # port depending on db
@@ -12,8 +13,6 @@
         {%else%}
         3306
         {%endif%}
-- set_fact:
-    cops_drupal_db_port: "{{cops_drupal_db__port.strip()}}"
 # Set the cops_drupal_vars var from defaults/main.yml
 - name: "drupal registry init"
   include_role: {name: corpusops.roles/vars_registry}
@@ -33,7 +32,6 @@
 # Post process some variables
 - name: "drupal registry - postprocess"
   include_jinja_vars:
-    name: __GLOBAL__
     content: |
       ---
       {% set p = 'cops_drupal_vars' %}
@@ -52,3 +50,4 @@
       {{ _vars | to_json }}
   tags: [drupal, vars, drupal_vars]
   no_log: "{{not (cops_vars_debug|default(false))}}"
+

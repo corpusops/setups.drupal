@@ -17,7 +17,6 @@
   tags: [cops_drupal_s_fixperms_run]
   when: cops_drupal_s_fixperms_run
 - name: add fixperms cron
-  when: "(cops_drupal_vars.fixperms_cron_periodicity | copsf_bool)"
   copy:
     dest: "{{cops_drupal_vars.fixperms_cron}}"
     force: true
@@ -25,11 +24,10 @@
     content: |
       {{cops_drupal_vars.fixperms_cron_periodicity}} root {{cops_drupal_vars.fixperms}} >/dev/null 2>&1
   tags: [cops_drupal_s_fixperms_configs]
-  when: cops_drupal_s_fixperms_configs
+  when: "cops_drupal_s_fixperms_configs and (cops_drupal_vars.fixperms_cron_periodicity | copsf_bool)"
 - name: remove fixperms cron
-  when: "not (cops_drupal_vars.fixperms_cron_periodicity | copsf_bool)"
   file:
     path: "{{cops_drupal_vars.fixperms_cron}}"
     state: absent
   tags: [cops_drupal_s_fixperms_configs]
-  when: cops_drupal_s_fixperms_configs
+  when: "cops_drupal_s_fixperms_configs and not (cops_drupal_vars.fixperms_cron_periodicity | copsf_bool)"

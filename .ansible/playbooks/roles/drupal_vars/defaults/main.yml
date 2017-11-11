@@ -225,13 +225,14 @@ cops_drupal_ep_post_start_skip_tags: "{{(
   'cops_drupal_s_entry_point,'
   )}}"
 # global orchestration steps (db, code sync, web & workers prereqs, drupal config)
+cops_drupal_become: true
 cops_drupal_lifecycle_db: true
-cops_drupal_db_servers: true
-cops_drupal_db_objects: true
+cops_drupal_lifecycle_db_servers: true
+cops_drupal_lifecycle_db_objects: true
 cops_drupal_lifecycle_app: true
-cops_drupal_lifecycle_push_code: true
-cops_drupal_lifecycle_nginx: true
-cops_drupal_lifecycle_fpm: true
+cops_drupal_lifecycle_app_push_code: true
+cops_drupal_lifecycle_app_nginx: true
+cops_drupal_lifecycle_app_fpm: true
 cops_drupal_lifecycle_app_setup: true
 # drupal & project deployment steps
 cops_drupal_s_vars: true
