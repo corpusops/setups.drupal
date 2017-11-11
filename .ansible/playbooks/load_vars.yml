@@ -1,0 +1,56 @@
+---
+# DB
+- hosts: "{{dbservers}}"
+  tasks:
+    - when: "cops_drupal_lifecycle_db|default(true)"
+      tags: [cops_drupal_lifecycle_db]
+      block:
+      - include_tasks: "{{cops_playbooks}}/provision/{{cops_installer_mode}}/tasks/load_vars.yml"
+      - include_role: {name: drupal_vars}
+        become: true
+      - become: true
+        become_user: postgres
+        block:
+          - shell: >-
+              psql -t -A -F';;;' -c'\l' | egrep -iq
+              "{{cops_postgresql_roles[0].name}}.*{{cops_postgresql_databases[0].db}}"
+            failed_when: false
+            changed_when: false
+            register: cops_setup_databases_test1
+            no_log: true
+            become_user: postgres
+          - set_fact: {cops_no_app_db: "{{cops_setup_databases_test1.rc!=0}}"}
+        rescue:
+          - set_fact:
+              cops_drupal_lifecycle_db: >-
+                (((not vars.get('SKIP_INSTALL_DB', False)) and
+                 ((cops_no_app_db))) or
+                 cops_drupal_lifecycle_db|default(false) or
+                 (vars.get('FORCE_INSTALL_DB', False)))
+
+# APP
+- hosts: "{{appservers}}"
+  tasks:
+    - when: "cops_drupal_lifecycle_app|default(true)"
+      tags: [cops_drupal_lifecycle_app]
+      block:
+      - include_tasks: "{{cops_playbooks}}/provision/{{cops_installer_mode}}/tasks/load_vars.yml"
+      - include_role: {name: drupal_vars}
+        become: true
+      - shell: /bin/false
+        failed_when: false
+        changed_when: false
+        register: cops_drupal_test1
+        no_log: true
+      - shell: /bin/false
+        register: cops_drupal_test2
+        changed_when: false
+        failed_when: false
+        no_log: true
+      - set_fact:
+          cops_drupal_lifecycle_app: |-
+           (((not vars.get('SKIP_INSTALL_APP', False)) and
+             (cops_drupal_test1 !=0) or
+             (cops_drupal_test2 !=0))) or
+                 cops_drupal_lifecycle_app|default(false) or
+            (vars.get('FORCE_INSTALL_APP', False)))

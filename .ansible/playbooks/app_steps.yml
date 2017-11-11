@@ -1,0 +1,5 @@
+---
+- hosts: "{{appservers}}"
+  tasks:
+  - include_tasks: "{{cops_playbooks}}/provision/{{cops_installer_mode}}/tasks/load_vars.yml"
+  - import_tasks: "./tasks/app_steps.yml"

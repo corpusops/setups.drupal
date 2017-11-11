@@ -1,8 +1,8 @@
 ---
 # generate the app vhost(s) before nginx install itself
 # as if we have syntax errors, we wont have any chance to regenerate the
-# vhost before the general nginx role will run (syntax check -> deploy KO)
-#
+# vhost before the general service role will run (syntax check -> deploy KO)
+
 # Configure nginx default vhost
 - block:
     - name: Generate default virtualhost

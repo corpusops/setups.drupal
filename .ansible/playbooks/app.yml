@@ -1,0 +1,28 @@
+---
+- hosts: "{{appservers}}"
+  tasks:
+    - tags: [cops_drupal_lifecycle_push_code,cops_drupal_lifecycle_app,app]
+      when: "cops_drupal_lifecycle_push_code|cops_drupal_lifecycle_app"
+      block:
+      - include_tasks: tasks/lc_push_code.yml
+
+- hosts: "{{appservers}}"
+  tasks:
+    - tags: [cops_drupal_lifecycle_nginx,cops_drupal_lifecycle_app,app]
+      when: "cops_drupal_lifecycle_nginx|cops_drupal_lifecycle_app"
+      block:
+      - include_tasks: tasks/lc_nginx.yml
+
+- hosts: "{{appservers}}"
+  tasks:
+    - tags: [cops_drupal_lifecycle_fpm,cops_drupal_lifecycle_app,app]
+      when: "cops_drupal_lifecycle_fpm|cops_drupal_lifecycle_app"
+      block:
+      - include_tasks: tasks/lc_fpm.yml
+
+- hosts: "{{appservers}}"
+  tasks:
+    - tags: [cops_drupal_lifecycle_app_setup,cops_drupal_lifecycle_app,app]
+      when: "cops_drupal_lifecycle_app_setup|cops_drupal_lifecycle_app"
+      block:
+      - include_tasks: tasks/lc_app.yml

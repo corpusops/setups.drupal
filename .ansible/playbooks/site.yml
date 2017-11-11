@@ -1,4 +1,6 @@
 ---
-- hosts: all
-  tasks:
-  - include_tasks: ./tasks/lc.yml
+- import_playbook: load_vars.yml
+
+- import_playbook: db_site.yml
+
+- import_playbook: app.yml

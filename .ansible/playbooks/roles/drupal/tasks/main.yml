@@ -17,6 +17,9 @@
 - include_tasks: P6000_reverse_proxy.yml
   tags: [drupal, reverse_proxy, drupal_reverse_proxy, cops_drupal_s_reverse_proxy]
   when: "cops_drupal_s_reverse_proxy"
+- include_tasks: P6010_fpm.yml
+  tags: [drupal, fpm, drupal_fpm, cops_drupal_s_fpm]
+  when: "cops_drupal_s_fpm"
 - include_tasks: P7000_workers.yml
   tags: [drupal, workers, drupal_workers, cops_drupal_s_workers]
   when: "cops_drupal_s_workers"

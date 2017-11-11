@@ -1,0 +1,6 @@
+---
+- hosts: "{{appservers}}"
+  tasks:
+    - import_tasks: "./tasks/app_steps.yml"
+      vars:
+        cops_drupal_s_reverse_proxy: True

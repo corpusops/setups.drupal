@@ -1,7 +1,7 @@
 ---
-- hosts: all
+- hosts: "{{appservers}}"
   tasks:
-    - import_tasks: "./tasks/drupal_step.yml"
+    - import_tasks: "./tasks/app_steps.yml"
       vars:
         cops_drupal_s_layout: True
         cops_drupal_s_setup: True

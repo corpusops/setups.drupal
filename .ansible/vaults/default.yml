@@ -1,5 +1,6 @@
 ---
 dbservers: dbservers
+appservers: appservers
 cops_app_name: drupal
 cops_installer_mode: lazy
 cops_postgresql_roles:

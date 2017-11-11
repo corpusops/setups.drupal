@@ -1,7 +1,7 @@
 ---
 - include_tasks: ./db_servers.yml
-  when: cops_drupal_db_servers|cops_drupal_lifecycle_all_db
+  when: cops_drupal_db_servers|cops_drupal_lifecycle_db
   tags: [cops_drupal_db_servers]
 - include_tasks: ./db_objects.yml
   tags: [cops_drupal_db_objects]
-  when: cops_drupal_db_objects|cops_drupal_lifecycle_all_db
+  when: cops_drupal_db_objects|cops_drupal_lifecycle_db
