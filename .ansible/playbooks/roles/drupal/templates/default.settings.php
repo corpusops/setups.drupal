@@ -15,6 +15,7 @@ $databases['default']['default'] = array(
   'driver' => '{{ddata.db_type}}',
   'database' => '{{ddata.db_name}}',
   'username' => '{{ddata.db_user}}',
+  'password' => '{{ddata.db_password}}',
   'host' => '{{ddata.db_host}}',
   {% if ddata.get('db_prefix', None) %}'prefix' => '{{ddata.db_prefix}}',{%endif%}
   {% if ddata.get('db_collation', None) %}'collation' => '{{ddata.db_collation}}',{%endif%}
@@ -22,7 +23,7 @@ $databases['default']['default'] = array(
 );
 
 $settings['update_free_access'] = FALSE;
-$drupal_hash_salt = '{{ddata.local_settings_drupal_hash}}';
+$drupal_hash_salt = '{{cfg.local_settings_drupal_hash}}';
 $settings['hash_salt'] = $drupal_hash_salt;
 
 ini_set('session.gc_probability', 1);
