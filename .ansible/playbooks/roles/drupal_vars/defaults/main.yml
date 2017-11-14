@@ -456,7 +456,7 @@ cops_drupal_fpm_allow_url_fopen: 0
 cops_drupal_fpm_upload_max_filesize: "50M"
 cops_drupal_fpm_max_input_vars: 2000
 cops_drupal_fpm_user: "{name}-php"
-cops_drupal_fpm_group: "{name}-grp"
+cops_drupal_fpm_group: "{group}"
 cops_drupal_fpm_memory_limit: "256M"
 cops_drupal_fpm_modules: {}
 cops_drupal_push_codes_sync_mode: "{{ cops_installer_mode in ['vagrant'] and 'rsync' or 'git' }}"
