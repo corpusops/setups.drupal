@@ -12,6 +12,16 @@
   with_items: ['composer']
 
 # Run composer install
+- name: initialize services config file (restricted perms)
+  copy:
+    content: ""
+    force: false
+    dest: "{{cops_drupal_vars.project_root}}/www/sites/default/default.services.yml"
+    mode: "0644"
+    owner: "{{cops_drupal_vars.user}}"
+    group: "{{cops_drupal_vars.group}}"
+  changed_when: false
+
 - name: Composer install
   shell: |
          set -e
@@ -20,6 +30,24 @@
   become: true
   changed_when: false
   become_user: "{{cops_drupal_vars.user}}"
+  register: cops_drupal_composer_run
+
+- name: Drupal scaffold
+  shell: |
+         set -ex
+         cd {{cops_drupal_vars.project_root}}
+         dsyml="{{cops_drupal_vars.project_root}}/www/sites/default/default.services.yml"
+         if grep -q "drupal-composer/drupal-scaffold" composer.json;then
+            li=$(cat "${dsyml}" 2>/dev/null|wc -l)
+            if [ $li -lt 5 ];then
+              echo "We have runscaffoldfromansible"
+              sbin/composer run-script drupal-scaffold
+            fi
+         fi
+  become: true
+  become_user: "{{cops_drupal_vars.user}}"
+  register: cops_drupal_composer_scaffold_run
+  changed_when: "'runscaffoldfromansible' in cops_drupal_composer_scaffold_run.stdout"
 
 # Check that drush wrapper in sbin is WORKING
 # drush will come through composer install or artifact extraction
