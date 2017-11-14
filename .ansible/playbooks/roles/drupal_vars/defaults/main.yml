@@ -91,7 +91,7 @@ cops_drupal_local_settings_page_compression: 0
 cops_drupal_local_settings_js_gzip_compression: 1
 cops_drupal_local_settings_css_gzip_compression: 1
 cops_drupal_local_settings_page_cache_maximum_age: 21600
-#cops_drupal_local_settings_drupal_hash: null
+cops_drupal_local_settings_drupal_hash: null
 cops_drupal_local_settings_site_password: null
 cops_drupal_local_settings_account_name: 'admin'
 cops_drupal_local_settings_account_email: 'root@{{ansible_fqdn}}'
