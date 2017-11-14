@@ -361,7 +361,7 @@ cops_drupal_files:
   # check these files are NOT present
   - {path: "{project_root}/sbin/profile_conf.sh", state: absent, force: true}
   - {path: "{project_root}/sbin/composer.lock",   state: absent, force: true}
-cops_drupal_composer_install_args: ""
+cops_drupal_composer_install_args: "--no-dev"
 cops_drupal_reconfigure: "{project_dir}/reconfigure.sh"
 cops_drupal_reconfigure_passenv: "ANSIBLE_PLAY ANSIBLE_FOLDER"
 cops_drupal_configs:
@@ -459,4 +459,26 @@ cops_drupal_fpm_user: "{name}-php"
 cops_drupal_fpm_group: "{name}-grp"
 cops_drupal_fpm_memory_limit: "256M"
 cops_drupal_fpm_modules: {}
+cops_drupal_push_codes_sync_mode: "{{ cops_installer_mode in ['vagrant'] and 'rsync' or 'git' }}"
+cops_drupal_push_codes_file_tests:
+  git: []
+  rsync: ["composer.json", "composer.lock", ".git"]
+cops_drupal_push_codes_rsync_opts:
+  git:   ["-azv",                           "--exclude", "local/*", "--exclude", ".vagrant", "--exclude", "*.retry"]
+  rsync: ["-azv", "--include", ".git/**/*", "--exclude", "local/*", "--exclude", ".vagrant", "--exclude", "*.retry"]
+cops_drupal_push_codes_rsync_submodule_opts:
+  git:   ["-azv", "--exclude", "*.retry"]
+  rsync: ["-azv", "--exclude", "*.retry"]
+cops_drupal_push_codes:
+- path: "{project_root}"
+  origin_path: "{cops_cwd}"
+  sync_mode: "{{cops_drupal_push_codes_sync_mode}}"
+  rsync_opts: "{{cops_drupal_push_codes_rsync_opts[cops_drupal_push_codes_sync_mode]}}"
+  file_tests: "{{cops_drupal_push_codes_file_tests[cops_drupal_push_codes_sync_mode]}}"
+  owner: "{user}"
+  group: "{group}"
+  sub_paths:
+  - path: local/setups.drupal
+    rsync_opts: "{{cops_drupal_push_codes_rsync_submodule_opts[cops_drupal_push_codes_sync_mode]}}"
+    is_submodule: true
 # vim:set ft=sls:

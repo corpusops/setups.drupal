@@ -13,20 +13,4 @@ cops_drupal_name: "{{cops_app_name}}"
 cops_drupal_db_user: "{{cops_postgresql_roles[0].name}}"
 cops_drupal_db_name: "{{cops_postgresql_databases[0].db}}"
 cops_drupal_db_password: "{{cops_postgresql_roles[0].password}}"
-cops_drupal_push_codes:
-- path: "{project_root}"
-  origin_path: "{cops_cwd}"
-  sync_mode: git
-  rsync_opts: [
-      "-azv",
-      "--exclude", "local/*",
-      "--exclude", ".vagrant",
-      "--exclude", "*.retry",
-  ]
-  owner: "{user}"
-  group: "{group}"
-  sub_paths:
-  - path: local/setups.drupal
-    rsync_opts: ["-azv", "--exclude", "*.retry"]
-    is_submodule: true
-
+# vim:set ft=sls:
