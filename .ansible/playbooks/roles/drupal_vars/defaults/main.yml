@@ -426,6 +426,7 @@ cops_drupal_nginx_upstream_name: "{name}"
 cops_drupal_nginx_doc_root: "{project_root}/www"
 cops_drupal_nginx_maintenance_page: "/index_maintenance.html"
 cops_drupal_stickymode: "2"
+cops_drupal_services_nginx_reload_state: "reloaded"
 # PHP-Fpm
 cops_drupal_fpm_ping: "/ping"
 cops_drupal_fpm_domain: "{domain}"

@@ -1,5 +1,6 @@
 ---
 - listen: restart_cops_drupal
+  become: true
   systemd:
     daemon_reload: yes
     state: restarted
@@ -9,6 +10,7 @@
           corpusops_vars.has_services_manager and
           (ansible_service_mgr == 'systemd'))"
 - listen: restart_cops_drupal
+  become: true
   service:
     state: restarted
     name: "{{item}}"
@@ -17,6 +19,7 @@
           corpusops_vars.has_services_manager and
           (ansible_service_mgr != 'systemd'))"
 - listen: reload_cops_drupal
+  become: true
   systemd:
     daemon_reload: yes
     state: reloaded
@@ -26,6 +29,7 @@
           corpusops_vars.has_services_manager and
           (ansible_service_mgr == 'systemd'))"
 - listen: reload_cops_drupal
+  become: true
   service:
     state: reloaded
     name: "{{item}}"

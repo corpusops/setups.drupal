@@ -37,6 +37,7 @@
       cops_drupal_s_setup_app:             "{{cops_drupal_s_setup_app|default(cops_drupal_s_setup)}}"
       cops_drupal_s_setup_cron:            "{{cops_drupal_s_setup_cron|default(cops_drupal_s_setup)}}"
       cops_drupal_s_setup_maintenance_off: "{{cops_drupal_s_setup_maintenance|default(cops_drupal_s_setup_maintenance_off|default(cops_drupal_s_setup))}}"
+      cops_drupal_s_reverse_proxy_reload:  "{{cops_drupal_s_reverse_proxy_reload|default(cops_drupal_s_reverse_proxy)}}"
       cops_drupal_s_reverse_proxy_config:  "{{cops_drupal_s_reverse_proxy_config|default(cops_drupal_s_reverse_proxy)}}"
       cops_drupal_s_reverse_proxy_config_dvhost: "{{cops_drupal_s_reverse_proxy_config_dvhost|default(cops_drupal_s_reverse_proxy)}}"
       cops_drupal_s_reverse_proxy_config_vhost:  "{{cops_drupal_s_reverse_proxy_config_vhost|default(cops_drupal_s_reverse_proxy)}}"
@@ -71,6 +72,7 @@
           cops_drupal_s_setup_app or
           cops_drupal_s_setup_cron or
           cops_drupal_s_setup_maintenance_off or
+          cops_drupal_s_reverse_proxy_reload or
           cops_drupal_s_reverse_proxy_config or
           cops_drupal_s_reverse_proxy_config_dvhost or
           cops_drupal_s_reverse_proxy_config_vhost or

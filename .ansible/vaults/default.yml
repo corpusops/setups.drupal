@@ -19,17 +19,12 @@ cops_drupal_push_codes:
   sync_mode: git
   rsync_opts: [
       "-azv",
-      "--include", ".git/**/*",
       "--exclude", "local/*",
       "--exclude", ".vagrant",
       "--exclude", "*.retry",
   ]
   owner: "{user}"
   group: "{group}"
-  file_tests:
-    - "composer.jsone"
-    - "composer.lock"
-    - ".git"
   sub_paths:
   - path: local/setups.drupal
     rsync_opts: ["-azv", "--exclude", "*.retry"]

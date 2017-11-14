@@ -3,3 +3,23 @@ cops_installer_mode: vagrant
 dbservers: all
 appservers: all
 cops_drupal_ep_playbook: "vagrant_site.yml"
+cops_drupal_push_codes:
+- path: "{project_root}"
+  origin_path: "{cops_cwd}"
+  sync_mode: rsync
+  rsync_opts: [
+      "-azv",
+      "--include", ".git/**/*",
+      "--exclude", "local/*",
+      "--exclude", ".vagrant",
+      "--exclude", "*.retry",
+  ]
+  owner: "{user}"
+  group: "{group}"
+  file_tests:
+    - "composer.jsone"
+    - "composer.lock"
+    - ".git"
+  sub_paths:
+  - path: local/setups.drupal
+    rsync_opts: ["-azv", "--exclude", "*.retry"]

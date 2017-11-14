@@ -43,3 +43,14 @@
             cops_drupal_vars.http_users is not none and
             cops_drupal_vars.http_users|length > 0)"
   tags: [cops_drupal_s_reverse_proxy_users]
+
+# Reload
+- name: Reload nginx
+  include_role:
+    name: "corpusops.roles/nginx_control"
+    allow_duplicates: true
+  vars:
+    _corpusops_nginx_control:
+      state: "{{cops_drupal_vars.services_nginx_reload_state}}"
+  tags: [cops_drupal_s_reverse_proxy_reload]
+  when: "cops_drupal_s_reverse_proxy_reload"

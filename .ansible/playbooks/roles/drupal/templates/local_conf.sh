@@ -45,5 +45,4 @@ INSTALL_MARKER="{{cfg.data_root}}/installed"
 unset -v TARGETS
 declare -A TARGETS
 TARGETS["root@localhost"]="{{cfg.data_root}}/testsync"
-
 # vim:set et sts=4 ts=4 tw=80:
