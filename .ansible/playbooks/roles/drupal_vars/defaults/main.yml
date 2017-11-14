@@ -220,6 +220,7 @@ cops_drupal_ep_post_start_skip_tags: "{{(
   'cops_drupal_s_users,'
   'cops_drupal_s_first_fixperms,'
   'cops_drupal_s_prerequisites,'
+  'cops_drupal_s_setup_maintenance,'
   'cops_drupal_s_setup_composer,'
   'cops_drupal_s_workers,'
   'cops_drupal_s_entry_point,'
