@@ -1,4 +1,5 @@
 ---
+cops_drupal_domain: "{{cops_app_name}}.vbox.local"
 cops_installer_mode: vagrant
 dbservers: all
 appservers: all

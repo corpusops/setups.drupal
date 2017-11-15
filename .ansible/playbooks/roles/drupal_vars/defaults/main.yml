@@ -94,14 +94,14 @@ cops_drupal_local_settings_page_cache_maximum_age: 21600
 cops_drupal_local_settings_drupal_hash: null
 cops_drupal_local_settings_site_password: null
 cops_drupal_local_settings_account_name: 'admin'
-cops_drupal_local_settings_account_email: 'root@{{ansible_fqdn}}'
-cops_drupal_local_settings_site_email: 'root@{{ansible_fqdn}}'
+cops_drupal_local_settings_account_email: 'root@{domain}'
+cops_drupal_local_settings_site_email: 'root@{domain}'
 cops_drupal_local_settings_site_name: "{name}"
 cops_drupal_local_settings_reverse_proxy: 'TRUE'
 cops_drupal_local_settings_reverse_proxy_addresses: "array('127.0.0.1', '10.5.0.1')"
 cops_drupal_local_settings_image_allow_insecure_derivatives: 0
 cops_drupal_local_settings_reroute_email_enable: 0
-cops_drupal_local_settings_reroute_email_address: 'sysadmin@{{ansible_fqdn}}'
+cops_drupal_local_settings_reroute_email_address: 'sysadmin@{domain}'
 cops_drupal_local_settings_image_jpeg_quality: 100
 cops_drupal_local_settings_locale_cache_length: 204800
 cops_drupal_local_settings_cookie_cache_bypass_adv_cache_lifetime: 300
@@ -117,7 +117,7 @@ cops_drupal_local_settings_conf_staging_dir: '{project_root}/lib/config/staging'
 cops_drupal_local_settings_conf_todev_dir: '{project_root}/lib/config/to_dev'
 cops_drupal_local_settings_smtp_used: True
 cops_drupal_local_settings_smtp_host: '127.0.0.1'
-cops_drupal_local_settings_smtp_from: 'root@{{ansible_fqdn}}'
+cops_drupal_local_settings_smtp_from: 'root@{domain}'
 cops_drupal_local_settings_smtp_fromname: ''
 cops_drupal_local_settings_block_cache_bypass_node_grants: 1
 cops_drupal_secret_variables:
@@ -331,7 +331,7 @@ cops_drupal_files:
   - {path: "{data_root}/var/log",
      owner: "{user}", group: "{group}",
      state: directory, mode: "{stickymode}751"}
-  - {path: "{data_root}/var/log/cron/{{ansible_fqdn}}",
+  - {path: "{data_root}/var/log/cron/{domain}",
      owner: "{user}", group: "{group}",
      state: directory, mode: "{stickymode}750"}
  #- {path: "{data_root}/var/log/nginx",
