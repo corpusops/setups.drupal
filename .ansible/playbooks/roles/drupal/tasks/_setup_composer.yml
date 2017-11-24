@@ -55,7 +55,7 @@
   shell: |
          set -e
          cd {{cops_drupal_vars.project_root}}/sbin
-         {{cops_drupal_vars.project_root}}/sbin/{{item}} --version
+         {{cops_drupal_vars.project_root}}/sbin/{{item}} version
   become: true
   become_user: "{{cops_drupal_vars.user}}"
   changed_when: false
