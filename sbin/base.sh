@@ -253,7 +253,7 @@ set_drush() {
         if [ "x${search}" != "x" ];then
             for i in ${DRUSH_PRETENDANTS};do
                 if [ -x "$(filter_drush ${i})" ];then
-                    if ${i} --version 1>/dev/null 2>&1;then
+                    if ${i} version 1>/dev/null 2>&1;then
                         DRUSH_CMD="${i}"
                         break
                     fi
