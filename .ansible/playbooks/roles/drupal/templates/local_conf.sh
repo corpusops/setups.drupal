@@ -33,7 +33,7 @@ SITE_MAIL="{{cfg.local_settings.site_email}}"
 
 # drush make related
 # Profile to use
-PROJECT_NAME="{{cfg.drupal_profile}}"
+PROFILE_NAME="{{cfg.drupal_profile}}"
 DRUPAL_URI="{{cfg.drupal_uri}}"
 DRUSH_EXTRA_ARGS="--uri="${DRUPAL_URI}""
 
