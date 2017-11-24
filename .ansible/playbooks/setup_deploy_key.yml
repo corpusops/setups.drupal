@@ -1,0 +1,14 @@
+---
+- hosts: controller
+  tasks:
+    - block:
+      - include_tasks: tasks/load_vars.yml
+      - file:
+          path: "{{cops_drupal_vars.deploy_ssh_key_path|copsf_dirname}}"
+          state: directory
+          mode: "0700"
+      - copy:
+          content: "{{cops_drupal_vars.deploy_ssh_key}}"
+          mode: "0600"
+          dest: "{{cops_drupal_vars.deploy_ssh_key_path}}"
+          force: true

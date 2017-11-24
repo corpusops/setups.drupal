@@ -94,3 +94,5 @@ nbproject
 atlassian-ide-plugin.xml
 *~
 \#*#
+
+*.retry

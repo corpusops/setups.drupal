@@ -1,0 +1,8 @@
+---
+- hosts: controller
+  tasks:
+    - block:
+      - include_tasks: tasks/load_vars.yml
+      - file:
+          state: absent
+          path: "{{cops_drupal_vars.deploy_ssh_key_path}}"
