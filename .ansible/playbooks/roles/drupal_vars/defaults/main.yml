@@ -1,4 +1,5 @@
 ---
+cops_drupal_php_version: "7.1"
 corpusops_core_projects_path: /srv/projects
 # users than have full right to edit file in the container
 # When this is enabled, the project user/group is also granted full perms
@@ -132,6 +133,7 @@ cops_drupal_cops_sub_namespaces:
   lifecycle: {}
   local_settings: {smtp: {}}
   force: {}
+  dbsmartbackup: {}
 cops_drupal_use_etc_hosts: true
 # set to 8 for d8, anything else for others
 cops_drupal_drupal_version: 8
@@ -187,12 +189,17 @@ cops_drupal_force_remove_maintenance: 1
 remove_suspend_cron: 1
 cops_drupal_db_prefix: ""
 cops_drupal_db_type: pgsql
+cops_drupal_db_role_type:
+  pgsql: postgresql
+cops_drupal_dbs_types_mapping:
+  pgsql: postgresql
+cops_drupal_db_role: "{{cops_drupal_db_role_type.get(cops_drupal_db_type, cops_drupal_db_type)}}"
 cops_drupal_db_host: "127.0.0.1"
 cops_drupal_db_name: "{name}"
 cops_drupal_db_password: "{db_name}"
 cops_drupal_db_user: "{db_name}"
 cops_drupal_db_port: null
-cops_drupal_db_url: "{db_type}://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+cops_drupal_db_url: "{db_type}://{db_user}:{db_password}@{db_host}:{db__port}/{db_name}"
 # overrides this dir with values of cops_drupal_env !
 cops_drupal_env_overrides: {}
 cops_drupal_env: {}
@@ -200,36 +207,45 @@ cops_drupal_env: {}
 cops_drupal_drupal_bind_host: '127.0.0.1'
 # templates
 ## entry point
+cops_drupal_provision_dir: /provision_dir
+cops_drupal_ep_ansible_args: >-
+ -e "cops_cwd={provision_dir}"
+ -e "cops_playbooks=${COPS_ROOT}/playbooks/corpusops"
+ -e "cops_path=${COPS_ROOT}"
 cops_drupal_ep_vaults:
+  - "{provision_dir}/.ansible/vaults/default.yml"
+  - "{provision_dir}/.ansible/vaults/app.yml"
+  - "{provision_dir}/.ansible/vaults/docker.yml"
   - /setup/reconfigure.yml
 cops_drupal_ep_template: "../templates/app_entry_point"
-# entrypoint settings, tags for cli and vars for playbook reuse via
+# Docker entrypoint settings, tags for cli and vars for playbook reuse via
 # conditionals
+cops_drupal_ep_folder: ".ansible"
 cops_drupal_ep_playbook: "site.yml"
 cops_drupal_ep_skip_tags: "{{(
+  'cops_drupal_lifecycle_app_push_code,'
   'cops_drupal_s_users,'
   'cops_drupal_s_first_fixperms,'
   'cops_drupal_s_prerequisites,'
-  'cops_drupal_s_setup,'
+  'cops_drupal_s_setup_maintenance_on,'
+  'cops_drupal_s_setup_composer,'
+  'cops_drupal_s_setup_cron,'
+  'cops_drupal_s_setup_maintenance_off,'
   'cops_drupal_s_workers,'
   'cops_drupal_s_entry_point,'
   'cops_drupal_s_manage_content,'
-  'cops_drupal_s_end_fixperms'
+  'cops_drupal_s_end_fixperms,'
   )}}"
 cops_drupal_ep_post_start_skip_tags: "{{(
   'cops_drupal_s_users,'
   'cops_drupal_s_first_fixperms,'
   'cops_drupal_s_prerequisites,'
-  'cops_drupal_s_setup_maintenance,'
-  'cops_drupal_s_setup_composer,'
-  'cops_drupal_s_workers,'
+  'cops_drupal_s_setup,'
   'cops_drupal_s_entry_point,'
   )}}"
 # global orchestration steps (db, code sync, web & workers prereqs, drupal config)
 cops_drupal_become: true
 cops_drupal_lifecycle_db: true
-cops_drupal_lifecycle_db_servers: true
-cops_drupal_lifecycle_db_objects: true
 cops_drupal_lifecycle_app: true
 cops_drupal_lifecycle_app_push_code: true
 cops_drupal_lifecycle_app_nginx: true
@@ -275,18 +291,16 @@ cops_drupal_s_manage_content: true
 cops_drupal_s_end_fixperms: true
 #
 cops_drupal_ep_main_ep: "/entry_point"
-cops_drupal_php_version: "7.1"
 # service
 cops_drupal_service: "php{php_version}-fpm"
-cops_drupal_services:
-- "{service}"
-- "nginx"
-cops_drupal_reconfigure_services: []
-# use in docker (via a vault):
-# cops_drupal_reconfigure_services: ["post-start-{service}"]
+cops_drupal_services: ["{service}", "nginx"]
 cops_drupal_rhandlers: [restart_cops_drupal]
+# use in docker (via a vault):
+cops_drupal_reconfigure_services: []
+# cops_drupal_reconfigure_services: ["post-start-{service}"]
 cops_drupal_activated: true
-#
+# Layout, files & configs
+cops_drupal_stickymode: "2"
 cops_drupal_files:
   - {path: "{projects_dir}",
      owner: root, group: root, state: directory}
@@ -362,9 +376,7 @@ cops_drupal_files:
   # check these files are NOT present
   - {path: "{project_root}/sbin/profile_conf.sh", state: absent, force: true}
   - {path: "{project_root}/sbin/composer.lock",   state: absent, force: true}
-cops_drupal_composer_install_args: "--no-dev"
-cops_drupal_reconfigure: "{project_dir}/reconfigure.sh"
-cops_drupal_reconfigure_passenv: "ANSIBLE_PLAY ANSIBLE_FOLDER"
+# Config files
 cops_drupal_configs:
   - {src: "../templates/default.settings.php",
      dest: "{project_root}/www/sites/default/settings.php",
@@ -400,6 +412,48 @@ cops_drupal_ep_configs:
   - {src: "{ep_template}",
      dest: "/app_entry_point", mode: "0755",
      owner: root, group: root}
+# SystemD based reconfigure unit settings
+cops_drupal_reconfigure_service_stderr: ""
+cops_drupal_reconfigure_service_stdout: ""
+cops_drupal_reconfigure_unit_after: "network.target {service}.service"
+cops_drupal_reconfigure_install_wantedby: "multi-user.target"
+cops_drupal_reconfigure: "{project_dir}/reconfigure.sh"
+cops_drupal_reconfigure_passenv: "ANSIBLE_PLAY ANSIBLE_FOLDER COPS_ROOT"
+cops_drupal_reconfigure_verbosity: "-v"
+# Code synchronnisation settings
+cops_drupal_push_codes_cwd: "{cops_cwd}"
+cops_drupal_push_codes_sync_mode: "{{ cops_installer_mode in ['vagrant'] and 'rsync' or 'git' }}"
+cops_drupal_push_codes_file_tests:
+  git: []
+  rsync: ["composer.json", "composer.lock", ".git"]
+cops_drupal_push_codes_rsync_opts:
+  git:   ["-azv",                           "--exclude", "local/*", "--exclude", ".vagrant", "--exclude", "*.retry"]
+  rsync: ["-azv", "--include", ".git/**/*", "--exclude", "local/*", "--exclude", ".vagrant", "--exclude", "*.retry"]
+cops_drupal_push_codes_rsync_submodule_opts:
+  git:   ["-azv", "--exclude", "*.retry"]
+  rsync: ["-azv", "--exclude", "*.retry"]
+cops_drupal_push_codes:
+- path: "{project_root}"
+  origin_path: "{push_codes_cwd}"
+  sync_mode: "{{cops_drupal_push_codes_sync_mode}}"
+  rsync_opts: "{{cops_drupal_push_codes_rsync_opts[cops_drupal_push_codes_sync_mode]}}"
+  file_tests: "{{cops_drupal_push_codes_file_tests[cops_drupal_push_codes_sync_mode]}}"
+  owner: "{user}"
+  group: "{group}"
+  sub_paths:
+  - path: local/setups.drupal
+    rsync_opts: "{{cops_drupal_push_codes_rsync_submodule_opts[cops_drupal_push_codes_sync_mode]}}"
+    is_submodule: true
+# SSH deploy settings -> env vault
+cops_deploy_ssh_key_paths:
+  deploy:
+    path: "{{'local/.ssh/deploy_key'|copsf_abspath}}"
+    pub: "{{cops_deploy_ssh_pub_key|default('')}}"
+    #  ssh-rsa xxx x@y
+    # should be in encypted vault
+    private: "{{cops_deploy_ssh_key|default('')}}"
+    # -----BEGIN RSA PRIVATE KEY-----
+    # -----END RSA PRIVATE KEY-----
 # Reverse proxy Nginx
 cops_drupal_default_vhost_is_default_server: false
 cops_drupal_nginx_domain: "{domain}"
@@ -426,7 +480,6 @@ cops_drupal_nginx_loglevel: crit
 cops_drupal_nginx_upstream_name: "{name}"
 cops_drupal_nginx_doc_root: "{project_root}/www"
 cops_drupal_nginx_maintenance_page: "/index_maintenance.html"
-cops_drupal_stickymode: "2"
 cops_drupal_services_nginx_reload_state: "reloaded"
 # PHP-Fpm
 cops_drupal_fpm_ping: "/ping"
@@ -460,26 +513,11 @@ cops_drupal_fpm_user: "{name}-php"
 cops_drupal_fpm_group: "{group}"
 cops_drupal_fpm_memory_limit: "256M"
 cops_drupal_fpm_modules: {}
-cops_drupal_push_codes_sync_mode: "{{ cops_installer_mode in ['vagrant'] and 'rsync' or 'git' }}"
-cops_drupal_push_codes_file_tests:
-  git: []
-  rsync: ["composer.json", "composer.lock", ".git"]
-cops_drupal_push_codes_rsync_opts:
-  git:   ["-azv",                           "--exclude", "local/*", "--exclude", ".vagrant", "--exclude", "*.retry"]
-  rsync: ["-azv", "--include", ".git/**/*", "--exclude", "local/*", "--exclude", ".vagrant", "--exclude", "*.retry"]
-cops_drupal_push_codes_rsync_submodule_opts:
-  git:   ["-azv", "--exclude", "*.retry"]
-  rsync: ["-azv", "--exclude", "*.retry"]
-cops_drupal_push_codes:
-- path: "{project_root}"
-  origin_path: "{cops_cwd}"
-  sync_mode: "{{cops_drupal_push_codes_sync_mode}}"
-  rsync_opts: "{{cops_drupal_push_codes_rsync_opts[cops_drupal_push_codes_sync_mode]}}"
-  file_tests: "{{cops_drupal_push_codes_file_tests[cops_drupal_push_codes_sync_mode]}}"
-  owner: "{user}"
-  group: "{group}"
-  sub_paths:
-  - path: local/setups.drupal
-    rsync_opts: "{{cops_drupal_push_codes_rsync_submodule_opts[cops_drupal_push_codes_sync_mode]}}"
-    is_submodule: true
+# Composer settings
+cops_drupal_composer_install_args: "--no-dev"
+# Dbsmartbackup settings
+cops_drupal_dbsmartbackup: {}
+cops_drupal_dbsmartbackup_name: "{name}"
+cops_drupal_dbsmartbackup_type: "{{(
+   cops_drupal_dbs_types_mapping[cops_drupal_db_type])}}"
 # vim:set ft=sls:

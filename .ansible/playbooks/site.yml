@@ -1,6 +1,5 @@
 ---
-- import_playbook: db_site.yml
-  tags: [play_db]
-
+- import_playbook: db.yml
+  tags: [play_drupal_db]
 - import_playbook: app.yml
-  tags: [play_app]
+  tags: [play_drupal_app]

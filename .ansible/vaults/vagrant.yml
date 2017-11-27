@@ -1,8 +1,11 @@
 ---
+db_backup_servers: all
+drupal_servers: all
+postgresql_servers: all
+mysql_servers: all
 cops_drupal_domain: "{{cops_app_name}}.vbox.local"
 cops_installer_mode: vagrant
-dbservers: all
-appservers: all
-cops_drupal_ep_playbook: "vagrant_site.yml"
+cops_drupal_ep_playbook: "site_vagrant.yml"
 # install dev pkgs also (reset default --no-dev)
 cops_drupal_composer_install_args: ""
+cops_drupal_lifecycle_dbbackup: false

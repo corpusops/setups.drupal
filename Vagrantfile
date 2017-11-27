@@ -38,7 +38,7 @@ cfg = cops_inject_playbooks \
         # install PHP-FPM
         # install a postgresql server, db & user
         # install drupal (fpm-pool && drupal setup)
-        {".ansible/playbooks/vagrant_site.yml" => ansible_vars},
+        {".ansible/playbooks/site_vagrant.yml" => ansible_vars},
     ]
 
 # install rancher server only on first box
