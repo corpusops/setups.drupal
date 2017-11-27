@@ -48,7 +48,6 @@ verbose_call_drush site-install -v -y \
     --site-mail="${SITE_MAIL}" \
     --site-name="${SITE_NAME}" \
     --sites-subdir="${SITES_SUBDIR}" \
-    --locale="${LOCALE}" \
     --debug \
     "${PROFILE_NAME}" \
     install_configure_form.enable_update_status_emails=NULL \
