@@ -76,7 +76,6 @@
       cops_drupal_lifecycle_app_push_code: "{{cops_drupal_lifecycle_app|default(cops_drupal_lifecycle_app_push_code|default(not only_steps))}}"
       cops_drupal_lifecycle_app_nginx:     "{{cops_drupal_lifecycle_app|default(cops_drupal_lifecycle_app_nginx    |default(not only_steps))}}"
       cops_drupal_lifecycle_app_fpm:       "{{cops_drupal_lifecycle_app|default(cops_drupal_lifecycle_app_fpm      |default(not only_steps))}}"
-      cacheable: false
   - set_fact:
       cacheable: false
       cops_drupal_lifecycle_app: "{{cops_drupal_lifecycle_app|default(
