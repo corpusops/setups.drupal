@@ -1,7 +1,7 @@
 ---
 - include_tasks: _maintenance_on.yml
-  tags: [cops_drupal_s_setup_maintenance,cops_drupal_s_setup_maintenance_on]
-  when: "cops_drupal_s_setup_maintenance,cops_drupal_s_setup_maintenance_on"
+  tags: [cops_drupal_s_setup_maintenance_on]
+  when: "cops_drupal_s_setup_maintenance_on"
 
 - include_tasks: _setup_configs.yml
   tags: [cops_drupal_s_setup_configs]
@@ -24,7 +24,7 @@
   when: "cops_drupal_s_setup_cron"
 
 - include_tasks: _maintenance_off.yml
-  tags: [cops_drupal_s_setup_maintenance,cops_drupal_s_setup_maintenance_off]
-  when: "cops_drupal_s_setup_maintenance,cops_drupal_s_setup_maintenance_off"
+  tags: [cops_drupal_s_setup_maintenance_off]
+  when: "cops_drupal_s_setup_maintenance_off"
 
 - meta: flush_handlers
