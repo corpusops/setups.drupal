@@ -7,3 +7,5 @@ cops_drupal_reconfigure_service_stderr: "journal+console"
 cops_drupal_reconfigure_service_stdout: "journal+console"
 cops_drupal_lifecycle_db: false
 cops_drupal_lifecycle_dbbackup: false
+cops_drupal_s_setup_maintenance_on: false
+cops_drupal_s_setup_maintenance_off: false

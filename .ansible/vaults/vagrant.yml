@@ -9,3 +9,5 @@ cops_drupal_ep_playbook: "site_vagrant.yml"
 # install dev pkgs also (reset default --no-dev)
 cops_drupal_composer_install_args: ""
 cops_drupal_lifecycle_dbbackup: false
+cops_drupal_s_setup_maintenance_on: false
+cops_drupal_s_setup_maintenance_off: false
