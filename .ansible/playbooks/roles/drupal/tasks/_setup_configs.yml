@@ -1,14 +1,8 @@
 ---
 # install custom config files
-- name: configs
-  template:
-    dest: "{{item.dest}}"
-    src: "{{item.src|default('../templates{0}'.format(item.dest))}}"
-    force: "{{item.force|default(True)}}"
-    mode: "{{item.mode|default(omit)}}"
-    owner: "{{item.owner|default(omit)}}"
-    group: "{{item.group|default(omit)}}"
-    trim_blocks: "{{item.trim_blocks|default(False)}}"
-  with_list: "{{cops_drupal_vars.configs}}"
+# not really for now due to https://github.com/ansible/ansible/issues/32265
+- include_role: {name: corpusops.roles/async_configs, private: true}
+  vars:
+    cops_async_configs_configs: "{{cops_drupal_vars.configs}}"
+    cops_async_configs_notify: "{{cops_drupal_vars.rhandlers}}"
   tags: [drupal, configs, drupal_configs]
-  notify: "{{cops_drupal_vars.rhandlers}}"

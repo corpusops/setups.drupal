@@ -27,4 +27,10 @@
   tags: [cops_drupal_s_setup_maintenance_off]
   when: "cops_drupal_s_setup_maintenance_off"
 
-- meta: flush_handlers
+- include_tasks: _setup_reverse_proxy.yml
+  tags: [cops_drupal_s_setup_reverse_proxy]
+  when: "cops_drupal_s_setup_reverse_proxy"
+
+- include_tasks: _setup_fpm.yml
+  tags: [cops_drupal_s_setup_fpm]
+  when: "cops_drupal_s_setup_fpm"

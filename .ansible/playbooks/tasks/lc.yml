@@ -2,12 +2,6 @@
 - include_tasks: lc_push_code.yml
   when: cops_drupal_lifecycle_app_push_code|cops_drupal_lifecycle_app
   tags: [cops_drupal_lifecycle_app_push_code]
-- include_tasks: lc_nginx.yml
-  when: cops_drupal_lifecycle_app_nginx|cops_drupal_lifecycle_app
-  tags: [cops_drupal_lifecycle_app_nginx]
-- include_tasks: lc_fpm.yml
-  when: cops_drupal_lifecycle_app_fpm|cops_drupal_lifecycle_app
-  tags: [cops_drupal_lifecycle_app_fpm]
 - include_tasks: lc_app.yml
   when: cops_drupal_lifecycle_app_setup|cops_drupal_lifecycle_app
   tags: [cops_drupal_lifecycle_app]

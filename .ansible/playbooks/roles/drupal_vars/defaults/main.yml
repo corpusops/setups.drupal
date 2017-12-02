@@ -248,8 +248,6 @@ cops_drupal_become: true
 cops_drupal_lifecycle_db: true
 cops_drupal_lifecycle_app: true
 cops_drupal_lifecycle_app_push_code: true
-cops_drupal_lifecycle_app_nginx: true
-cops_drupal_lifecycle_app_fpm: true
 cops_drupal_lifecycle_app_setup: true
 # drupal & project deployment steps
 cops_drupal_s_vars: true
@@ -273,16 +271,16 @@ cops_drupal_s_setup_composer: true
 cops_drupal_s_setup_app: true
 cops_drupal_s_setup_cron: true
 cops_drupal_s_setup_maintenance_off: true
+cops_drupal_s_setup_reverse_proxy: true
+cops_drupal_s_setup_reverse_proxy_dvhost: true
+cops_drupal_s_setup_reverse_proxy_vhost: true
+cops_drupal_s_setup_reverse_proxy_users: true
+cops_drupal_s_setup_fpm: true
+cops_drupal_s_setup_fpm_pool: true
 cops_drupal_s_fpm: true
-cops_drupal_s_fpm_config: true
-cops_drupal_s_fpm_config_vhost: true
 cops_drupal_s_fpm_install: true
 cops_drupal_s_reverse_proxy: true
-cops_drupal_s_reverse_proxy_config: true
-cops_drupal_s_reverse_proxy_config_dvhost: true
-cops_drupal_s_reverse_proxy_config_vhost: true
 cops_drupal_s_reverse_proxy_install: true
-cops_drupal_s_reverse_proxy_users: true
 cops_drupal_s_workers: true
 cops_drupal_s_workers_service: true
 cops_drupal_s_workers_checks: true

@@ -8,22 +8,20 @@
       cops_drupal_lifecycle_dbbackup: "{{cops_drupal_lifecycle_dbbackup|default(not only_steps)}}"
       cacheable: false
   - set_fact:
-      cops_drupal_s_setup_maintenance_on:        "{{cops_drupal_s_setup_maintenance_on |default(cops_drupal_s_setup_maintenance          |default(cops_drupal_s_setup        |default(cops_drupal_lifecycle_app_setup|default(not only_steps))))}}"
-      cops_drupal_s_setup_maintenance_off:       "{{cops_drupal_s_setup_maintenance_off|default(cops_drupal_s_setup_maintenance          |default(cops_drupal_s_setup        |default(cops_drupal_lifecycle_app_setup|default(not only_steps))))}}"
-      cops_drupal_s_setup_configs:               "{{                                            cops_drupal_s_setup_configs              |default(cops_drupal_s_setup        |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_setup_hosts:                 "{{                                            cops_drupal_s_setup_hosts                |default(cops_drupal_s_setup        |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_setup_composer:              "{{                                            cops_drupal_s_setup_composer             |default(cops_drupal_s_setup        |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_setup_app:                   "{{                                            cops_drupal_s_setup_app                  |default(cops_drupal_s_setup        |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_setup_cron:                  "{{                                            cops_drupal_s_setup_cron                 |default(cops_drupal_s_setup        |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_reverse_proxy_reload:        "{{                                            cops_drupal_s_reverse_proxy_reload       |default(cops_drupal_s_reverse_proxy|default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_reverse_proxy_config:        "{{                                            cops_drupal_s_reverse_proxy_config       |default(cops_drupal_s_reverse_proxy|default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_reverse_proxy_config_dvhost: "{{                                            cops_drupal_s_reverse_proxy_config_dvhost|default(cops_drupal_s_reverse_proxy|default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_reverse_proxy_config_vhost:  "{{                                            cops_drupal_s_reverse_proxy_config_vhost |default(cops_drupal_s_reverse_proxy|default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_reverse_proxy_install:       "{{                                            cops_drupal_s_reverse_proxy_install      |default(cops_drupal_s_reverse_proxy|default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_reverse_proxy_users:         "{{                                            cops_drupal_s_reverse_proxy_users        |default(cops_drupal_s_reverse_proxy|default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_fpm_config:                  "{{                                            cops_drupal_s_fpm_config                 |default(cops_drupal_s_fpm          |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_fpm_config_pool:             "{{                                            cops_drupal_s_fpm_config_pool            |default(cops_drupal_s_fpm          |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_fpm_install:                 "{{                                            cops_drupal_s_fpm_install                |default(cops_drupal_s_fpm          |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_setup_maintenance_on:        "{{cops_drupal_s_setup_maintenance_on |default(cops_drupal_s_setup_maintenance          |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps))))}}"
+      cops_drupal_s_setup_maintenance_off:       "{{cops_drupal_s_setup_maintenance_off|default(cops_drupal_s_setup_maintenance          |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps))))}}"
+      cops_drupal_s_setup_configs:               "{{                                            cops_drupal_s_setup_configs              |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_setup_hosts:                 "{{                                            cops_drupal_s_setup_hosts                |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_setup_composer:              "{{                                            cops_drupal_s_setup_composer             |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_setup_app:                   "{{                                            cops_drupal_s_setup_app                  |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_setup_cron:                  "{{                                            cops_drupal_s_setup_cron                 |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_setup_reverse_proxy_dvhost:  "{{                                            cops_drupal_s_setup_reverse_proxy_dvhost |default(cops_drupal_s_setup_reverse_proxy|default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_setup_reverse_proxy_vhost:   "{{                                            cops_drupal_s_setup_reverse_proxy_vhost  |default(cops_drupal_s_setup_reverse_proxy|default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_setup_reverse_proxy_users:   "{{                                            cops_drupal_s_setup_reverse_proxy_users  |default(cops_drupal_s_setup_reverse_proxy|default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_setup_fpm_pool:              "{{                                            cops_drupal_s_setup_fpm_pool             |default(cops_drupal_s_setup_fpm          |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_reverse_proxy_reload:        "{{                                            cops_drupal_s_reverse_proxy_reload       |default(cops_drupal_s_reverse_proxy      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_reverse_proxy_install:       "{{                                            cops_drupal_s_reverse_proxy_install      |default(cops_drupal_s_reverse_proxy      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_fpm_install:                 "{{                                            cops_drupal_s_fpm_install                |default(cops_drupal_s_fpm                |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cacheable: false
   - set_fact:
       cacheable: false
@@ -35,13 +33,15 @@
       cops_drupal_s_entry_point:    "{{cops_drupal_s_entry_point   |default(cops_drupal_lifecycle_app_setup|default(not only_steps))}}"
       cops_drupal_s_manage_content: "{{cops_drupal_s_manage_content|default(cops_drupal_lifecycle_app_setup|default(not only_steps))}}"
       cops_drupal_s_end_fixperms:   "{{cops_drupal_s_end_fixperms  |default(cops_drupal_lifecycle_app_setup|default(not only_steps))}}"
-      cops_drupal_s_reverse_proxy:  "{{(
-          cops_drupal_s_reverse_proxy_reload or
-          cops_drupal_s_reverse_proxy_config or
-          cops_drupal_s_reverse_proxy_config_dvhost or
-          cops_drupal_s_reverse_proxy_config_vhost or
-          cops_drupal_s_reverse_proxy_install or
-          cops_drupal_s_reverse_proxy_users)}}"
+      cops_drupal_s_setup_reverse_proxy:  "{{(
+        cops_drupal_s_setup_reverse_proxy_dvhost or
+        cops_drupal_s_setup_reverse_proxy_vhost or
+        cops_drupal_s_setup_reverse_proxy_users)}}"
+      cops_drupal_s_setup_fpm: "{{(cops_drupal_s_setup_fpm_pool)}}"
+      cops_drupal_s_reverse_proxy:  "{{(cops_drupal_s_reverse_proxy_reload or cops_drupal_s_reverse_proxy_install)}}"
+      cops_drupal_s_fpm: "{{(cops_drupal_s_fpm_install)}}"
+  - set_fact:
+      cacheable: false
       cops_drupal_s_setup: "{{(
           cops_drupal_s_setup_maintenance_on or
           cops_drupal_s_setup_configs or
@@ -49,11 +49,9 @@
           cops_drupal_s_setup_composer or
           cops_drupal_s_setup_app or
           cops_drupal_s_setup_cron or
-          cops_drupal_s_setup_maintenance_off)}}"
-      cops_drupal_s_fpm: "{{(
-          cops_drupal_s_fpm_config or
-          cops_drupal_s_fpm_config_pool or
-          cops_drupal_s_fpm_install)}}"
+          cops_drupal_s_setup_maintenance_off or
+          cops_drupal_s_setup_reverse_proxy or
+          cops_drupal_s_setup_fpm)}}"
   - set_fact:
       cacheable: false
       cops_drupal_lifecycle_app_level_1_steps: "{{(
@@ -74,14 +72,10 @@
                                             (cops_drupal_lifecycle_app|default(False)) or (
                                               cops_drupal_lifecycle_app_level_1_steps))}}"
       cops_drupal_lifecycle_app_push_code: "{{cops_drupal_lifecycle_app|default(cops_drupal_lifecycle_app_push_code|default(not only_steps))}}"
-      cops_drupal_lifecycle_app_nginx:     "{{cops_drupal_lifecycle_app|default(cops_drupal_lifecycle_app_nginx    |default(not only_steps))}}"
-      cops_drupal_lifecycle_app_fpm:       "{{cops_drupal_lifecycle_app|default(cops_drupal_lifecycle_app_fpm      |default(not only_steps))}}"
   - set_fact:
       cacheable: false
       cops_drupal_lifecycle_app: "{{cops_drupal_lifecycle_app|default(
           cops_drupal_lifecycle_app_push_code or
-          cops_drupal_lifecycle_app_nginx or
-          cops_drupal_lifecycle_app_fpm or
           cops_drupal_lifecycle_app_setup)}}"
   - set_fact:
       cacheable: false

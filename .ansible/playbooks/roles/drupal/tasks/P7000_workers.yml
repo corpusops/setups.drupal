@@ -14,6 +14,8 @@
   when: "cops_drupal_s_workers_service and corpusops_vars.has_services_manager"
   tags: [cops_drupal_s_workers_service]
 
+- meta: flush_handlers
+
 # Check reverse proxy is listening
 - uri:
     url: "http://{{cops_drupal_vars.query_host}}:{{cops_drupal_vars.nginx.port}}/"

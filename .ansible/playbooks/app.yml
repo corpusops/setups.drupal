@@ -38,20 +38,6 @@
 
 - hosts: "{{drupal_servers|default('all')}}"
   tasks:
-    - tags: [cops_drupal_lifecycle_app_nginx,cops_drupal_lifecycle_app]
-      when: "cops_drupal_lifecycle_app_nginx|default(cops_drupal_lifecycle_app)"
-      block:
-      - include_tasks: tasks/lc_nginx.yml
-
-- hosts: "{{drupal_servers|default('all')}}"
-  tasks:
-    - tags: [cops_drupal_lifecycle_app_fpm,cops_drupal_lifecycle_app]
-      when: "cops_drupal_lifecycle_app_fpm|default(cops_drupal_lifecycle_app)"
-      block:
-      - include_tasks: tasks/lc_fpm.yml
-
-- hosts: "{{drupal_servers|default('all')}}"
-  tasks:
     - tags: [cops_drupal_lifecycle_app_setup,cops_drupal_lifecycle_app]
       when: "cops_drupal_lifecycle_app_setup|default(cops_drupal_lifecycle_app)"
       block:
