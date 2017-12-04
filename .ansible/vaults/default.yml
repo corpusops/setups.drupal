@@ -1,4 +1,7 @@
 ---
+cops_app_name: drupal
+cops_drupal_drupal_profile: "{{cops_app_name}}"
+#
 db_backup_servers: db_backup_servers
 dbsmartbackup_servers: db_backup_servers
 drupal_servers: drupal_servers
@@ -6,7 +9,6 @@ postgresql_servers: postgresql_servers
 mysql_servers: mysql_servers
 db_servers: "{{cops_drupal_db_role_type[cops_drupal_db_type]}}_servers"
 app_servers: "{{drupal_servers}}"
-cops_app_name: drupal
 cops_installer_mode: lazy
 cops_drupal_db_type: pgsql
 cops_drupal_db_role_type:
