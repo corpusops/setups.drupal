@@ -1,8 +1,8 @@
 ---
 # install custom config files
 # not really for now due to https://github.com/ansible/ansible/issues/32265
-- include_role: {name: corpusops.roles/async_configs, private: true}
+- include_role: {name: corpusops.roles/configs, private: true}
   vars:
-    cops_async_configs_configs: "{{cops_drupal_vars.configs}}"
-    cops_async_configs_notify: "{{cops_drupal_vars.rhandlers}}"
+    cops_configs_templates: "{{cops_drupal_vars.configs}}"
+    cops_configs_notify: "{{cops_drupal_vars.rhandlers}}"
   tags: [drupal, configs, drupal_configs]
