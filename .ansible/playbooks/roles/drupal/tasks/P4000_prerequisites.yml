@@ -23,3 +23,8 @@
           cops_drupal_vars.rh_packages|length > 0)"
   with_items: "{{cops_drupal_vars.rh_packages}}"
   tags: [cops_drupal_s_prerequisites_pkgs]
+
+- include_role: {name: corpusops.roles/services_db_postgresql_client}
+  tags: [cops_drupal_pgclient]
+  when: "{{cops_drupal_vars.db_type == 'pgsql'}}"
+
