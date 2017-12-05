@@ -18,7 +18,7 @@ for SECRET_VAULT in $SECRET_VAULTS;do
         debug "No vault password found in $vault" >&2
     fi
 done
-log "-> In $cops_cwd"
+log "-> In $ci_cwd"
 if [[ -n ${ANSIBLE_DRY_RUN-${DRY_RUN-}} ]];then
     log run \
       $AP \
