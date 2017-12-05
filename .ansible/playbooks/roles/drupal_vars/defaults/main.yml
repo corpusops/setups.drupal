@@ -263,6 +263,7 @@ cops_drupal_s_fixperms_configs: true
 cops_drupal_s_fixperms_run: true
 cops_drupal_s_prerequisites: true
 cops_drupal_s_prerequisites_pkgs: true
+cops_drupal_s_prerequisites_pgclient: true
 cops_drupal_s_setup: true
 cops_drupal_s_setup_maintenance_on: true
 cops_drupal_s_setup_configs: true
