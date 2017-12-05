@@ -18,14 +18,23 @@ for SECRET_VAULT in $SECRET_VAULTS;do
         debug "No vault password found in $vault" >&2
     fi
 done
-do_="vv"
+log "-> In $cops_cwd"
 if [[ -n ${ANSIBLE_DRY_RUN-${DRY_RUN-}} ]];then
-    do_="dryrun_vv"
+    log run \
+      $AP \
+      $vaultpwfiles \
+      $A_INVENTORY \
+      $A_CUSTOM_ARGS \
+      ${PLAYBOOK_PRE_ARGS-} \
+      ${PLAYBOOK_PRE_CUSTOM_ARGS-} \
+      $PLAYBOOK \
+      ${PLAYBOOK_POST_ARGS-} \
+      ${PLAYBOOK_POST_CUSTOM_ARGS-}
+    exit 0
 fi
 debug "vaultpwfiles: $vaultpwfiles"
 if [[ -z "${NO_SILENT-}" ]];then
-  $do_ \
-      $COPS_ROOT/bin/silent_run \
+  $COPS_ROOT/bin/silent_run \
       $AP \
       $vaultpwfiles \
       $A_INVENTORY \
@@ -36,8 +45,7 @@ if [[ -z "${NO_SILENT-}" ]];then
       ${PLAYBOOK_POST_ARGS-} \
       ${PLAYBOOK_POST_CUSTOM_ARGS-}
 else
-  $do_ \
-      $AP \
+  $AP \
       $vaultpwfiles \
       $A_INVENTORY \
       $A_CUSTOM_ARGS \
