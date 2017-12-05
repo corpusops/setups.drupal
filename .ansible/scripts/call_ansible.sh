@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 set -e
 ci_cwd=$(pwd)
-dryrun_vv() { echo "($ci_cwd) $@" >&2;echo "$@"; }
-vv() { echo "($ci_cwd) $@" >&2;"$@"; }
+log() { echo "$@" >&2; }
+vv() { log "($ci_cwd) $@";"$@"; }
 debug() { if [[ -n "${ADEBUG-}" ]];then echo "$@" >&2;fi }
-vaultpwfile=''
+vaultpwfiles=''
 for SECRET_VAULT in $SECRET_VAULTS;do
     vault=$(echo "$SECRET_VAULT"|awk -F@ '{print $1}')
     if [ -e $vault ];then
         echo "-> Using vault: $vault" >&2
         if "$AP" --help|grep -q vault-id;then
-            vaultpwfiles="--vault-id \"$vault\""
+            vaultpwfiles="--vault-id=$vault"
         else
-            vaultpwfiles="--vault-password-file \"$vault\""
+            vaultpwfiles="--vault-password-file=$vault"
         fi
     else
         debug "No vault password found in $vault" >&2
@@ -22,11 +22,12 @@ do_="vv"
 if [[ -n ${ANSIBLE_DRY_RUN-${DRY_RUN-}} ]];then
     do_="dryrun_vv"
 fi
+debug "vaultpwfiles: $vaultpwfiles"
 if [[ -z "${NO_SILENT-}" ]];then
   $do_ \
       $COPS_ROOT/bin/silent_run \
       $AP \
-      --vault-password-file "/root/makina-drupal.solibre.staging"  \
+      $vaultpwfiles \
       $A_INVENTORY \
       $A_CUSTOM_ARGS \
       ${PLAYBOOK_PRE_ARGS-} \
@@ -37,7 +38,7 @@ if [[ -z "${NO_SILENT-}" ]];then
 else
   $do_ \
       $AP \
-      $vaultpwfile \
+      $vaultpwfiles \
       $A_INVENTORY \
       $A_CUSTOM_ARGS \
       ${PLAYBOOK_PRE_ARGS-} \
