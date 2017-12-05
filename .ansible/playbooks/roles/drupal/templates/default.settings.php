@@ -17,6 +17,7 @@ $databases['default']['default'] = array(
   'username' => '{{ddata.db_user}}',
   'password' => '{{ddata.db_password}}',
   'host' => '{{ddata.db_host}}',
+  {% if ddata.get('db_port', None) %}'port' => '{{ddata.db_port}}',{%endif%}
   {% if ddata.get('db_prefix', None) %}'prefix' => '{{ddata.db_prefix}}',{%endif%}
   {% if ddata.get('db_collation', None) %}'collation' => '{{ddata.db_collation}}',{%endif%}
   {% if ddata.get('db_namespace', None) %}'namespace' => '{{ddata.db_namespace}}',{%endif%}
