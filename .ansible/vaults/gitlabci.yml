@@ -1,4 +1,0 @@
----
-cops_path: "{{ansible_env.CI_PROJECT_DIR}}/local/corpusops.bootstrap"
-cops_cwd: "{{ansible_env.CI_PROJECT_DIR}}"
-cops_playbooks: "{{cops_path}}/playbooks/corpusops/"
