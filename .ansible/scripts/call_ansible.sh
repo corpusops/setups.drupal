@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 ci_cwd=$(pwd)
+export COPS_ROOT="${cops_path:-"${ci_pwd}/local/corpusops.bootstrap"}"
+export AP=${AP:-"$COPS_ROOT/bin/ansible-playbook"}
 log() { echo "$@" >&2; }
 vv() { log "($ci_cwd) $@";"$@"; }
 debug() { if [[ -n "${ADEBUG-}" ]];then echo "$@" >&2;fi }
@@ -24,7 +26,7 @@ if [[ -n ${ANSIBLE_DRY_RUN-${DRY_RUN-}} ]];then
       $AP \
       $vaultpwfiles \
       $A_INVENTORY \
-      $A_CUSTOM_ARGS \
+      ${A_CUSTOM_ARGS-} \
       ${PLAYBOOK_PRE_ARGS-} \
       ${PLAYBOOK_PRE_CUSTOM_ARGS-} \
       $PLAYBOOK \
@@ -38,7 +40,7 @@ if [[ -z "${NO_SILENT-}" ]];then
       $AP \
       $vaultpwfiles \
       $A_INVENTORY \
-      $A_CUSTOM_ARGS \
+      ${A_CUSTOM_ARGS-} \
       ${PLAYBOOK_PRE_ARGS-} \
       ${PLAYBOOK_PRE_CUSTOM_ARGS-} \
       $PLAYBOOK \
@@ -48,7 +50,7 @@ else
   $AP \
       $vaultpwfiles \
       $A_INVENTORY \
-      $A_CUSTOM_ARGS \
+      ${A_CUSTOM_ARGS-} \
       ${PLAYBOOK_PRE_ARGS-} \
       ${PLAYBOOK_PRE_CUSTOM_ARGS-} \
       $PLAYBOOK \
