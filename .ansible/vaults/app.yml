@@ -1,4 +1,3 @@
 ---
 # copy this file instead of symlinking
-cops_app_name: mydrupal
-cops_drupal_drupal_profile: "{{cops_app_name}}"
+cops_app_name: myapp

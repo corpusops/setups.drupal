@@ -1,2 +1,1 @@
----
-- import_playbook: "{{cops_playbooks}}/provision/install/deploy_key_setup.yml"
+../../local/setups.drupal/.ansible/playbooks/deploy_key_setup.yml

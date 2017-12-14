@@ -1,0 +1,10 @@
+[submodule "local/setups.postgresql"]
+	path = local/setups.postgresql
+	url = https://github.com/corpusops/setups.postgresql.git
+[submodule "local/setups.dbsmartbackup"]
+	path = local/setups.dbsmartbackup
+	url = https://github.com/corpusops/setups.dbsmartbackup
+[submodule "local/setups.drupal"]
+	path = local/setups.drupal
+	url = https://github.com/corpusops/setups.drupal.git
+	branch = D8

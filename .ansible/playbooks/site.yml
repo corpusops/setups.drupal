@@ -1,5 +1,1 @@
----
-- import_playbook: db.yml
-  tags: [play_drupal_db]
-- import_playbook: app.yml
-  tags: [play_drupal_app]
+../../local/setups.drupal/.ansible/playbooks/site.yml

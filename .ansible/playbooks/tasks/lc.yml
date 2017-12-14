@@ -1,7 +1,1 @@
----
-- include_tasks: lc_push_code.yml
-  when: cops_drupal_lifecycle_app_push_code|cops_drupal_lifecycle_app
-  tags: [cops_drupal_lifecycle_app_push_code]
-- include_tasks: lc_app.yml
-  when: cops_drupal_lifecycle_app_setup|cops_drupal_lifecycle_app
-  tags: [cops_drupal_lifecycle_app]
+../../../local/setups.drupal/.ansible/playbooks/tasks/lc.yml

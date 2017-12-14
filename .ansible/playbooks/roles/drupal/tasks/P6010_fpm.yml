@@ -1,6 +1,0 @@
----
-# Configure fpm itself
-- include_role:
-    name: "corpusops.roles/services_php_fpm"
-  tags: [cops_drupal_s_fpm_install]
-  when: "cops_drupal_s_fpm_install"

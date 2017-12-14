@@ -1,5 +1,1 @@
-#!/usr/bin/env bash
-# A composer wrapper for local project environment.
-. "$(dirname "${0}")/base.sh"
-call_composer "${@}"
-exit ${?}
+../local/setups.drupal/sbin/composer

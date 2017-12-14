@@ -1,13 +1,1 @@
----
-- become: "{{cops_drupal_vars.become}}"
-  block:
-  - include_tasks: roles/drupal/tasks/P1000_users.yml
-  - assert:
-      that:
-        - "vars.get(varitem, none) is not none"
-      msg: "{{varitem}} must be set"
-    loop_control: {loop_var: varitem}
-    with_items:
-      - cops_cwd
-  - include_tasks: _push_code.yml
-    with_items: "{{cops_drupal_vars.push_codes}}"
+../../../local/setups.drupal/.ansible/playbooks/tasks/lc_push_code.yml

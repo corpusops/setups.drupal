@@ -1,4 +1,1 @@
----
-# compute app settings
-- include_role: {name: ./roles/drupal}
-  become: "{{cops_drupal_vars.become}}"
+../../../local/setups.drupal/.ansible/playbooks/tasks/lc_app.yml
