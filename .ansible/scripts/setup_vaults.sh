@@ -5,7 +5,7 @@ log() { echo "$@" >&2; }
 vv() { log "($ci_cwd) $@";"$@"; }
 debug() { if [[ -n "${ADEBUG-}" ]];then echo "$@" >&2;fi }
 
-VAULT_PASSWORD_VARIABLES_PREFIX=${VAULT_PASSWORD_VARIABLES_PREFIX:-CORPUSOPS_VAULT_PASSWORD}
+VAULT_PASSWORD_VARIABLES_PREFIX=${VAULT_PASSWORD_VARIABLES_PREFIX:-CORPUSOPS_VAULT_PASSWORD_}
 debug "VAULT_PASSWORD_VARIABLES_PREFIX: $VAULT_PASSWORD_VARIABLES_PREFIX"
 if [[ -n ${SKIP_VAULT_PASSWORD_FILES_SETUP-} ]];then
     echo "-> Skip ansible vault password files setup" >&2
