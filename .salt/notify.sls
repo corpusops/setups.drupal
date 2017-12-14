@@ -1,0 +1,1 @@
+../local/setups.drupal/.salt/notify.sls
