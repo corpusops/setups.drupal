@@ -26,5 +26,6 @@
 
 - include_role: {name: corpusops.roles/services_db_postgresql_client}
   tags: [cops_drupal_s_prerequisites_pgclient]
-  when: "{{cops_drupal_s_prerequisites_pgclient and (cops_drupal_vars.db_type == 'pgsql')}}"
+  when: "(cops_drupal_s_prerequisites_pgclient and
+          (cops_drupal_vars.db_type == 'pgsql'))"
 

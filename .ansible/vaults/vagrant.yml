@@ -1,4 +1,5 @@
 ---
+db_servers: all
 db_backup_servers: all
 drupal_servers: all
 postgresql_servers: all
