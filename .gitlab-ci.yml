@@ -3,7 +3,7 @@ image: corpusops/ubuntu:16.04
 variables:
   # https://gitlab.com/gitlab-org/gitlab-runner/issues/2148:
   # This workaround support both gitlab itself & remote repos ssl certs & tokens
-  CORP_DOMAIN: "makina-corpus.net"
+  CORP_DOMAIN: "foo.net"
   GIT_SSL_CAPATH: /etc/ssl/certs/
   GIT_SUBMODULE_STRATEGY: recursive
   # skippable steps: (set to 1 to activate)
@@ -30,7 +30,7 @@ variables:
     -e@.ansible/vaults/default.yml
     -e@.ansible/vaults/app.yml
     -e@local/gitlabci.yml
-  ADEBUG: "1"
+  ADEBUG: ""
 
 stages: [test, deploy, jobs]
 
