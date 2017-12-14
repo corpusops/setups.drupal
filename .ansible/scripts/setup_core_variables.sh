@@ -2,7 +2,7 @@
 set -e
 log() { echo "$@" >&2; }
 vv() { log "($ci_cwd) $@";"$@"; }
-debug() { if [[ -n "${ADEBUG-}" ]];then echo "$@" >&2;fi } 
+debug() { if [[ -n "${ADEBUG-}" ]];then echo "$@" >&2;fi }
 if [ ! -e local ];then
     mkdir local
 fi
