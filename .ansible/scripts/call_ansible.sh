@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 ci_cwd=$(pwd)
-export COPS_ROOT="${cops_path:-"${ci_pwd}/local/corpusops.bootstrap"}"
+export COPS_ROOT="${cops_path:-"${ci_cwd}/local/corpusops.bootstrap"}"
 export AP=${AP:-"$COPS_ROOT/bin/ansible-playbook"}
 log() { echo "$@" >&2; }
 vv() { log "($ci_cwd) $@";"$@"; }
