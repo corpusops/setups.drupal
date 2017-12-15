@@ -1,28 +1,27 @@
 ---
-- name: update & install prerequisites
-  package:
-    cache_valid_time: '{{60*60}}'
-    update_cache: yes
-    name: '{{item}}'
-    state: present
-  when: "cops_drupal_s_prerequisites_pkgs and (
-          ansible_os_family.lower() in ['debian'] and
-          cops_drupal_vars.deb_packages is not none and
-          cops_drupal_vars.deb_packages|length > 0)"
-  with_items: "{{cops_drupal_vars.deb_packages}}"
+- when: "cops_drupal_s_prerequisites_pkgs"
   tags: [cops_drupal_s_prerequisites_pkgs]
-- name: update & install prerequisites
-  package:
-    update_cache: yes
-    enablerepo: epel,epel-testing
-    name: '{{item}}'
-    state: present
-  when: "cops_drupal_s_prerequisites_pkgs and (
-          ansible_os_family.lower() in ['redhat'] and
-          cops_drupal_vars.rh_packages is not none and
-          cops_drupal_vars.rh_packages|length > 0)"
-  with_items: "{{cops_drupal_vars.rh_packages}}"
-  tags: [cops_drupal_s_prerequisites_pkgs]
+  block:
+  - name: update & install prerequisites
+    package:
+      cache_valid_time: '{{60*60}}'
+      update_cache: yes
+      name: '{{item}}'
+      state: present
+    when: "(ansible_os_family.lower() in ['debian'] and
+            cops_drupal_vars.deb_packages is not none and
+            cops_drupal_vars.deb_packages|length > 0)"
+    with_items: "{{cops_drupal_vars.deb_packages}}"
+  - name: update & install prerequisites
+    package:
+      update_cache: yes
+      enablerepo: epel,epel-testing
+      name: '{{item}}'
+      state: present
+    when: "(ansible_os_family.lower() in ['redhat'] and
+            cops_drupal_vars.rh_packages is not none and
+            cops_drupal_vars.rh_packages|length > 0)"
+    with_items: "{{cops_drupal_vars.rh_packages}}"
 
 - include_role: {name: corpusops.roles/services_db_postgresql_client}
   tags: [cops_drupal_s_prerequisites_pgclient]
