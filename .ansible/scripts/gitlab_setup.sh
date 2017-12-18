@@ -1,1 +1,0 @@
-../../local/setups.drupal/.ansible/scripts/gitlab_setup.sh
