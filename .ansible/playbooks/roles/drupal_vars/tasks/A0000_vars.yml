@@ -16,19 +16,19 @@
 - set_fact:
     cacheable: false
     cops_drupal_db__port: "{{cops_drupal_db___port.strip()}}"
+
+# Generate passwords on remote box if not found in registry
+- name: "drupal secrets -- {{drupalsecret}}}"
+  loop_control: {loop_var: secretvariable}
+  with_items: "{{cops_drupal_secret_variables}}"
+  no_log: "{{not (cops_vars_debug|default(false))}}"
+  include_tasks: _set_secret_variable.yml
+
 # Set the cops_drupal_vars var from defaults/main.yml
 - name: "drupal registry init"
   include_role: {name: corpusops.roles/vars_registry}
   vars:
     cops_vars_registry_target: cops_drupal
-  tags: [drupal, vars, drupal_vars]
-  no_log: "{{not (cops_vars_debug|default(false))}}"
-
-# Generate passwords on remote box if not found in registry
-- name: "drupal secrets -- {{drupalsecret}}}"
-  include_tasks: _set_secret_variable.yml
-  loop_control: {loop_var: drupalsecret}
-  with_items: "{{cops_drupal_vars.secret_variables}}"
   tags: [drupal, vars, drupal_vars]
   no_log: "{{not (cops_vars_debug|default(false))}}"
 
