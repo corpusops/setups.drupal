@@ -1,1 +1,1 @@
-../../local/setups.zope/.ansible/scripts/edit_vault.sh
+../../local/setups.drupal/.ansible/scripts/edit_vault.sh

@@ -1,1 +1,1 @@
-../../local/setups.zope/.ansible/scripts/download_corpusops.sh
+../../local/setups.drupal/.ansible/scripts/download_corpusops.sh

@@ -1,1 +1,1 @@
-../../local/setups.zope/.ansible/scripts/yamldump.py
+../../local/setups.drupal/.ansible/scripts/yamldump.py

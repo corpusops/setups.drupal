@@ -1,1 +1,1 @@
-../../local/setups.zope/.ansible/scripts/setup_ansible.sh
+../../local/setups.drupal/.ansible/scripts/setup_ansible.sh
