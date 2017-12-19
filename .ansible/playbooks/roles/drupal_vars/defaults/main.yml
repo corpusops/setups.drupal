@@ -460,8 +460,11 @@ cops_drupal_nginx_server_aliases:
   - "www.{domain}"
 cops_drupal_nginx_redirect_aliases: true
 cops_drupal_htpasswd: "/etc/nginx/{name}-htpasswd"
-#cops_drupal_http_users: []
+cops_drupal_http_auth_restricted: false
 cops_drupal_http_users: []
+cops_drupal_http_users:
+- {user: "{local_settings_account_name}",
+   password: "{local_settings_site_password}"}
 #  - {user: name, password: foobar}
 cops_drupal_ssl_protected: false
 cops_drupal_nginx: {}
