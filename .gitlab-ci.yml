@@ -174,8 +174,8 @@ setup_staging_db:
      <<: [ *staging_vault_variables ]
      PLAYBOOK: ".ansible/playbooks/db.yml"
 
- setup_staging_db_backup:
-   <<: [ *ansible, *teardown_ansible, *setup_ansible, *jobs_branchs, *jobs ]
-   variables:
-     <<: [ *staging_vault_variables ]
-     PLAYBOOK: ".ansible/playbooks/db_backup.yml"
+setup_staging_db_backup:
+  <<: [ *ansible, *teardown_ansible, *setup_ansible, *jobs_branchs, *jobs ]
+  variables:
+    <<: [ *staging_vault_variables ]
+    PLAYBOOK: ".ansible/playbooks/db_backup.yml"
