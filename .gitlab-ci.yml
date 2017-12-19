@@ -15,6 +15,9 @@ variables:
   # See: https://gitlab.com/gitlab-org/gitlab-runner/issues/2495
   #
   # Select the desired vault for the environment
+  # -> password file
+  A_ENV_NAME: "$CI_JOB_STAGE"
+  # -> vaults files
   A_VAULT_NAME: "$CI_JOB_STAGE"
   # Select the inventory to act on
   A_INVENTORY: "-i $CI_PROJECT_DIR/.ansible/inventory_$A_VAULT_NAME/"
