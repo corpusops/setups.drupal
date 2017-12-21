@@ -14,7 +14,11 @@
   when: "cops_drupal_s_workers_service and corpusops_vars.has_services_manager"
   tags: [cops_drupal_s_workers_service]
 
+- shell: echo "force service reload/restart"
+  notify: [cops_drupal_rhandlers]
+  tags: [cops_drupal_s_workers_service]
 - meta: flush_handlers
+  tags: [cops_drupal_s_workers_service]
 
 # Check reverse proxy is listening
 - uri:

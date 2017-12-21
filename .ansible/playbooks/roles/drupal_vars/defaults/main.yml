@@ -293,7 +293,9 @@ cops_drupal_ep_main_ep: "/entry_point"
 # service
 cops_drupal_service: "php{php_version}-fpm"
 cops_drupal_services: ["{service}", "nginx"]
-cops_drupal_rhandlers: [restart_cops_drupal]
+cops_drupal_rhandlers: [
+cops_drupal_rhandlers: [restart_cops_drupal_systemd,
+                        restart_cops_drupal]
 # use in docker (via a vault):
 cops_drupal_reconfigure_services: []
 # cops_drupal_reconfigure_services: ["post-start-{service}"]
@@ -475,7 +477,6 @@ cops_drupal_nginx_basename: "corpus-{name}"
 cops_drupal_nginx_is_default_server: true
 cops_drupal_nginx_ssl_protected: "{ssl_protected}"
 cops_drupal_nginx_htpasswd: "{htpasswd}"
-cops_drupal_nginx_force_reload: true
 cops_drupal_nginx_ssl_cert: ""
 cops_drupal_nginx_ssl_key: ""
 cops_drupal_nginx_loglevel: crit

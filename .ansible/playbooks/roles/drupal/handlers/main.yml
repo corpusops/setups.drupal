@@ -1,4 +1,11 @@
 ---
+- listen: restart_cops_drupal_systemd
+  become: true
+  shell: systemctl daemon-reload
+  when: "(cops_drupal_vars.activated and
+          corpusops_vars.has_services_manager and
+          (ansible_service_mgr == 'systemd'))"
+
 - listen: restart_cops_drupal
   become: true
   systemd:
@@ -18,6 +25,7 @@
   when: "(cops_drupal_vars.activated and
           corpusops_vars.has_services_manager and
           (ansible_service_mgr != 'systemd'))"
+
 - listen: reload_cops_drupal
   become: true
   systemd:
