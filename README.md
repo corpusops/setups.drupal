@@ -12,7 +12,7 @@ export FTP_URL=<tri>@/path
 ```
 
 ### Clone the project
-- Note the **--recursive** switch; if you follow the next commands, you can then skip this step on the next docs.
+- Note the **--recursive** switch; if you follow the next commands, you can then skip this step on the next docss.
 
     ```sh
     git clone --recursive $A_GIT_URL $COPS_CWD
@@ -24,11 +24,11 @@ export FTP_URL=<tri>@/path
     ```
 
 ### Deploy the dev VM
-- [corpusops vagrant doc](https://github.com/corpusops/corpusops.bootstrap/blob/master/doc/projects/vagrant.md)<br/>
-  or ``local/corpusops.bootstrap/doc/projects/vagrant.md`` after corpusops.bootstrap download.
+- [corpusops vagrant docs](https://github.com/corpusops/corpusops.bootstrap/blob/master/docs/projects/vagrant.md)<br/>
+  or ``local/corpusops.bootstrap/docs/projects/vagrant.md`` after corpusops.bootstrap download.
 
 ### Deploy on enviromnents
 - Setup needed when you dont have Ci setup for doing it for you
-- [corpusops deploy doc](https://github.com/corpusops/corpusops.bootstrap/blob/master/doc/projects/deploy.md)<br/>
-  or ``local/corpusops.bootstrap/doc/projects/deploy.md`` after corpusops.bootstrap download.
+- [corpusops deploy docs](https://github.com/corpusops/corpusops.bootstrap/blob/master/docs/projects/deploy.md)<br/>
+  or ``local/corpusops.bootstrap/docs/projects/deploy.md`` after corpusops.bootstrap download.
 
