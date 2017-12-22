@@ -10,6 +10,7 @@ export NONINTERACTIVE=1
 # VM NOT DONE
 export FTP_URL=<tri>@/path
 ```
+
 ### Clone the project
 - Note the **--recursive** switch; if you follow the next commands, you can then skip this step on the next docs.
 
