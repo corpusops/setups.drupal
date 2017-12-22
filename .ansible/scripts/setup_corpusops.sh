@@ -1,1 +1,1 @@
-../../local/setups.drupal/.ansible/scripts/setup_corpusops.sh
+cops_wrapper.sh

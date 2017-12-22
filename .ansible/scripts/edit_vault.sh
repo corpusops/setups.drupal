@@ -1,1 +1,1 @@
-../../local/setups.drupal/.ansible/scripts/edit_vault.sh
+cops_wrapper.sh

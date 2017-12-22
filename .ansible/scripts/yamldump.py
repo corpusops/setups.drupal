@@ -1,1 +1,1 @@
-../../local/setups.drupal/.ansible/scripts/yamldump.py
+cops_wrapper.sh

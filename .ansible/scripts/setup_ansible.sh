@@ -1,1 +1,1 @@
-../../local/setups.drupal/.ansible/scripts/setup_ansible.sh
+cops_wrapper.sh
