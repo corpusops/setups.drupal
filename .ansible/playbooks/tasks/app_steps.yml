@@ -8,6 +8,8 @@
       cops_drupal_lifecycle_dbbackup: "{{cops_drupal_lifecycle_dbbackup|default(not only_steps)}}"
       cacheable: false
   - set_fact:
+      cops_drupal_s_prerequisites_pgclient:     "{{                                                 cops_drupal_s_prerequisites_pgclient |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_prerequisites_pkgs:         "{{                                                     cops_drupal_s_prerequisites_pkgs |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_setup_maintenance_on:        "{{cops_drupal_s_setup_maintenance_on |default(cops_drupal_s_setup_maintenance          |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps))))}}"
       cops_drupal_s_setup_maintenance_off:       "{{cops_drupal_s_setup_maintenance_off|default(cops_drupal_s_setup_maintenance          |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps))))}}"
       cops_drupal_s_setup_configs:               "{{                                            cops_drupal_s_setup_configs              |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
@@ -28,7 +30,6 @@
       cops_drupal_s_users:          "{{cops_drupal_s_users         |default(cops_drupal_lifecycle_app_setup|default(not only_steps))}}"
       cops_drupal_s_layout:         "{{cops_drupal_s_layout        |default(cops_drupal_lifecycle_app_setup|default(not only_steps))}}"
       cops_drupal_s_first_fixperms: "{{cops_drupal_s_first_fixperms|default(cops_drupal_lifecycle_app_setup|default(not only_steps))}}"
-      cops_drupal_s_prerequisites:  "{{cops_drupal_s_prerequisites |default(cops_drupal_lifecycle_app_setup|default(not only_steps))}}"
       cops_drupal_s_workers:        "{{cops_drupal_s_workers       |default(cops_drupal_lifecycle_app_setup|default(not only_steps))}}"
       cops_drupal_s_entry_point:    "{{cops_drupal_s_entry_point   |default(cops_drupal_lifecycle_app_setup|default(not only_steps))}}"
       cops_drupal_s_manage_content: "{{cops_drupal_s_manage_content|default(cops_drupal_lifecycle_app_setup|default(not only_steps))}}"
@@ -42,6 +43,9 @@
       cops_drupal_s_fpm: "{{(cops_drupal_s_fpm_install)}}"
   - set_fact:
       cacheable: false
+      cops_drupal_s_prerequisites:  "{{(
+          cops_drupal_s_prerequisites_pgclient or
+          cops_drupal_s_prerequisites_pkgs)}}"
       cops_drupal_s_setup: "{{(
           cops_drupal_s_setup_maintenance_on or
           cops_drupal_s_setup_configs or

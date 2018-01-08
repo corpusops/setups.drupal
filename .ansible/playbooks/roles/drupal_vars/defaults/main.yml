@@ -485,6 +485,7 @@ cops_drupal_nginx_maintenance_page: "/index_maintenance.html"
 cops_drupal_services_nginx_reload_state: "reloaded"
 # PHP-Fpm
 cops_drupal_fpm_ping: "/ping"
+cops_drupal_fpm_reload_action: null
 cops_drupal_fpm_domain: "{domain}"
 cops_drupal_fpm_pool_root: "{project_root}"
 cops_drupal_fpm_doc_root: "{project_root}/www"
