@@ -262,6 +262,7 @@ cops_drupal_s_first_fixperms: true
 cops_drupal_s_fixperms_configs: true
 cops_drupal_s_fixperms_run: true
 cops_drupal_s_prerequisites: true
+cops_drupal_s_prerequisites_phpinstall: true
 cops_drupal_s_prerequisites_pkgs: true
 cops_drupal_s_prerequisites_pgclient: true
 cops_drupal_s_setup: true
@@ -270,6 +271,8 @@ cops_drupal_s_setup_configs: true
 cops_drupal_s_setup_hosts: true
 cops_drupal_s_setup_composer: true
 cops_drupal_s_setup_app: true
+cops_drupal_s_setup_app_install: true
+cops_drupal_s_setup_app_update: true
 cops_drupal_s_setup_cron: true
 cops_drupal_s_setup_maintenance_off: true
 cops_drupal_s_setup_reverse_proxy: true
@@ -280,6 +283,7 @@ cops_drupal_s_setup_fpm: true
 cops_drupal_s_setup_fpm_pool: true
 cops_drupal_s_fpm: true
 cops_drupal_s_fpm_install: true
+cops_drupal_s_fpm_pkgs: true
 cops_drupal_s_reverse_proxy: true
 cops_drupal_s_reverse_proxy_install: true
 cops_drupal_s_workers: true

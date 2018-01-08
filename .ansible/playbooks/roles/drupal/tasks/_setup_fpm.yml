@@ -10,4 +10,4 @@
   vars:
     _corpusops_fpm_pool: "{{cops_drupal_vars.fpm}}"
   tags: [cops_drupal_s_setup_fpm_pool]
-  when: "cops_drupal_s_setup_fpm_pool"
+  when: [cops_drupal_s_setup_fpm_pool]

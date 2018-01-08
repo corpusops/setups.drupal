@@ -4,4 +4,3 @@
 - include_role: {name: corpusops.roles/configs, private: true}
   vars:
     cops_configs_templates: "{{cops_drupal_vars.configs}}"
-  tags: [drupal, configs, drupal_configs]

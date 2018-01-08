@@ -11,7 +11,8 @@
     ../sbin/install.sh
   register: cops_drupal_install_log
   changed_when: "not 'Install skipped' in cops_drupal_install_log.stderr"
-  tags: cops_drupal_s_app_install
+  tags: [cops_drupal_s_setup_app_install]
+  when: [cops_drupal_s_setup_app_install]
 
 - name: Drush postupdate if neccesary
   shell: |
@@ -20,4 +21,5 @@
     export NONINTERACTIVE=y
     ../sbin/post_update.sh
   register: cops_drupal_post_update_log
-  tags: cops_drupal_s_app_post_update
+  tags: [cops_drupal_s_setup_app_update]
+  when: [cops_drupal_s_setup_app_update]

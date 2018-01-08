@@ -8,6 +8,7 @@
       cops_drupal_lifecycle_dbbackup: "{{cops_drupal_lifecycle_dbbackup|default(not only_steps)}}"
       cacheable: false
   - set_fact:
+      cops_drupal_s_prerequisites_phpinstall:   "{{                                               cops_drupal_s_prerequisites_phpinstall |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_prerequisites_pgclient:     "{{                                                 cops_drupal_s_prerequisites_pgclient |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_prerequisites_pkgs:         "{{                                                     cops_drupal_s_prerequisites_pkgs |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_setup_maintenance_on:        "{{cops_drupal_s_setup_maintenance_on |default(cops_drupal_s_setup_maintenance          |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps))))}}"
@@ -40,10 +41,11 @@
         cops_drupal_s_setup_reverse_proxy_users)}}"
       cops_drupal_s_setup_fpm: "{{(cops_drupal_s_setup_fpm_pool)}}"
       cops_drupal_s_reverse_proxy:  "{{(cops_drupal_s_reverse_proxy_reload or cops_drupal_s_reverse_proxy_install)}}"
-      cops_drupal_s_fpm: "{{(cops_drupal_s_fpm_install)}}"
+      cops_drupal_s_fpm: "{{(cops_drupal_s_fpm_install or cops_drupal_s_fpm_pkgs)}}"
   - set_fact:
       cacheable: false
       cops_drupal_s_prerequisites:  "{{(
+          cops_drupal_s_prerequisites_phpinstall or
           cops_drupal_s_prerequisites_pgclient or
           cops_drupal_s_prerequisites_pkgs)}}"
       cops_drupal_s_setup: "{{(
