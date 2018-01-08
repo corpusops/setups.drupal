@@ -37,4 +37,4 @@
 
 - import_playbook: "../../local/setups.{{cops_drupal_db_role}}/.ansible/playbooks/site.yml"
   tags: [cops_drupal_lifecycle_db]
-  when: "cops_drupal_lifecycle_db|default(true)"
+  when: [cops_drupal_lifecycle_db]

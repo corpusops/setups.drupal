@@ -293,10 +293,9 @@ cops_drupal_ep_main_ep: "/entry_point"
 # service
 cops_drupal_service: "php{php_version}-fpm"
 cops_drupal_services: ["{service}", "nginx"]
-cops_drupal_rhandlers: [
+# use in docker (via a vault):
 cops_drupal_rhandlers: [restart_cops_drupal_systemd,
                         restart_cops_drupal]
-# use in docker (via a vault):
 cops_drupal_reconfigure_services: []
 # cops_drupal_reconfigure_services: ["post-start-{service}"]
 cops_drupal_activated: true
@@ -462,8 +461,8 @@ cops_drupal_nginx_server_aliases:
   - "www.{domain}"
 cops_drupal_nginx_redirect_aliases: true
 cops_drupal_htpasswd: "/etc/nginx/{name}-htpasswd"
+# set to true to activate HTTP Basic auth
 cops_drupal_http_auth_restricted: false
-cops_drupal_http_users: []
 cops_drupal_http_users:
 - {user: "{local_settings_account_name}",
    password: "{local_settings_site_password}"}

@@ -15,7 +15,7 @@
   tags: [cops_drupal_s_workers_service]
 
 - shell: echo "force service reload/restart"
-  notify: [cops_drupal_rhandlers]
+  notify: "{{cops_drupal_vars.rhandlers}}"
   tags: [cops_drupal_s_workers_service]
 - meta: flush_handlers
   tags: [cops_drupal_s_workers_service]
