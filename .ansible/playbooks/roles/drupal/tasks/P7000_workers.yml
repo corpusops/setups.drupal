@@ -22,9 +22,7 @@
 
 # Check reverse proxy is listening
 - tags: ["cops_drupal_s_workers_checks"]
-  when: ["cops_drupal_s_workers_checks and (
-          corpusops_vars.has_services_manager and
-          cops_drupal_vars.activated)"]
+  when: ["cops_drupal_s_workers_checks"]
   block:
   - uri:
       url: "http://{{cops_drupal_vars.query_host}}:{{cops_drupal_vars.nginx.port}}/"
