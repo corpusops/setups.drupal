@@ -1,47 +1,49 @@
 ---
-- listen: restart_cops_drupal_systemd
-  become: true
-  shell: systemctl daemon-reload
-  when: "(cops_drupal_vars.activated and
-          corpusops_vars.has_services_manager and
-          (ansible_service_mgr == 'systemd'))"
+- become: true
+  block:
+  - listen: restart_cops_drupal_systemd
+    become: true
+    shell: systemctl daemon-reload
+    when: "(cops_drupal_vars.activated and
+            corpusops_vars.has_services_manager and
+            (ansible_service_mgr == 'systemd'))"
 
-- listen: restart_cops_drupal
-  become: true
-  systemd:
-    daemon_reload: yes
-    state: restarted
-    name: "{{item}}"
-  with_items: "{{cops_drupal_vars.services}}"
-  when: "(cops_drupal_vars.activated and
-          corpusops_vars.has_services_manager and
-          (ansible_service_mgr == 'systemd'))"
-- listen: restart_cops_drupal
-  become: true
-  service:
-    state: restarted
-    name: "{{item}}"
-  with_items: "{{cops_drupal_vars.services}}"
-  when: "(cops_drupal_vars.activated and
-          corpusops_vars.has_services_manager and
-          (ansible_service_mgr != 'systemd'))"
+  - listen: restart_cops_drupal
+    become: true
+    systemd:
+      daemon_reload: yes
+      state: restarted
+      name: "{{item}}"
+    with_items: "{{cops_drupal_vars.services}}"
+    when: "(cops_drupal_vars.activated and
+            corpusops_vars.has_services_manager and
+            (ansible_service_mgr == 'systemd'))"
+  - listen: restart_cops_drupal
+    become: true
+    service:
+      state: restarted
+      name: "{{item}}"
+    with_items: "{{cops_drupal_vars.services}}"
+    when: "(cops_drupal_vars.activated and
+            corpusops_vars.has_services_manager and
+            (ansible_service_mgr != 'systemd'))"
 
-- listen: reload_cops_drupal
-  become: true
-  systemd:
-    daemon_reload: yes
-    state: reloaded
-    name: "{{item}}"
-  with_items: "{{cops_drupal_vars.services}}"
-  when: "(cops_drupal_vars.activated and
-          corpusops_vars.has_services_manager and
-          (ansible_service_mgr == 'systemd'))"
-- listen: reload_cops_drupal
-  become: true
-  service:
-    state: reloaded
-    name: "{{item}}"
-  with_items: "{{cops_drupal_vars.services}}"
-  when: "(cops_drupal_vars.activated and
-          corpusops_vars.has_services_manager and
-          (ansible_service_mgr != 'systemd'))"
+  - listen: reload_cops_drupal
+    become: true
+    systemd:
+      daemon_reload: yes
+      state: reloaded
+      name: "{{item}}"
+    with_items: "{{cops_drupal_vars.services}}"
+    when: "(cops_drupal_vars.activated and
+            corpusops_vars.has_services_manager and
+            (ansible_service_mgr == 'systemd'))"
+  - listen: reload_cops_drupal
+    become: true
+    service:
+      state: reloaded
+      name: "{{item}}"
+    with_items: "{{cops_drupal_vars.services}}"
+    when: "(cops_drupal_vars.activated and
+            corpusops_vars.has_services_manager and
+            (ansible_service_mgr != 'systemd'))"
