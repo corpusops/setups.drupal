@@ -511,6 +511,8 @@ cops_drupal_fpm_include_path:
   - "{project_root}/www"
   - "{project_root}/lib"
   - "{project_root}/vendor"
+cops_drupal_php_extensions:
+  - {ext: mbstring, exts: [tokenizer]}
 cops_drupal_fpm_listen: "127.0.0.1:9000"
 cops_drupal_fpm_session_auto_start: 0
 cops_drupal_fpm_allow_url_fopen: 0

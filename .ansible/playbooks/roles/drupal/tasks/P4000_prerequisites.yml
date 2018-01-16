@@ -42,3 +42,8 @@
   when: ["(cops_drupal_s_prerequisites_pgclient and
           (cops_drupal_vars.db_type == 'pgsql'))"]
 
+- include_role: {name: corpusops.roles/php_ext}
+  when: [cops_drupal_s_prerequisites_extensions]
+  tags: [cops_drupal_s_prerequisites_extensions]
+  with_items: ["{{cops_drupal_vars.php_extensions}}"]
+  loop_control: {loop_var: _corpusops_php_ext}
