@@ -12,7 +12,8 @@
       - set_fact:
           cacheable: false
           cops_drupal_dbsmartbackup_default_free_form: |
-            export HOST="{{hostvars[groups['db_servers'][0]]['ansible_fqdn']}}"
+            {% set dbserver = groups.get('db_servers', groups['all'])[0] %}
+            export HOST="{{hostvars[dbserver]['ansible_fqdn']}}"
             export PORT="{{cops_drupal_vars.db__port}}"
             export DBNAMES="{{cops_drupal_vars.db_name}}"
             export PASSWORD="{{cops_drupal_vars.db_password}}"
