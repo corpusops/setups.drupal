@@ -29,10 +29,10 @@
       return_content: true
       headers:
         Host: "{{cops_drupal_vars.domain}}"
-      user: "{{((not cops_drupal_vars.http_users2)
+      user: "{{((not cops_drupal_vars.http_users)
                 and omit
                 or cops_drupal_vars.http_users[0].user)}}"
-      password: "{{((not cops_drupal_vars.http_users2)
+      password: "{{((not cops_drupal_vars.http_users)
                     and omit
                     or cops_drupal_vars.http_users[0].password)}}"
     register: cops_drupal_check1
