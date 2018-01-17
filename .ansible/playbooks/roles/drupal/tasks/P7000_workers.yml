@@ -20,28 +20,35 @@
     notify: "{{cops_drupal_vars.rhandlers}}"
   - meta: flush_handlers
 
-# Check reverse proxy is listening
 - tags: ["cops_drupal_s_workers_checks"]
   when: ["cops_drupal_s_workers_checks"]
   block:
-  - uri:
+  - name: Check reverse proxy is listening
+    uri:
       url: "http://{{cops_drupal_vars.query_host}}:{{cops_drupal_vars.nginx.port}}/"
       return_content: true
       headers:
         Host: "{{cops_drupal_vars.domain}}"
+      user: "{{((not cops_drupal_vars.http_users2)
+                and omit
+                or cops_drupal_vars.http_users[0].user)}}"
+      password: "{{((not cops_drupal_vars.http_users2)
+                    and omit
+                    or cops_drupal_vars.http_users[0].password)}}"
     register: cops_drupal_check1
-    # TODO: @kiorky check we only have an HTTP response (any status)
     until: "('{0}'.format(cops_drupal_check1.status)[0]
               in ['1','2','3','4','5','6','7','8','9'])"
     retries: 10
     delay: 1
-  # Check php-fpm is listening
-  - uri:
+    failed_when: "not ('{0}'.format(cops_drupal_check1.status)[0]
+              in ['1','2','3','4','5','6','7','8','9'])"
+  - name: Check php-fpm is listening
+    uri:
       url: "http://{{cops_drupal_vars.query_host}}:{{cops_drupal_vars.nginx.port}}{{cops_drupal_vars.fpm.ping}}"
-      headers:
-        Host: "{{cops_drupal_vars.domain}}"
+      headers: {Host: "{{cops_drupal_vars.domain}}"}
       return_content: true
     register: cops_drupal_check2
     until: "'pong' in cops_drupal_check2.content"
+    failed_when: "not('pong' in cops_drupal_check2.content)"
     retries: 10
     delay: 1
