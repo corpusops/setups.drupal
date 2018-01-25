@@ -3,5 +3,5 @@
 - {include_tasks: tasks/app_steps.yml}
 - {include_tasks: "../../local/setups.{{cops_drupal_db_role}}/.ansible/playbooks/tasks/app_steps.yml"}
 - {include_tasks: "../../local/setups.dbsmartbackup/.ansible/playbooks/tasks/app_steps.yml"}
-- {include_role: {name: drupal_vars}, become: true}
+- {include_role: {name: drupal_vars, allow_duplicates: false}, become: true}
 
