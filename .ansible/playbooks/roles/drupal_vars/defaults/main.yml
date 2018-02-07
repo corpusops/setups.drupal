@@ -15,7 +15,8 @@ cops_drupal__supereditors: >-
      ) | copsf_splitstrip | to_json }}
 cops_drupal_supereditors_paths: "{_supereditors_paths}"
 cops_drupal_supereditors: "{_supereditors}"
-cops_drupal_deb_packages:
+cops_drupal_deb_packages: "{{cops_drupal_deb_packages___default}}"
+cops_drupal_deb_packages___default:
     - unzip
     - xsltproc
     - curl
@@ -65,7 +66,8 @@ cops_drupal_deb_packages:
     - poppler-utils
     - wv
     - zlib1g-dev
-cops_drupal_rh_packages: []
+cops_drupal_rh_packages: "{{cops_drupal_rh_packages___default}}"
+cops_drupal_rh_packages___default: []
 # extra conf to add to pgconf (directly added to a tuning conf file (string))
 cops_drupal_sysctls: []
 cops_drupal_domain: "{{ansible_fqdn}}"
@@ -305,7 +307,8 @@ cops_drupal_reconfigure_services: []
 cops_drupal_activated: true
 # Layout, files & configs
 cops_drupal_stickymode: "2"
-cops_drupal_files:
+cops_drupal_files: "{{cops_drupal_files___default}}"
+cops_drupal_files___default:
   - {path: "{projects_dir}",
      owner: root, group: root, state: directory}
   - {path: "{project_dir}",
@@ -381,7 +384,8 @@ cops_drupal_files:
   - {path: "{project_root}/sbin/profile_conf.sh", state: absent, force: true}
   - {path: "{project_root}/sbin/composer.lock",   state: absent, force: true}
 # Config files
-cops_drupal_configs:
+cops_drupal_configs: "{{cops_drupal_configs___default}}"
+cops_drupal_configs___default:
   - {src: "../templates/default.settings.php",
      dest: "{project_root}/www/sites/default/settings.php",
      mode: "0640",
@@ -397,11 +401,13 @@ cops_drupal_configs:
      mode: "0750",
      owner: "{user}",
      group: "root"}
-cops_drupal_fixperms_configs:
+cops_drupal_fixperms_configs: "{{cops_drupal_fixperms_configs___default}}"
+cops_drupal_fixperms_configs___default:
   - {src: "../templates/fixperms.sh",
      dest: "{fixperms}", mode: "0755",
      owner: root, group: root}
-cops_drupal_ep_configs:
+cops_drupal_ep_configs: "{{cops_drupal_ep_configs___default}}"
+cops_drupal_ep_configs___default:
   # script to reconfigure image before and after systemd is launched
   - {src: "../templates/reconfigure.sh",
      dest: "{reconfigure}",
@@ -427,16 +433,20 @@ cops_drupal_reconfigure_verbosity: "-v"
 # Code synchronnisation settings
 cops_drupal_push_codes_cwd: "{cops_cwd}"
 cops_drupal_push_codes_sync_mode: "{{ cops_installer_mode in ['vagrant'] and 'rsync' or 'git' }}"
-cops_drupal_push_codes_file_tests:
+cops_drupal_push_codes_file_tests: "{{cops_drupal_push_codes_file_tests___default}}"
+cops_drupal_push_codes_file_tests___default:
   git: []
   rsync: ["composer.json", "composer.lock", ".git"]
-cops_drupal_push_codes_rsync_opts:
+cops_drupal_push_codes_rsync_opts: "{{cops_drupal_push_codes_rsync_opts___default}}"
+cops_drupal_push_codes_rsync_opts___default:
   git:   ["-azv",                           "--exclude", "local/*", "--exclude", ".vagrant", "--exclude", "*.retry"]
   rsync: ["-azv", "--include", ".git/**/*", "--exclude", "local/*", "--exclude", ".vagrant", "--exclude", "*.retry"]
-cops_drupal_push_codes_rsync_submodule_opts:
+cops_drupal_push_codes_rsync_submodule_opts: "{{cops_drupal_push_codes_rsync_submodule_opts___default}}"
+cops_drupal_push_codes_rsync_submodule_opts___default:
   git:   ["-azv", "--exclude", "*.retry"]
   rsync: ["-azv", "--exclude", "*.retry"]
-cops_drupal_push_codes:
+cops_drupal_push_codes: "{{cops_drupal_push_codes___default}}"
+cops_drupal_push_codes___default:
 - path: "{project_root}"
   origin_path: "{push_codes_cwd}"
   sync_mode: "{{cops_drupal_push_codes_sync_mode}}"
@@ -449,7 +459,8 @@ cops_drupal_push_codes:
     rsync_opts: "{{cops_drupal_push_codes_rsync_submodule_opts[cops_drupal_push_codes_sync_mode]}}"
     is_submodule: true
 # SSH deploy settings -> env vault
-cops_deploy_ssh_key_paths:
+cops_deploy_ssh_key_paths: "{{cops_deploy_ssh_key_paths___default}}"
+cops_deploy_ssh_key_paths___default:
   deploy:
     path: "{{'local/.ssh/deploy_key'|copsf_abspath}}"
     pub: "{{cops_deploy_ssh_pub_key|default('')}}"
@@ -461,13 +472,15 @@ cops_deploy_ssh_key_paths:
 # Reverse proxy Nginx
 cops_drupal_default_vhost_is_default_server: false
 cops_drupal_nginx_domain: "{domain}"
-cops_drupal_nginx_server_aliases:
+cops_drupal_nginx_server_aliases: "{{cops_drupal_nginx_server_aliases___default}}"
+cops_drupal_nginx_server_aliases___default:
   - "www.{domain}"
 cops_drupal_nginx_redirect_aliases: true
 cops_drupal_htpasswd: "/etc/nginx/{name}-htpasswd"
 # set to true to activate HTTP Basic auth
 cops_drupal_http_auth_restricted: false
-cops_drupal_http_users:
+cops_drupal_http_users: "{{cops_drupal_http_users___default}}"
+cops_drupal_http_users___default:
 - {user: "{local_settings_account_name}",
    password: "{local_settings_site_password}"}
 #  - {user: name, password: foobar}
@@ -496,7 +509,8 @@ cops_drupal_fpm_doc_root: "{project_root}/www"
 cops_drupal_fpm_name: "{name}"
 cops_drupal_fpm_display_errors: 0
 cops_drupal_fpm_xdebug_profiler_enable_trigger: 0
-cops_drupal_fpm_open_basedir:
+cops_drupal_fpm_open_basedir: "{{cops_drupal_fpm_open_basedir___default}}"
+cops_drupal_fpm_open_basedir___default:
   - "{data_root}/sites"
   - "{data_root}/var/sites"
   - "{data_root}/var/log"
@@ -507,11 +521,13 @@ cops_drupal_fpm_open_basedir:
   - "{project_root}/vendor"
   - "{project_root}/var/tmp"
   - "{project_root}/var/private"
-cops_drupal_fpm_include_path:
+cops_drupal_fpm_include_path: "{{cops_drupal_fpm_include_path___default}}"
+cops_drupal_fpm_include_path___default:
   - "{project_root}/www"
   - "{project_root}/lib"
   - "{project_root}/vendor"
-cops_drupal_php_extensions:
+cops_drupal_php_extensions: "{{cops_drupal_php_extensions___default}}"
+cops_drupal_php_extensions___default:
   - {ext: mbstring, exts: [tokenizer]}
 cops_drupal_fpm_listen: "127.0.0.1:9000"
 cops_drupal_fpm_session_auto_start: 0
