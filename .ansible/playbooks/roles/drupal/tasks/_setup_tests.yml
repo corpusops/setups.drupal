@@ -4,7 +4,7 @@
   apt:
     update_cache: yes
     cache_valid_time: 3600
-    name: [fluxbox, vnc4server, firefox, expect]
+    name: [fluxbox, vnc4server, chromium-browser, chromium-chromedriver, expect, libxfont1, xfonts-terminus, xfonts-base, xterm, openjdk-9-jre, tar, gzip]
     state: latest
 - name: ensure project user vnc directory exists
   file:
@@ -15,12 +15,12 @@
     mode: 0750
 - name: Download Selenium standalone server
   get_url:
-    url: "http://selenium-release.storage.googleapis.com/2.52/selenium-server-standalone-2.52.0.jar"
+    url: "http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.1.jar"
     owner: "{{cops_drupal_vars.user}}"
     group: "{{cops_drupal_vars.group}}"
     mode: "750"
-    checksum: "sha256:09c1e8376fa70640e0038cdf3ef58c37965181567e5afd880935b64f9223e0ab"
-    dest: "/home/{{cops_drupal_vars.user}}/selenium-server-standalone-2.52.0.jar"
+    checksum: "sha256:1cce6d3a5ca5b2e32be18ca5107d4f21bddaa9a18700e3b117768f13040b7cf8"
+    dest: "/home/{{cops_drupal_vars.user}}/selenium-server-standalone-2.53.1.jar"
 - name: Vnc startup script launching selenium
   file:
     path: "/home/{{ cops_drupal_vars.user }}/.vnc"
@@ -36,7 +36,7 @@
         vncconfig -iconic &
         x-terminal-emulator -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &
         /usr/bin/startfluxbox &
-        java -jar selenium-server-standalone-2.52.0.jar &
+        java -jar selenium-server-standalone-2.53.1.jar -Dwebriver.chrome.driver="/usr/lib/chromium-browser/chromedriver" &
     owner: "{{ cops_drupal_vars.user }}"
     group: "{{ cops_drupal_vars.group }}"
     mode: "0750"

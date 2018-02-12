@@ -331,7 +331,7 @@ cops_drupal_files___default:
   - {path: "{project_root}/lib",
      owner: "{user}", group: "{group}",
      state: directory, mode: "{stickymode}750"}
-  - {path: "{project_root}/resources",
+  - {path: "{project_root}/tests",
      owner: "{user}", group: "{group}",
      state: directory, mode: "{stickymode}750"}
   - {path: "{project_root}/www/sites",
@@ -389,16 +389,12 @@ cops_drupal_files___default:
   # check these files are NOT present
   - {path: "{project_root}/sbin/profile_conf.sh", state: absent, force: true}
   - {path: "{project_root}/sbin/composer.lock",   state: absent, force: true}
+  - {path: "{project_root}/www/sites/default/common.settings.php",   state: absent, force: true}
 # Config files
 cops_drupal_configs: "{{cops_drupal_configs___default}}"
 cops_drupal_configs___default:
   - {src: "../templates/default.settings.php",
      dest: "{project_root}/www/sites/default/settings.php",
-     mode: "0640",
-     owner: "{user}",
-     group: "{group}"}
-  - {src: "../templates/common.settings.php",
-     dest: "{project_root}/www/sites/default/common.settings.php",
      mode: "0640",
      owner: "{user}",
      group: "{group}"}
@@ -408,7 +404,7 @@ cops_drupal_configs___default:
      owner: "{user}",
      group: "root"}
   - {src: "../templates/behat.yml",
-     dest: "{project_root}/resources/behat.yml",
+     dest: "{project_root}/tests/behat.yml",
      mode: "0750",
      owner: "{user}",
      group: "root"}
