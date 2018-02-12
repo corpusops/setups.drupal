@@ -18,6 +18,7 @@
       cops_drupal_s_setup_hosts:                 "{{                                            cops_drupal_s_setup_hosts                |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_setup_composer:              "{{                                            cops_drupal_s_setup_composer             |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_setup_app:                   "{{                                            cops_drupal_s_setup_app                  |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_setup_test:                   "{{                                           cops_drupal_s_setup_test                 |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_setup_cron:                  "{{                                            cops_drupal_s_setup_cron                 |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_setup_reverse_proxy_dvhost:  "{{                                            cops_drupal_s_setup_reverse_proxy_dvhost |default(cops_drupal_s_setup_reverse_proxy|default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_setup_reverse_proxy_vhost:   "{{                                            cops_drupal_s_setup_reverse_proxy_vhost  |default(cops_drupal_s_setup_reverse_proxy|default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
@@ -56,6 +57,7 @@
           cops_drupal_s_setup_hosts or
           cops_drupal_s_setup_composer or
           cops_drupal_s_setup_app or
+          cops_drupal_s_setup_test or
           cops_drupal_s_setup_cron or
           cops_drupal_s_setup_maintenance_off or
           cops_drupal_s_setup_reverse_proxy or

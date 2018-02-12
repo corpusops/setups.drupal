@@ -87,6 +87,7 @@ cops_drupal_admins: 'sysadmin@{domain}'
 cops_drupal_tz: "Europe/Paris"
 cops_drupal_country: "FR"
 cops_drupal_update_status_module: 0
+cops_drupal_vncpasswd: "default"
 cops_drupal_local_settings_cache: 0
 cops_drupal_local_settings_cache_block: 0
 cops_drupal_local_settings_reverse_proxy_header: 'HTTP_X_FORWARDED_FOR'
@@ -177,6 +178,7 @@ cops_drupal_password: "secret"
 cops_drupal_modules_dir: "{project_root}/www/sites/all/modules"
 cops_drupal_modules_check: "ctools webform token pathauto"
 cops_drupal_php: ''
+cops_drupal_tests_selenium_driver_url: "http://127.0.0.1:4444/wd/hub"
 # this will force a drush install
 # you can also use a data/force_install file for one-time things
 cops_drupal_force_install: 0
@@ -283,6 +285,7 @@ cops_drupal_s_setup_reverse_proxy_vhost: true
 cops_drupal_s_setup_reverse_proxy_users: true
 cops_drupal_s_setup_fpm: true
 cops_drupal_s_setup_fpm_pool: true
+cops_drupal_s_setup_test: false
 cops_drupal_s_fpm: true
 cops_drupal_s_fpm_install: true
 cops_drupal_s_fpm_pkgs: true
@@ -326,6 +329,9 @@ cops_drupal_files___default:
      owner: "{user}", group: "{group}",
      state: directory, mode: "{stickymode}750"}
   - {path: "{project_root}/lib",
+     owner: "{user}", group: "{group}",
+     state: directory, mode: "{stickymode}750"}
+  - {path: "{project_root}/resources",
      owner: "{user}", group: "{group}",
      state: directory, mode: "{stickymode}750"}
   - {path: "{project_root}/www/sites",
@@ -398,6 +404,11 @@ cops_drupal_configs___default:
      group: "{group}"}
   - {src: "../templates/local_conf.sh",
      dest: "{project_root}/sbin/local_conf.sh",
+     mode: "0750",
+     owner: "{user}",
+     group: "root"}
+  - {src: "../templates/behat.yml",
+     dest: "{project_root}/resources/behat.yml",
      mode: "0750",
      owner: "{user}",
      group: "root"}
@@ -539,7 +550,7 @@ cops_drupal_fpm_group: "{group}"
 cops_drupal_fpm_memory_limit: "256M"
 cops_drupal_fpm_modules: {}
 # Composer settings
-cops_drupal_composer_install_args: "--no-dev"
+cops_drupal_composer_install_args: "--no-dev --prefer-dist --optimize-autoloader"
 # Dbsmartbackup settings
 cops_drupal_dbsmartbackup: {}
 cops_drupal_dbsmartbackup_name: "{name}"
