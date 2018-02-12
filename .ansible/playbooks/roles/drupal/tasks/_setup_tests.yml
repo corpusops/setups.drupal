@@ -1,0 +1,57 @@
+---
+# We'll need vncserver, firefox
+- name: refresh apt cache if more than 1 hour
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+    name: [fluxbox, vnc4server, chromium-browser, chromium-chromedriver, expect, libxfont1, xfonts-terminus, xfonts-base, xterm, openjdk-9-jre, tar, gzip]
+    state: latest
+- name: ensure project user vnc directory exists
+  file:
+    path: "/home/{{cops_drupal_vars.user}}/.vnc"
+    state: directory
+    owner: "{{cops_drupal_vars.user}}"
+    group: "{{cops_drupal_vars.group}}"
+    mode: 0750
+- name: Download Selenium standalone server
+  get_url:
+    url: "http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.1.jar"
+    owner: "{{cops_drupal_vars.user}}"
+    group: "{{cops_drupal_vars.group}}"
+    mode: "750"
+    checksum: "sha256:1cce6d3a5ca5b2e32be18ca5107d4f21bddaa9a18700e3b117768f13040b7cf8"
+    dest: "/home/{{cops_drupal_vars.user}}/selenium-server-standalone-2.53.1.jar"
+- name: Vnc startup script launching selenium
+  file:
+    path: "/home/{{ cops_drupal_vars.user }}/.vnc"
+    state: directory
+- name: Vnc startup script launching selenium
+  copy:
+    dest: "/home/{{ cops_drupal_vars.user }}/.vnc/xstartup"
+    content: |
+        #!/bin/sh
+        [ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+        [ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+        xsetroot -solid grey
+        vncconfig -iconic &
+        x-terminal-emulator -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &
+        /usr/bin/startfluxbox &
+        java -jar selenium-server-standalone-2.53.1.jar -Dwebriver.chrome.driver="/usr/lib/chromium-browser/chromedriver" &
+    owner: "{{ cops_drupal_vars.user }}"
+    group: "{{ cops_drupal_vars.group }}"
+    mode: "0750"
+- become: true
+  become_user: "{{ cops_drupal_vars.user }}"
+  shell: |
+      echo "default" | vncpasswd -f /home/{{ cops_drupal_vars.user }}/.vnc/passwd
+      /usr/bin/expect <<EOF
+      spawn /usr/bin/vncpasswd
+      expect "Password:"
+      send "{{ cops_drupal_vars.vncpasswd }}\n"
+      expect "Verify:"
+      send "{{ cops_drupal_vars.vncpasswd }}\n"
+      expect eof
+      exit
+      EOF
+      vncserver :1 -localhost
+      vncserver -kill :1

@@ -8,7 +8,10 @@ cops_drupal_domain: "{{cops_app_name}}.vbox.local"
 cops_installer_mode: vagrant
 cops_drupal_ep_playbook: "site_vagrant.yml"
 # install dev pkgs also (reset default --no-dev)
-cops_drupal_composer_install_args: ""
+cops_drupal_composer_install_args: "--prefer-dist --optimize-autoloader"
 cops_drupal_lifecycle_dbbackup: false
+# avoid maintenance mode switchs
 cops_drupal_s_setup_maintenance_on: false
 cops_drupal_s_setup_maintenance_off: false
+# install test stuff
+cops_drupal_s_setup_test: true

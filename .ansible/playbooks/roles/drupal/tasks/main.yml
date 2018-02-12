@@ -16,6 +16,9 @@
   - include_tasks: P4500_setup.yml
     tags: [cops_drupal_s_setup]
     when: [cops_drupal_s_setup]
+  - include_tasks: P5000_test_setup.yml
+    tags: [cops_drupal_s_test_setup]
+    when: [cops_drupal_s_test_setup]
   - include_tasks: P6000_reverse_proxy.yml
     tags: [cops_drupal_s_reverse_proxy]
     when: [cops_drupal_s_reverse_proxy]

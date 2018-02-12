@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# {{ansible_managed}}
+# (you may need to adapt this file more than that ...)
+# make a copy in YOUR PROJECT, in
+# .ansible/playbooks/overrides/templates/behat.yml
+# and edit your .ansible/vaults/app.yml
+# to reference it (cops_drupal_configs):
+#cops_drupal_configs:
+#  - {src: "../templates/default.settings.php",
+#     (...)
+#  - {src: "../templates/common.settings.php",
+#     (...)
+#  - {src: "../templates/local_conf.sh",
+#     (...)
+#  - {src: "overrides/templates/behat.yml",
+#     (...)
+#
+# {% set cfg = cops_drupal_vars %}
+# {% set force = cfg.get('force', {}) %}
+default:
+  suites:
+    default:
+      filters:
+        tags: "~@exclude"
+      contexts:
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\DrushContext
+        - FeatureContext:
+            parameters:
+              http_username: "root"
+              http_password: "rootroot"
+  extensions:
+    Behat\MinkExtension:
+      goutte: ~
+      selenium2:
+        browser: "chrome"
+        wd_host: "{{ cfg.tests_selenium_driver_url }}"
+        capabilities: { "browser": "chrome", "version": "" }
+      base_url: "http://{{ cfg.domain }}"
+      files_path: "{{ cfg.project_root }}/tests/files"
+    Drupal\DrupalExtension:
+      blackbox: ~
+      api_driver: "drupal"
+      drupal:
+        drupal_root: "{{ cfg.project_root }}/www"
+      selectors:
+        message_selector: 'div[role=alert]'
+        error_message_selector: '.placeholder'
+        success_message_selector: '.messages.messages-status'
+      text:
+        username_field: "name"
+        password_field: "pass"
+      #   log_out: "Déconnexion"
+
