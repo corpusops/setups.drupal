@@ -8,7 +8,7 @@ popd > /dev/null
 BEHAT=${SCRIPTPATH}/vendor/bin/behat
 AUTOLOAD=${SCRIPTPATH}/vendor/autoload.php
 BEHAT_STUFF=${SCRIPTPATH}/tests
-PROJECT_USER=${stat -c '%U' ${BEHAT_STUFF}/behat.yml}
+PROJECT_USER=$(stat -c '%U' ${BEHAT_STUFF}/behat.yml)
 
 ps auxf|grep -v grep|grep -q Xvnc4
 if [ "x${?}" == "x0" ]; then

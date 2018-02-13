@@ -36,7 +36,7 @@
         vncconfig -iconic &
         x-terminal-emulator -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &
         /usr/bin/startfluxbox &
-        java -jar selenium-server-standalone-2.53.1.jar -Dwebriver.chrome.driver="/usr/lib/chromium-browser/chromedriver" &
+        java -jar selenium-server-standalone-2.53.1.jar -Dwebdriver.chrome.driver="/usr/lib/chromium-browser/chromedriver" &
     owner: "{{ cops_drupal_vars.user }}"
     group: "{{ cops_drupal_vars.group }}"
     mode: "0750"
