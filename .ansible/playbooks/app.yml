@@ -10,24 +10,12 @@
     - when: "cops_drupal_lifecycle_app"
       tags: [cops_drupal_lifecycle_app]
       block:
-      - shell: /bin/false
-        failed_when: false
-        changed_when: false
-        register: cops_drupal_test1
-        no_log: true
-      - shell: /bin/false
-        register: cops_drupal_test2
-        changed_when: false
-        failed_when: false
-        no_log: true
-      - set_fact:
+        - set_fact:
           cacheable: false
           cops_drupal_lifecycle_app: |-
-           (((not vars.get('SKIP_INSTALL_DRUPAL', False)) and
-             (cops_drupal_test1 !=0) or
-             (cops_drupal_test2 !=0))) or
-              cops_drupal_lifecycle_app|default(false) or
-            (vars.get('FORCE_INSTALL_DRUPAL', False)))
+           ((not vars.get('SKIP_INSTALL_DRUPAL', False) and
+             (cops_drupal_lifecycle_app|default(false))) or
+            vars.get('FORCE_INSTALL_DRUPAL', False))
 
 - hosts: "{{drupal_servers|default('all')}}"
   tasks:
