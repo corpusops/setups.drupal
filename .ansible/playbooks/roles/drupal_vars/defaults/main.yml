@@ -401,12 +401,12 @@ cops_drupal_configs___default:
      mode: "0640",
      owner: "{user}",
      group: "{group}"}
-  - {src: "{template_bash_conf}",
+  - {src: "{config_template_bash_conf}",
      dest: "{project_root}/sbin/local_conf.sh",
      mode: "0750",
      owner: "{user}",
      group: "root"}
-  - {src: "{template_behat}",
+  - {src: "{config_template_behat}",
      dest: "{project_root}/tests/behat.yml",
      mode: "0750",
      owner: "{user}",
