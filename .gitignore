@@ -1,16 +1,22 @@
-# By default:
 # Ignore all core Drupal files.
-# On a prodcution steps you may comment theses ignore to push the real code
-# in git.
-# www/*.*
-# www/includes
-# www/misc
-# www/modules
-# www/scripts
-# www/translations
-# www/themes
-# www/profiles/*
-# www/sites
+www/*.*
+www/core
+# Ignore vendor directory.
+vendor
+# Ignore contrib files.
+www/libraries/*
+www/modules/*
+www/themes/*
+www/sites
+
+# Not this one required by drush...
+!www/autoload.php
+
+# Exceptions inside contrib files (custom code).
+!www/modules/custom
+!www/themes/custom
+!www/libraries/custom
+!www/monitor*
 
 # even after activating full project versioning in production you will still need
 # to ignore theses files:
@@ -23,36 +29,16 @@ www/sites/README.txt
 
 /local
 
-# In case you manage non salted /data directory in a /sites directory
-# with symlinks from www/sites/default to /sites/default
-# We do not want to store in git most of this content. Except the common.settings.php
-# But do not forget this common.settings.php is not the one used by salt
-# the real one should be in: .salt/files/common.settings.php
-/www/sites/*/files
-# /www/sites/*/modules/*
-/www/sites/*/*settings*
-# /www/sites/*/libraries/*
-# /www/sites/*/modules/*
-# /www/sites/*/themes/*
-!/sites/*/common.settings.php
-!/sites/*/local.settings.*.php
+# Documentation builds.
+doc/_build
 
-# Exceptions inside Drupal files (custom code).
-# !www/sites/*/modules/custom
-# !www/sites/*/themes/custom
-# !www/sites/*/libraries/custom
-# !www/monitor*
+# IDE settings.
+nbproject
+.idea/
 
 # WARNING: You will want to use your custom profile's real name below.
 !www/profiles/example
 !www/profiles/project_profile
-
-# Ignore vendor files (drush), comment for production release
-sbin/vendor
-sbin/composer.phar
-sbin/composer.lock
-sbin/.upgrades.done
-/sbin/user_rights*
 
 # Ignore conf files
 sbin/profile_conf.sh
@@ -70,16 +56,15 @@ doc/_build
 
 # ignore runtime files
 /bin/
-./lib
-!/lib/config/staging
-!/lib/config/sync
 /log
 /private
 /tmp
 /var
 
-#ignore apache conf
-/etc/*
+# Tests.
+tests/behat.local.yml
+# behat.yml file is generated
+tests/behat.yml
 
 # Ignore IDE and OS-related files
 .buildpath
@@ -95,5 +80,12 @@ atlassian-ide-plugin.xml
 *~
 \#*#
 
+# VM & prod deployment
+/local
+/*.box
+/*.log
+/vagrant_config.yml
+/.vagrant
 *.retry
+/.vagrant_config-overrides.yml
 /.ansible/scripts/ansible_deploy_env
