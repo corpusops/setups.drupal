@@ -1,0 +1,5 @@
+# build layout, install base pkgs
+ADD . /provision_dir
+RUN .ansible/scripts/setup_core_variables.sh
+RUN ROLES="drupal_push_code drupal_users drupal_layout drupal_fixperms" $_call_roles
+RUN ROLES="drupal_prerequisites" $_call_roles

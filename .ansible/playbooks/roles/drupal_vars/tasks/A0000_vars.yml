@@ -1,4 +1,5 @@
 ---
+- include_role: {name: drupal_steps, allow_duplicates: false}
 # compute some defaults
 - set_fact:
     cacheable: false
@@ -18,14 +19,11 @@
     cops_drupal_db__port: "{{cops_drupal_db___port.strip()}}"
 
 # Generate passwords on remote box if not found in registry
-- name: "Setup drupal secrets"
-  include_tasks: "{{cops_playbooks}}/utils/set_secret_variables.yml"
-  loop_control: {loop_var: secretvariables}
-  with_items:
-    - variables: "{{cops_drupal_secret_variables}}"
-      path: "{{corpusops_vars.config_dir}}/{{cops_drupal_name}}-secrets"
-      registry_prefix: cops_drupal_
+- name: "drupal secrets -- {{drupalsecret}}}"
+  loop_control: {loop_var: secretvariable}
+  with_items: "{{cops_drupal_secret_variables}}"
   no_log: "{{not (cops_vars_debug|default(false))}}"
+  include_tasks: _set_secret_variable.yml
 
 # Set the cops_drupal_vars var from defaults/main.yml
 - name: "drupal registry init"

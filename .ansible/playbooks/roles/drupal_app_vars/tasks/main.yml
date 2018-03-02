@@ -1,0 +1,7 @@
+---
+- set_fact:
+    cacheable: false
+    cops_drupal_lifecycle_app: |-
+     ((not vars.get('SKIP_INSTALL_DRUPAL', False) and
+       (cops_drupal_lifecycle_app|default(false))) or
+      vars.get('FORCE_INSTALL_DRUPAL', False))

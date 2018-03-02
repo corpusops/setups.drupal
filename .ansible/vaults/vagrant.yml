@@ -6,10 +6,12 @@ postgresql_servers: all
 mysql_servers: all
 cops_drupal_domain: "{{cops_app_name}}.vbox.local"
 cops_installer_mode: vagrant
-cops_drupal_ep_playbook: "site_vagrant.yml"
+cops_drupal_lifecycle_dbbackup: false
+# let outside VM user edit inside VM files
+cops_supereditors: ["{{ansible_user_id}}",
+                    "{{ansible_effective_user_id}}"]
 # install dev pkgs also (reset default --no-dev)
 cops_drupal_composer_install_args: "--prefer-dist --optimize-autoloader"
-cops_drupal_lifecycle_dbbackup: false
 # avoid maintenance mode switchs
 cops_drupal_s_setup_maintenance_on: false
 cops_drupal_s_setup_maintenance_off: false

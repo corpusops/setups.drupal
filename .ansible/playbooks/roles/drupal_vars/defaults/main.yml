@@ -249,54 +249,6 @@ cops_drupal_ep_post_start_skip_tags: "{{(
   )}}"
 # global orchestration steps (db, code sync, web & workers prereqs, drupal config)
 cops_drupal_become: true
-cops_drupal_lifecycle_db: true
-cops_drupal_lifecycle_app: true
-cops_drupal_lifecycle_app_push_code: true
-cops_drupal_lifecycle_app_setup: true
-# drupal & project deployment steps
-cops_drupal_s_vars: true
-cops_drupal_s_users: true
-cops_drupal_s_users_user: true
-cops_drupal_s_users_group: true
-cops_drupal_s_users_fpm_user: true
-cops_drupal_s_users_fpm_group: true
-cops_drupal_s_layout: true
-cops_drupal_s_layout_layout: true
-cops_drupal_s_first_fixperms: true
-cops_drupal_s_fixperms_configs: true
-cops_drupal_s_fixperms_run: true
-cops_drupal_s_prerequisites: true
-cops_drupal_s_prerequisites_phpinstall: true
-cops_drupal_s_prerequisites_pkgs: true
-cops_drupal_s_prerequisites_pgclient: true
-cops_drupal_s_setup: true
-cops_drupal_s_setup_maintenance_on: true
-cops_drupal_s_setup_configs: true
-cops_drupal_s_setup_hosts: true
-cops_drupal_s_setup_composer: true
-cops_drupal_s_setup_app: true
-cops_drupal_s_setup_app_install: true
-cops_drupal_s_setup_app_update: true
-cops_drupal_s_setup_cron: true
-cops_drupal_s_setup_maintenance_off: true
-cops_drupal_s_setup_reverse_proxy: true
-cops_drupal_s_setup_reverse_proxy_dvhost: true
-cops_drupal_s_setup_reverse_proxy_vhost: true
-cops_drupal_s_setup_reverse_proxy_users: true
-cops_drupal_s_setup_fpm: true
-cops_drupal_s_setup_fpm_pool: true
-cops_drupal_s_setup_test: false
-cops_drupal_s_fpm: true
-cops_drupal_s_fpm_install: true
-cops_drupal_s_fpm_pkgs: true
-cops_drupal_s_reverse_proxy: true
-cops_drupal_s_reverse_proxy_install: true
-cops_drupal_s_workers: true
-cops_drupal_s_workers_service: true
-cops_drupal_s_workers_checks: true
-cops_drupal_s_entry_point: true
-cops_drupal_s_manage_content: true
-cops_drupal_s_end_fixperms: true
 #
 cops_drupal_ep_main_ep: "/entry_point"
 # service

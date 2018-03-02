@@ -1,0 +1,12 @@
+---
+- block:
+  - name: Check php-fpm is listening
+    uri:
+      url: "http://{{cops_drupal_vars.query_host}}:{{cops_drupal_vars.nginx.port}}{{cops_drupal_vars.fpm.ping}}"
+      headers: {Host: "{{cops_drupal_vars.domain}}"}
+      return_content: true
+    register: cops_drupal_check2
+    until: "'pong' in cops_drupal_check2.content"
+    failed_when: "not('pong' in cops_drupal_check2.content)"
+    retries: 10
+    delay: 1

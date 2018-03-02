@@ -1,5 +1,0 @@
----
-- include_tasks: _setup_tests.yml
-  tags: [cops_drupal_s_test_setup]
-  when: [cops_drupal_s_test_setup]
-

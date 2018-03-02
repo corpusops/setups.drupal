@@ -3,8 +3,6 @@
 # eg:
 #  ansible-playbook .ansible/playbooks/app_steps.yml -e "cops_drupal_s_setup_maintenance_on=false cops_drupal_s_setup=True"
 - hosts: "{{drupal_servers|default('all')}}"
-  roles:
-    - role: corpusops.roles/ansible_plugins
   tasks:
-    - include_tasks: tasks/load_vars.yml
-    - include_tasks: tasks/lc_app.yml
+  - include_role: {name: drupal_app_vars,  allow_duplicates: false}
+  - include_role: {name: drupal_steps,     allow_duplicates: false}

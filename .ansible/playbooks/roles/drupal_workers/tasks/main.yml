@@ -1,0 +1,21 @@
+---
+- when: ["cops_drupal_s_workers_service and corpusops_vars.has_services_manager"]
+  tags: ["cops_drupal_s_workers_service"]
+  block:
+  # activate the main app service
+  - service:
+      state: "{{cops_drupal_vars.activated | ternary('started', 'stopped')}}"
+      enabled: "{{cops_drupal_vars.activated | ternary(True, False)}}"
+      name: "{{item}}"
+    with_items: "{{cops_drupal_vars.services}}"
+  # this will fail on non systemd hosts on purpose !
+  # if we have activated the reconfigure units (docker mode essentially)
+  - systemd:
+      enabled: "{{cops_drupal_vars.activated | ternary(True, False)}}"
+      daemon_reload: yes
+      name: "{{item}}"
+    with_items: "{{cops_drupal_vars.reconfigure_services}}"
+  # force a reload/restart here
+  - shell: echo "force service reload/restart"
+    notify: "{{cops_drupal_vars.rhandlers}}"
+  - meta: flush_handlers

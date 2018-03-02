@@ -1,0 +1,36 @@
+---
+- include_role: {name: drupal_maintenance_on, allow_duplicates: false}
+  tags: [cops_drupal_s_setup_maintenance_on]
+  when: [cops_drupal_s_setup_maintenance_on]
+
+- include_role: {name: drupal_setup_configs, allow_duplicates: false}
+  tags: [cops_drupal_s_setup_configs]
+  when: [cops_drupal_s_setup_configs]
+
+- include_role: {name: drupal_setup_front, allow_duplicates: false}
+  tags: [cops_drupal_s_setup_front]
+  when: [cops_drupal_s_setup_front]
+
+- include_role: {name: drupal_setup_hosts, allow_duplicates: false}
+  tags: [cops_drupal_s_setup_hosts]
+  when: [cops_drupal_s_setup_hosts]
+
+- include_role: {name: drupal_setup_composer, allow_duplicates: false}
+  tags: [cops_drupal_s_setup_composer]
+  when: [cops_drupal_s_setup_composer]
+
+- include_role: {name: drupal_setup_app, allow_duplicates: false}
+  tags: [cops_drupal_s_setup_app]
+  when: [cops_drupal_s_setup_app]
+
+- include_role: {name: drupal_setup_reverse_proxy, allow_duplicates: false}
+  tags: [cops_drupal_s_setup_reverse_proxy]
+  when: [cops_drupal_s_setup_reverse_proxy]
+
+- include_role: {name: drupal_maintenance_off, allow_duplicates: false}
+  tags: [cops_drupal_s_setup_maintenance_off]
+  when: [cops_drupal_s_setup_maintenance_off]
+
+- include_role: {name: drupal_setup_cron, allow_duplicates: false}
+  tags: [cops_drupal_s_setup_cron]
+  when: [cops_drupal_s_setup_cron]

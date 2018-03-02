@@ -1,39 +1,45 @@
 ---
-- tags: [cops_drupal, drupal]
+- tags: [cops_drupal_lifecycle_app_setup]
+  when: [cops_drupal_lifecycle_app_setup]
+  become: "{{cops_drupal_vars.become}}"
   block:
-  - include_tasks: P1000_users.yml
+  - include_role: {name: drupal_users, allow_duplicates: false}
     tags: [cops_drupal_s_users]
     when: [cops_drupal_s_users]
-  - include_tasks: P2000_layout.yml
+  - include_role: {name: drupal_layout, allow_duplicates: false}
     tags: [cops_drupal_s_layout]
     when: [cops_drupal_s_layout]
-  - include_tasks: G9000_fixperms.yml
+  - include_role: {name: drupal_fixperms, allow_duplicates: true}
     tags: [cops_drupal_s_first_fixperms]
     when: [cops_drupal_s_first_fixperms]
-  - include_tasks: P4000_prerequisites.yml
+  - include_role: {name: drupal_prerequisites, allow_duplicates: false}
     tags: [cops_drupal_s_prerequisites]
     when: [cops_drupal_s_prerequisites]
-  - include_tasks: P4500_setup.yml
+  - include_role: {name: drupal_setup, allow_duplicates: false}
     tags: [cops_drupal_s_setup]
     when: [cops_drupal_s_setup]
-  - include_tasks: P5000_test_setup.yml
-    tags: [cops_drupal_s_test_setup]
-    when: [cops_drupal_s_test_setup]
-  - include_tasks: P6000_reverse_proxy.yml
+  - include_role: {name: drupal_setup_test, allow_duplicates: false}
+    tags: [cops_drupal_s_setup_test]
+    when: [cops_drupal_s_setup_test]
+  - include_role: {name: drupal_reverse_proxy, allow_duplicates: false}
     tags: [cops_drupal_s_reverse_proxy]
     when: [cops_drupal_s_reverse_proxy]
-  - include_tasks: P6010_fpm.yml
+  - include_role: {name: drupal_fpm, allow_duplicates: false}
     tags: [cops_drupal_s_fpm]
     when: [cops_drupal_s_fpm]
-  - include_tasks: P7000_workers.yml
+  - include_role: {name: drupal_workers, allow_duplicates: false}
     tags: [cops_drupal_s_workers]
     when: [cops_drupal_s_workers]
-  - include_tasks: P8000_entry_point.yml
+  - include_role: {name: drupal_entry_point, allow_duplicates: false}
     tags: [cops_drupal_s_entry_point]
     when: [cops_drupal_s_entry_point]
-  - include_tasks: P8500_manage_content.yml
+  - include_role: {name: drupal_manage_content, allow_duplicates: false}
     tags: [cops_drupal_s_manage_content]
     when: [cops_drupal_s_manage_content]
-  - include_tasks: G9000_fixperms.yml
+  - include_role: {name: drupal_healthchecks, allow_duplicates: false}
+    tags: [cops_drupal_s_healthchecks]
+    when: [cops_drupal_s_healthchecks]
+  - include_role: {name: drupal_fixperms, allow_duplicates: true}
     tags: [cops_drupal_s_end_fixperms]
     when: [cops_drupal_s_end_fixperms]
+

@@ -18,14 +18,14 @@ cops_postgresql__roles:
 - name: "{{cops_app_name}}"
   password: "{{cops_app_name}}"
 cops_postgresql__databases:
-- db: "{{cops_postgresql__roles[0].name}}"
-  owner: "{{cops_postgresql__roles[0].name}}"
+- db: "{{cops_app_name}}"
+  owner: "{{cops_app_name}}"
 cops_drupal_name: "{{cops_app_name}}"
 cops_drupal_db_user: "{{cops_postgresql__roles[0].name}}"
 cops_drupal_db_name: "{{cops_postgresql__databases[0].db}}"
 cops_drupal_db_password: "{{cops_postgresql__roles[0].password}}"
-cops_postgresql_lifecycle_app_push_code: false
-cops_dbsmartbackup_lifecycle_app_push_code: false
 corpusops_services_db_postgresql_version: "9.6"
 cops_postgresql_version: "{{corpusops_services_db_postgresql_version}}"
+# no test setup by default
+cops_drupal_s_setup_test: false
 # vim:set ft=sls:

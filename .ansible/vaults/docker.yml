@@ -1,11 +1,15 @@
 ---
-cops_drupal_ep_folder:   "{{ansible_env['ANSIBLE_FOLDER']}}"
-cops_drupal_ep_playbook: "{{ansible_env['ANSIBLE_PLAY']}}"
+db_servers: all
+db_backup_servers: all
+django_servers: all
+postgresql_servers: all
+mysql_servers: all
 cops_drupal_reconfigure_services: ["post-start-{service}"]
-cops_drupal_lifecycle_app_push_code: false
 cops_drupal_reconfigure_service_stderr: "journal+console"
 cops_drupal_reconfigure_service_stdout: "journal+console"
 cops_drupal_lifecycle_db: false
 cops_drupal_lifecycle_dbbackup: false
 cops_drupal_s_setup_maintenance_on: false
 cops_drupal_s_setup_maintenance_off: false
+# install test stuff
+cops_drupal_s_setup_test: true
