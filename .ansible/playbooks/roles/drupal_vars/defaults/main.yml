@@ -392,18 +392,21 @@ cops_drupal_files___default:
   - {path: "{project_root}/www/sites/default/common.settings.php",   state: absent, force: true}
 # Config files
 cops_drupal_configs: "{{cops_drupal_configs___default}}"
+cops_drupal_config_template_settings: "../templates/default.settings.php"
+cops_drupal_config_template_bash_conf: "../templates/local_conf.sh"
+cops_drupal_config_template_behat: "../templates/behat.yml"
 cops_drupal_configs___default:
-  - {src: "../templates/default.settings.php",
+  - {src: "{config_template_settings}",
      dest: "{project_root}/www/sites/default/settings.php",
      mode: "0640",
      owner: "{user}",
      group: "{group}"}
-  - {src: "../templates/local_conf.sh",
+  - {src: "{template_bash_conf}",
      dest: "{project_root}/sbin/local_conf.sh",
      mode: "0750",
      owner: "{user}",
      group: "root"}
-  - {src: "../templates/behat.yml",
+  - {src: "{template_behat}",
      dest: "{project_root}/tests/behat.yml",
      mode: "0750",
      owner: "{user}",
