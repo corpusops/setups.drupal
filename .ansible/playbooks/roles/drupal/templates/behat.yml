@@ -1,19 +1,13 @@
 #!/usr/bin/env bash
 # {{ansible_managed}}
+# ----------------------------------------------------------------
 # (you may need to adapt this file more than that ...)
 # make a copy in YOUR PROJECT, in
 # .ansible/playbooks/overrides/templates/behat.yml
 # and edit your .ansible/vaults/app.yml
-# to reference it (cops_drupal_configs):
-#cops_drupal_configs:
-#  - {src: "../templates/default.settings.php",
-#     (...)
-#  - {src: "../templates/common.settings.php",
-#     (...)
-#  - {src: "../templates/local_conf.sh",
-#     (...)
-#  - {src: "overrides/templates/behat.yml",
-#     (...)
+# to reference it :
+#cops_drupal_config_template_behat: "overrides/templates/behat.yml"
+# ----------------------------------------------------------------
 #
 # {% set cfg = cops_drupal_vars %}
 # {% set force = cfg.get('force', {}) %}
