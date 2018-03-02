@@ -1,0 +1,1 @@
+../local/setups.drupal/sbin/run-behat.sh
