@@ -1,35 +1,13 @@
 ---
-- hosts: "{{db_backup_servers|default('all')}}"
+# APP
+- hosts: "{{drupal_servers|default('all')}}"
   roles: [corpusops.roles/ansible_plugins]
   tasks:
-    - include_role: {name: drupal_db_vars}
-      tags: [cops_drupal_lifecycle_dbbackup]
-      when: "cops_drupal_lifecycle_dbbackup|default(true)"
-    - tags: [cops_drupal_lifecycle_dbbackup]
-      when: "cops_drupal_lifecycle_dbbackup|default(true)"
-      block:
-      - set_fact:
-          cacheable: false
-          cops_drupal_dbsmartbackup_default_free_form: |
-            export HOST="{{hostvars[groups['db_servers'][0]]['ansible_fqdn']}}"
-            export PORT="{{cops_drupal_vars.db_port}}"
-            export DBNAMES="{{cops_drupal_vars.db_name}}"
-            export PASSWORD="{{cops_drupal_vars.db_password}}"
-            {% if cops_drupal_dbsmartbackup_type == 'postgresql' %}
-            export DBUSER="{{cops_drupal_vars.db_user}}"
-            export PGUSER="{{cops_drupal_vars.db_user}}"
-            export PGPASSWORD="{{cops_drupal_vars.db_password}}"
-            {% endif %}
-      - set_fact:
-          cacheable: false
-          cops_dbsmartbackup_confs_drupal: |-
-            {% set res = cops_drupal_vars.get('dbsmartbackup', {}).copy() %}
-            {% set _ = res.setdefault('name', cops_drupal_vars.name) %}
-            {% set _ = res.setdefault('type', cops_drupal_dbsmartbackup_type) %}
-            {% set _ = res.update({'free_form': (
-                cops_drupal_vars.dbsmartbackup.free_form
-                | default(cops_drupal_dbsmartbackup_default_free_form))}) %}
-            {{ res | to_json }}
-- import_playbook: "../../local/setups.dbsmartbackup/.ansible/playbooks/site.yml"
-  tags: [cops_drupal_lifecycle_dbbackup]
-  when: "cops_drupal_lifecycle_dbbackup|default(true)"
+  - when: ["cops_drupal_lifecycle_app|default(true)"]
+    tags: ["cops_drupal_lifecycle_app"]
+    include_role: {name: drupal_app_vars,  allow_duplicates: false}
+  - when: ["cops_drupal_lifecycle_app"]
+    tags: ["cops_drupal_lifecycle_app"]
+    block:
+    - include_role: {name: drupal_push_code, allow_duplicates: false}
+    - include_role: {name: drupal,           allow_duplicates: false}

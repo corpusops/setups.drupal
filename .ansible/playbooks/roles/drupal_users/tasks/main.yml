@@ -16,8 +16,7 @@
     name: "{{cops_drupal_vars.fpm_group}}"
     state: present
   tags: [cops_drupal_s_users_fpm_group]
-  when: ["cops_drupal_s_users_fpm_group and (
-    cops_drupal_vars.group != cops_drupal_vars.fpm_group)"]
+  when: ["(cops_drupal_vars.group != cops_drupal_vars.fpm_group)"]
 - user:
     group: "{{cops_drupal_vars.fpm_group}}"
     name: "{{cops_drupal_vars.fpm_user}}"
@@ -25,4 +24,4 @@
     append: true
     generate_ssh_key: true
   tags: [cops_drupal_s_users_fpm_user]
-  when: [cops_drupal_s_users_fpm_user]
+  when: ["cops_drupal_s_users_fpm_user|default(true)"]
