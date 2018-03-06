@@ -16,10 +16,8 @@ cfg = cops_inject_playbooks \
         # install nginx http server
         # install PHP-FPM
         # install a postgresql server, db & user
-        # install django (fpm-pool && django setup)
-        # install pureftpd
+        # install drupal (fpm-pool && drupal setup)
         {".ansible/playbooks/site_vagrant.yml" => ansible_vars},
-        {".ansible/playbooks/ftp.yml" => ansible_vars},
     ]
 
 debug cfg.to_yaml
