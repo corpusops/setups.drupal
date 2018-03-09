@@ -1,7 +1,7 @@
 ---
 db_servers: all
 db_backup_servers: all
-django_servers: all
+drupal_servers: all
 postgresql_servers: all
 mysql_servers: all
 cops_drupal_reconfigure_services: ["post-start-{service}"]
