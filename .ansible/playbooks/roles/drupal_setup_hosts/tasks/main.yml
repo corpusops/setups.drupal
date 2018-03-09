@@ -12,12 +12,8 @@
            {% for alias in cops_drupal_vars.nginx.server_aliases -%}
            {%    set _ = hostsentries.append((h, alias))%}
            {% endfor %}
-           {% for alias in cops_drupal_vars.front_nginx.server_aliases -%}
-           {%    set _ = hostsentries.append((h, alias))%}
-           {% endfor %}
            {% for domain in [
                 cops_drupal_vars.domain,
-                cops_drupal_vars.front_nginx_domain
               ] %}
            {%   if domain %}
            {%     set _ = hostsentries.append((h, domain )) %}

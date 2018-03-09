@@ -2,6 +2,6 @@
 - tags: [cops_drupal_s_fpm_install]
   when: [cops_drupal_s_fpm_install]
   block:
-  - include_tasks: _install_fpm.yml
+  - include_tasks: _setup_fpm.yml
     when: ["not cops_drupal_s_fpm_already_done|default(false)"]
 

@@ -8,7 +8,7 @@ cops_drupal__supereditors_paths:
   - "{project_root}"
   - "{data_root}"
 # space separated string of uids to allow to write inside
-# projetct directories (used in development through posix ACLS setter)
+# project directories (used in development through posix ACLS setter)
 cops_drupal__supereditors: >-
   {{ ansible_env.get(
       'SUPEREDITORS', cops_supereditors|default('')
@@ -73,6 +73,7 @@ cops_drupal_sysctls: []
 cops_drupal_domain: "{{ansible_fqdn}}"
 # for internal monitoring
 cops_drupal_query_host: "127.0.0.1"
+cops_drupal_internal_host: "127.0.0.1"
 cops_drupal_name: 'drupal'
 cops_drupal_user: "{name}-user"
 cops_drupal_group: "{name}-group"
@@ -449,8 +450,8 @@ cops_drupal_http_users___default:
 cops_drupal_ssl_protected: false
 cops_drupal_nginx: {}
 cops_drupal_nginx_port: "80"
-cops_drupal_nginx_content_template: "{vrole_path}/templates/nginx.conf"
-cops_drupal_nginx_top_template: "{vrole_path}/templates/nginx.top.conf"
+cops_drupal_nginx_content_template: "../templates/nginx.conf"
+cops_drupal_nginx_top_template: "../templates/nginx.top.conf"
 cops_drupal_nginx_basename: "corpus-{name}"
 cops_drupal_nginx_is_default_server: true
 cops_drupal_nginx_ssl_protected: "{ssl_protected}"
