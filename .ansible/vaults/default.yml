@@ -1,5 +1,8 @@
 ---
 cops_app_name: drupal
+cops_db_name: "{{cops_app_name}}"
+cops_db_user: "{{cops_app_name}}"
+cops_db_password: "{{cops_app_name}}"
 cops_drupal_drupal_profile: "{{cops_app_name}}"
 #
 db_backup_servers: db_backup_servers
@@ -15,11 +18,14 @@ cops_drupal_db_role_type:
   pgsql: postgresql
 cops_drupal_db_role: "{{cops_drupal_db_role_type.get(cops_drupal_db_type, cops_drupal_db_type)}}"
 cops_postgresql__roles:
-- name: "{{cops_app_name}}"
-  password: "{{cops_app_name}}"
+- name: "{{cops_db_user}}"
+  password: "{{cops_db_password}}"
+  # for mysql
+  privs: "{{cops_db_name}}.*"
 cops_postgresql__databases:
-- db: "{{cops_app_name}}"
-  owner: "{{cops_app_name}}"
+- db: "{{cops_db_name}}"
+  # for pgsql
+  owner: "{{cops_db_user}}"
 cops_drupal_name: "{{cops_app_name}}"
 cops_drupal_db_user: "{{cops_postgresql__roles[0].name}}"
 cops_drupal_db_name: "{{cops_postgresql__databases[0].db}}"
