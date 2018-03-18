@@ -43,8 +43,8 @@
       cacheable: false
   - set_fact:
       cacheable: false
-      cops_drupal_s_users_user:  "{{cops_drupal_s_users_user |default(cops_pureftpd_s_end_fixperms or cops_pureftpd_s_first_fixperms or cops_drupal_lifecycle_app_push_code or default(cops_drupal_s_users|default(cops_drupal_lifecycle_app_setup|default(not only_steps ))))}}"
-      cops_drupal_s_users_group: "{{cops_drupal_s_users_group|default(cops_pureftpd_s_end_fixperms or cops_pureftpd_s_first_fixperms or cops_drupal_lifecycle_app_push_code or default(cops_drupal_s_users|default(cops_drupal_lifecycle_app_setup|default(not only_steps ))))}}"
+      cops_drupal_s_users_user:  "{{cops_drupal_s_users_user |default(cops_pureftpd_s_end_fixperms or cops_pureftpd_s_first_fixperms or cops_drupal_lifecycle_app_push_code or cops_drupal_s_users|default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_users_group: "{{cops_drupal_s_users_group|default(cops_pureftpd_s_end_fixperms or cops_pureftpd_s_first_fixperms or cops_drupal_lifecycle_app_push_code or cops_drupal_s_users|default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
   - set_fact:
       cacheable: false
       cops_drupal_s_users:            "{{(cops_drupal_s_users_user or cops_drupal_s_users_group)}}"
