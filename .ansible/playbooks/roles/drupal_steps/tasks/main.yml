@@ -12,6 +12,7 @@
       cops_drupal_s_setup_app_update:  "{{          cops_drupal_s_setup_app_update | default(cops_drupal_s_setup_app                |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps ))))}}"
       cacheable: false
   - set_fact:
+      cops_drupal_s_prerequisites_nginxinstall:  "{{                                            cops_drupal_s_prerequisites_nginxinstall |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_prerequisites_phpinstall:    "{{                                              cops_drupal_s_prerequisites_phpinstall |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_prerequisites_extensions:    "{{                                              cops_drupal_s_prerequisites_extensions |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_prerequisites_pgclient:      "{{                                                cops_drupal_s_prerequisites_pgclient |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
@@ -62,7 +63,8 @@
   - set_fact:
       cacheable: false
       cops_drupal_s_prerequisites:  "{{(
-          cops_drupal_s_prerequisites_phpinstall or
+          cops_drupal_s_prerequisites_nginxinstall or
+          Cops_drupal_s_prerequisites_phpinstall or
           cops_drupal_s_prerequisites_extensions or
           cops_drupal_s_prerequisites_pgclient or
           cops_drupal_s_prerequisites_pkgs)}}"
