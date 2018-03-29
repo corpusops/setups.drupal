@@ -30,7 +30,6 @@ cops_drupal_name: "{{cops_app_name}}"
 cops_drupal_db_user: "{{cops_postgresql__roles[0].name}}"
 cops_drupal_db_name: "{{cops_postgresql__databases[0].db}}"
 cops_drupal_db_password: "{{cops_postgresql__roles[0].password}}"
-corpusops_services_db_postgresql_version: "9.6"
 cops_postgresql_version: "{{corpusops_services_db_postgresql_version}}"
 # no test setup by default
 cops_drupal_s_setup_test: false
