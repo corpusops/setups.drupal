@@ -20,7 +20,7 @@ export FTP_URL=<tri>@/path
     git submodule init
     git submodule update
     .ansible/scripts/download_corpusops.sh
-    .ansible/scripts/setup_ansible.sh
+    .ansible/scripts/setup_corpusops.sh
     ```
 
 ### Deploy the dev VM
