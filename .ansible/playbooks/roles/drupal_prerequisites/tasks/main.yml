@@ -19,7 +19,7 @@
     changed_when: false
   rescue:
   - name: Preinstalling php
-    include_tasks: _install_fpm.yml
+    include_role:  {name: "drupal_fpm", allow_duplicates: false}
   - set_fact:
       cacheable: valse
       cops_drupal_s_fpm_already_done: true
