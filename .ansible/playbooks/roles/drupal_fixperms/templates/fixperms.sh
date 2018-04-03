@@ -6,6 +6,7 @@ set +e
 
 THIS=$(readlink -f "$0")
 user="{{cfg.user}}"
+userphp="{{cfg.name}}-php"
 group="{{cfg.group}}"
 projects_dir="{{cfg.projects_dir}}"
 project_dir="{{cfg.project_dir}}"
@@ -132,3 +133,19 @@ while read i;do
                        -not -perm 0755 \) \
  \) )
 done <<< "$TOP_SCRIPTS"
+
+while read i;do
+    if [ ! -e "$i" ];then continue;fi
+    while read j;do
+        echo $j
+        chmod 0660 "$j"
+        chown $user:$group "$j"
+    done < <(\
+ find -H "$i" \
+ \(\
+       -type f -and \( -not -user $user -or \
+                       -not -group $group -or \
+                       -not -perm 0660 \) \
+ \) )
+done <<< "
+${project_root}/var/log/cron"
