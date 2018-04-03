@@ -49,9 +49,14 @@
     with_items: "{{cops_drupal_vars.rh_packages}}"
 
 - include_role: {name: corpusops.roles/services_db_postgresql_client}
-  tags: ["cops_drupal_s_prerequisites_pgclient"]
-  when: ["(cops_drupal_s_prerequisites_pgclient and
+  tags: ["cops_drupal_s_prerequisites_dbclient"]
+  when: ["(cops_drupal_s_prerequisites_dbclient and
           (cops_drupal_vars.db_type == 'pgsql'))"]
+
+- include_role: {name: corpusops.roles/services_db_mysql_client}
+  tags: ["cops_drupal_s_prerequisites_dbclient"]
+  when: ["(cops_drupal_s_prerequisites_dbclient and
+          (cops_drupal_vars.db_type == 'mysql'))"]
 
 - include_role: {name: corpusops.roles/php_ext}
   when: [cops_drupal_s_prerequisites_extensions]

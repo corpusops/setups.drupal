@@ -15,7 +15,7 @@
       cops_drupal_s_prerequisites_nginxinstall:  "{{                                            cops_drupal_s_prerequisites_nginxinstall |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_prerequisites_phpinstall:    "{{                                              cops_drupal_s_prerequisites_phpinstall |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_prerequisites_extensions:    "{{                                              cops_drupal_s_prerequisites_extensions |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_prerequisites_pgclient:      "{{                                                cops_drupal_s_prerequisites_pgclient |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_prerequisites_dbclient:      "{{                                                cops_drupal_s_prerequisites_dbclient |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_prerequisites_pkgs:          "{{                                                    cops_drupal_s_prerequisites_pkgs |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_setup_maintenance_on:        "{{cops_drupal_s_setup_maintenance_on |default(cops_drupal_s_setup_maintenance          |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps))))}}"
       cops_drupal_s_setup_maintenance_off:       "{{cops_drupal_s_setup_maintenance_off|default(cops_drupal_s_setup_maintenance          |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps))))}}"
@@ -66,7 +66,7 @@
           cops_drupal_s_prerequisites_nginxinstall or
           Cops_drupal_s_prerequisites_phpinstall or
           cops_drupal_s_prerequisites_extensions or
-          cops_drupal_s_prerequisites_pgclient or
+          cops_drupal_s_prerequisites_dbclient or
           cops_drupal_s_prerequisites_pkgs)}}"
       cops_drupal_s_setup: "{{(
           cops_drupal_s_setup_maintenance_on or
