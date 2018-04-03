@@ -1,8 +1,5 @@
 ---
 # generate the app pools
-# as if we have syntax errors, we wont have any chance to regenerate the
-# vhost before the general service role will run (syntax check -> deploy KO)
-# Configure nginx default vhost
 - name: Generate fpm pool
   include_role:
     name: "corpusops.roles/php_fpm_pool"
@@ -11,3 +8,4 @@
     _corpusops_fpm_pool: "{{cops_drupal_vars.fpm}}"
   tags: [cops_drupal_s_setup_fpm_pool]
   when: [cops_drupal_s_setup_fpm_pool]
+

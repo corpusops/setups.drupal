@@ -12,6 +12,7 @@
       cops_drupal_s_setup_app_update:  "{{          cops_drupal_s_setup_app_update | default(cops_drupal_s_setup_app                |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps ))))}}"
       cacheable: false
   - set_fact:
+      cops_drupal_s_prerequisites_nginxinstall:  "{{                                            cops_drupal_s_prerequisites_nginxinstall |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_prerequisites_phpinstall:    "{{                                              cops_drupal_s_prerequisites_phpinstall |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_prerequisites_extensions:    "{{                                              cops_drupal_s_prerequisites_extensions |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_prerequisites_pgclient:      "{{                                                cops_drupal_s_prerequisites_pgclient |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
@@ -34,18 +35,20 @@
       cops_drupal_s_reverse_proxy_reload:        "{{                                            cops_drupal_s_reverse_proxy_reload       |default(cops_drupal_s_reverse_proxy      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_reverse_proxy_install:       "{{                                            cops_drupal_s_reverse_proxy_install      |default(cops_drupal_s_reverse_proxy      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_fpm_install:                 "{{                                            cops_drupal_s_fpm_install                |default(cops_drupal_s_fpm                |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_users_user:                  "{{                                            cops_drupal_s_users_user                 |default(cops_drupal_s_users              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
-      cops_drupal_s_users_group:                 "{{                                            cops_drupal_s_users_group                |default(cops_drupal_s_users              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_workers_service:             "{{                                            cops_drupal_s_workers_service            |default(cops_drupal_s_workers            |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
       cops_drupal_s_healthchecks:                "{{                                                                                      cops_drupal_s_healthchecks               |default(cops_drupal_lifecycle_app_setup|default(not only_steps ))}}"
       cops_drupal_s_fixperms_configs:   "{{cops_drupal_s_fixperms_configs|default((cops_drupal_s_first_fixperms|default(not only_steps)) or (cops_drupal_s_end_fixperms|default(not only_steps)))}}"
       cops_drupal_s_fixperms_run:       "{{cops_drupal_s_fixperms_run    |default((cops_drupal_s_first_fixperms|default(not only_steps)) or (cops_drupal_s_end_fixperms|default(not only_steps)))}}"
+      cops_drupal_s_first_fixperms: "{{cops_drupal_s_first_fixperms|default(not only_steps)}}"
+      cops_drupal_s_end_fixperms:   "{{cops_drupal_s_end_fixperms  |default(not only_steps)}}"
       cacheable: false
   - set_fact:
       cacheable: false
-      cops_drupal_s_first_fixperms:   "{{cops_drupal_s_first_fixperms   |default(not only_steps)}}"
-      cops_drupal_s_end_fixperms:     "{{cops_drupal_s_end_fixperms     |default(not only_steps)}}"
-      cops_drupal_s_users:            "{{cops_drupal_s_users            |default(cops_drupal_lifecycle_app_setup|default(not only_steps))}}"
+      cops_drupal_s_users_user:  "{{cops_drupal_s_users_user |default(cops_drupal_s_end_fixperms or cops_drupal_s_first_fixperms or cops_drupal_lifecycle_app_push_code or cops_drupal_s_users|default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+      cops_drupal_s_users_group: "{{cops_drupal_s_users_group|default(cops_drupal_s_end_fixperms or cops_drupal_s_first_fixperms or cops_drupal_lifecycle_app_push_code or cops_drupal_s_users|default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}}"
+  - set_fact:
+      cacheable: false
+      cops_drupal_s_users:            "{{(cops_drupal_s_users_user or cops_drupal_s_users_group)}}"
       cops_drupal_s_layout:           "{{cops_drupal_s_layout           |default(cops_drupal_lifecycle_app_setup|default(not only_steps))}}"
       cops_drupal_s_workers:          "{{cops_drupal_s_workers          |default(cops_drupal_lifecycle_app_setup|default(not only_steps))}}"
       cops_drupal_s_entry_point:      "{{cops_drupal_s_entry_point      |default(cops_drupal_lifecycle_app_setup|default(not only_steps))}}"
@@ -60,7 +63,8 @@
   - set_fact:
       cacheable: false
       cops_drupal_s_prerequisites:  "{{(
-          cops_drupal_s_prerequisites_phpinstall or
+          cops_drupal_s_prerequisites_nginxinstall or
+          Cops_drupal_s_prerequisites_phpinstall or
           cops_drupal_s_prerequisites_extensions or
           cops_drupal_s_prerequisites_pgclient or
           cops_drupal_s_prerequisites_pkgs)}}"

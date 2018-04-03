@@ -311,9 +311,12 @@ cops_drupal_files___default:
   - {path: "{data_root}/var/log",
      owner: "{user}", group: "{group}",
      state: directory, mode: "{stickymode}751"}
+  - {path: "{data_root}/var/log/cron",
+     owner: "{user}", group: "{group}",
+     state: directory, mode: "{stickymode}770"}
   - {path: "{data_root}/var/log/cron/{domain}",
      owner: "{user}", group: "{group}",
-     state: directory, mode: "{stickymode}750"}
+     state: directory, mode: "{stickymode}770"}
  #- {path: "{data_root}/var/log/nginx",
  #    owner: "{user}", group: "{group}",
  #    state: directory, mode: "{stickymode}755"}

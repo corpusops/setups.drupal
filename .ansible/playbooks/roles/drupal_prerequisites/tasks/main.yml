@@ -1,6 +1,17 @@
 ---
 # php may not yet been installed, install it in case
 # (will effectivly only run on first install)
+- tags: [cops_drupal_s_prerequisites_nginxinstall]
+  when: [cops_drupal_s_prerequisites_nginxinstall]
+  block:
+  - shell: nginx -v
+    changed_when: false
+  rescue:
+  - name: Preinstalling nginx
+    include_role: {name: "corpusops.roles/services_http_nginx"}
+  - set_fact:
+      cacheable: valse
+      cops_drupal_s_nginx_already_done: true
 - tags: [cops_drupal_s_prerequisites_phpinstall]
   when: [cops_drupal_s_prerequisites_phpinstall]
   block:
@@ -8,7 +19,7 @@
     changed_when: false
   rescue:
   - name: Preinstalling php
-    include_tasks: _install_fpm.yml
+    include_role:  {name: "drupal_fpm", allow_duplicates: false}
   - set_fact:
       cacheable: valse
       cops_drupal_s_fpm_already_done: true

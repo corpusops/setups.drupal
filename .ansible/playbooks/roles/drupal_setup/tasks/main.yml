@@ -23,6 +23,10 @@
   tags: [cops_drupal_s_setup_app]
   when: [cops_drupal_s_setup_app]
 
+- include_role: {name: drupal_setup_fpm, allow_duplicates: false}
+  tags: [cops_drupal_s_setup_fpm]
+  when: [cops_drupal_s_setup_fpm]
+
 - include_role: {name: drupal_setup_reverse_proxy, allow_duplicates: false}
   tags: [cops_drupal_s_setup_reverse_proxy]
   when: [cops_drupal_s_setup_reverse_proxy]
