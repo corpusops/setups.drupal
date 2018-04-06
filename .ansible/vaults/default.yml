@@ -21,9 +21,15 @@ cops_drupal_db_role: "{{cops_drupal_db_role_type.get(cops_drupal_db_type, cops_d
 cops_postgresql__roles:
 - name: "{{cops_db_user}}"
   password: "{{cops_db_password}}"
-  # for mysql
-  # privs: "{{cops_db_name}}.*: ALL"
 cops_postgresql__databases:
+- db: "{{cops_db_name}}"
+  # for pgsql
+  owner: "{{cops_db_user}}"
+cops_mysql__roles:
+- name: "{{cops_db_user}}"
+  password: "{{cops_db_password}}"
+  privs: "{{cops_db_name}}.*: ALL"
+cops_mysql__databases:
 - db: "{{cops_db_name}}"
   # for pgsql
   owner: "{{cops_db_user}}"
