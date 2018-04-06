@@ -3,7 +3,7 @@
 # drush make or site-install.
 # you can force or postpone the execution via marker files or
 # environment variables.
-- name: Drush install if neccesary
+- name: Drush install if necessary
   shell: |
     set -e
     cd "{{cops_drupal_vars.project_root}}/www"
@@ -14,7 +14,7 @@
   tags: [cops_drupal_s_setup_app_install]
   when: [cops_drupal_s_setup_app_install]
 
-- name: Drush postupdate if neccesary
+- name: Drush postupdate if necessary
   shell: |
     set -e
     cd "{{cops_drupal_vars.project_root}}/www"
