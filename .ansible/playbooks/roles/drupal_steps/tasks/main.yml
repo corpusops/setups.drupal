@@ -64,7 +64,7 @@
       cacheable: false
       cops_drupal_s_prerequisites:  "{{(
           cops_drupal_s_prerequisites_nginxinstall or
-          Cops_drupal_s_prerequisites_phpinstall or
+          cops_drupal_s_prerequisites_phpinstall or
           cops_drupal_s_prerequisites_extensions or
           cops_drupal_s_prerequisites_dbclient or
           cops_drupal_s_prerequisites_pkgs)}}"
