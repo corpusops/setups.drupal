@@ -20,3 +20,4 @@ cops_drupal_s_setup_maintenance_off: false
 cops_drupal_s_setup_test: true
 # reduce memory impact of elastic search
 cops_elasticsearch_mem: "256m"
+cops_elasticsearch_nginx_is_default_server: False
