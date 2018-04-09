@@ -6,6 +6,7 @@
   - set_fact:
       cops_drupal_lifecycle_db:       "{{cops_drupal_lifecycle_db      |default(not only_steps)}}"
       cops_drupal_lifecycle_dbbackup: "{{cops_drupal_lifecycle_dbbackup|default(not only_steps)}}"
+      cops_drupal_lifecycle_app_push_code: "{{cops_drupal_lifecycle_app_push_code|default(not only_steps))}}"
       cacheable: false
   - set_fact:
       cops_drupal_s_setup_app_install: "{{          cops_drupal_s_setup_app_install | default(cops_drupal_s_setup_app                |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps ))))}}"
@@ -99,7 +100,6 @@
       cops_drupal_lifecycle_app_setup: "{{cops_drupal_lifecycle_app_setup|default(
                                             (cops_drupal_lifecycle_app|default(False)) or (
                                               cops_drupal_lifecycle_app_level_1_steps))}}"
-      cops_drupal_lifecycle_app_push_code: "{{cops_drupal_lifecycle_app_push_code|default(cops_drupal_lifecycle_app|default(not only_steps))}}"
   - set_fact:
       cops_drupal_lifecycle_app: "{{cops_drupal_lifecycle_app|default(
           cops_drupal_lifecycle_app_push_code or
