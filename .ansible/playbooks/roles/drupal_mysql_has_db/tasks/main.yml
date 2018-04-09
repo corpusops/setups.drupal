@@ -1,7 +1,7 @@
 ---
 - shell: >-
     echo "RERUN DBSTATE, the test for db/role mapping presence is not implemented for">&2
-    echo "{{cops_mysq__roles[0].name}}.*{{cops_mysql__databases[0].db}}">&2
+    echo "{{cops_mysql__roles[0].name}}.*{{cops_mysql__databases[0].db}}">&2
     exit 1
   changed_when: false
   register: cops_setup_databases_test1
