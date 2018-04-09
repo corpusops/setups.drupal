@@ -17,7 +17,8 @@ else
     echo "Starting VNC Server (for firefox-selenium)"
     if [ "x${USER}" != "x${PROJECT_USER}" ]; then
         if [ "x${USER}" == "xroot" ]; then
-            su -c "vncserver -httpport 5901 -depth 16 -geometry 1280x1024 :1 -localhost=0" makina-user
+            su -c "vncserver -httpport 5901 -depth 16 -geometry 1280x1024 :1
+            -localhost=0" $PROJECT_USER
         else
             echo "We cannot start vncserver as ${PROJECT_USER} (not root). We'll try with current user, hope things will work..."
             vncserver -httpport 5901 -depth 16 -geometry 1280x1024 :1 -localhost=0
