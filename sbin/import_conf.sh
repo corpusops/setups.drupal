@@ -1,0 +1,1 @@
+../local/setups.drupal/sbin/import_conf.sh

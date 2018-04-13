@@ -1,0 +1,1 @@
+../local/setups.drupal/sbin/export_conf.sh

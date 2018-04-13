@@ -1,0 +1,6 @@
+ignore:
+  - system.site
+  - contact.form.foobar.*
+  - devel.*
+  - system.menu.devel
+
