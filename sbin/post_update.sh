@@ -53,8 +53,8 @@ fi
 #fi
 ask "$((QUESTION++))- Do you want to run a sbin/import_conf.sh (drush cimy) ?"
 if [ "xok" = "x${USER_CHOICE}" ]; then
-    echo "${YELLOW}  - So we run ${BINPATH}/import_conf.sh ASK=${ASK}{NORMAL}"
-    ${BINPATH}/import_conf.sh ASK=${ASK}
+    echo "${YELLOW}  - So we run ASK=${ASK} ${BINPATH}/import_conf.sh{NORMAL}"
+    ASK=${ASK} ${BINPATH}/import_conf.sh
 fi
 
 ask "$((QUESTION++))- Clear all caches via drush ?"
