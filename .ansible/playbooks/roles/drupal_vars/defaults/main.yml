@@ -118,6 +118,7 @@ cops_drupal_local_settings_preprocess_js: 0
 cops_drupal_local_settings_base_url: 'default'
 cops_drupal_local_settings_omit_vary_cookie: 'FALSE'
 cops_drupal_local_settings_conf_sync_dir: '{project_root}/lib/config/sync'
+cops_drupal_local_settings_conf_install_dir: '{project_root}/lib/config/install'
 cops_drupal_local_settings_conf_staging_dir: '{project_root}/lib/config/staging'
 cops_drupal_local_settings_conf_todev_dir: '{project_root}/lib/config/to_dev'
 cops_drupal_local_settings_smtp_used: True

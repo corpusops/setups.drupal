@@ -40,10 +40,15 @@ if [ "xok" = "x${USER_CHOICE}" ]; then
     verbose_call_drush config-set -y system.site uuid "${SITE_UUID}"
 fi
 
-ask "$((QUESTION++))- Do you want to run a drush -y cim ?"
+#ask "$((QUESTION++))- Do you want to run a drush -y cim ?"
+#if [ "xok" = "x${USER_CHOICE}" ]; then
+#    echo "${YELLOW}  - So we run drush -y cim${NORMAL}"
+#    verbose_call_drush -y cim
+#fi
+ask "$((QUESTION++))- Do you want to run a sbin/import_conf.sh (drush cimy) ?"
 if [ "xok" = "x${USER_CHOICE}" ]; then
-    echo "${YELLOW}  - So we run drush -y cim${NORMAL}"
-    verbose_call_drush -y cim
+    echo "${YELLOW}  - So we run ${BINPATH}/import_conf.sh ASK=${ASK}{NORMAL}"
+    ${BINPATH}/import_conf.sh ASK=${ASK}
 fi
 
 ask "$((QUESTION++))- Clear all caches via drush ?"
