@@ -37,7 +37,12 @@ IGNORE_LIST_FILE=${ROOTPATH}/drush/config-ignore.yml
 ask "$((QUESTION++))- Do you want to run a drush config export ?"
 if [ "xok" = "x${USER_CHOICE}" ]; then
     echo "${YELLOW}  - So we run drush cexy --destination=${LIB_SYNC} --ignore-list=${IGNORE_LIST_FILE}${NORMAL}"
-    call_drush -y cexy --destination=${LIB_SYNC} --ignore-list=${IGNORE_LIST_FILE}
+    if [ "x${ASK}" == "xyauto" ]; then
+        FORCE="-y "
+    else
+        FORCE=""
+    fi
+    call_drush ${FORCE} cexy --destination=${LIB_SYNC} --ignore-list=${IGNORE_LIST_FILE}
 fi
 
 exit ${END_SUCCESS}

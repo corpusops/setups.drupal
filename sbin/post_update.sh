@@ -33,11 +33,17 @@ fi
 #     echo "${YELLOW}...no${NORMAL}"
 # fi
 
-SITE_UUID=$(cat ${ROOTPATH}/lib/config/sync/system.site.yml|grep uuid|tail -c +7|head -c 36)
-ask "$((QUESTION++))- Do you want to force site UUID to ${SITE_UUID}?"
-if [ "xok" = "x${USER_CHOICE}" ]; then
-    echo "${YELLOW}  - So we run  config-set -y system.site uuid \"${SITE_UUID}\"${NORMAL}"
-    verbose_call_drush config-set -y system.site uuid "${SITE_UUID}"
+SYSTEM_YML="${ROOTPATH}/lib/config/sync/system.site.yml"
+if [ ! -f ${SYSTEM_YML}]; then
+    SYSTEM_YML="${ROOTPATH}/lib/config/install/system.site.yml"
+fi
+if [ -f ${SYSTEM_YML}]; then
+    SITE_UUID=$(cat ${ROOTPATH}/lib/config/sync/system.site.yml|grep uuid|tail -c +7|head -c 36)
+    ask "$((QUESTION++))- Do you want to force site UUID to ${SITE_UUID}?"
+    if [ "xok" = "x${USER_CHOICE}" ]; then
+        echo "${YELLOW}  - So we run  config-set -y system.site uuid \"${SITE_UUID}\"${NORMAL}"
+        verbose_call_drush config-set -y system.site uuid "${SITE_UUID}"
+    fi
 fi
 
 #ask "$((QUESTION++))- Do you want to run a drush -y cim ?"

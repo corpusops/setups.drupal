@@ -55,11 +55,11 @@ ask "$((QUESTION++))- Do you want to run a drush config import ?"
 if [ "xok" = "x${USER_CHOICE}" ]; then
     echo "${YELLOW}  - Here is a preview first${NORMAL}"
     echo "${YELLOW}  - drush cimy --preview --source=${LIB_SYNC} --install={LIB_INSTALL_ONLY} --delete-list=${DELETE_LIST_FILE} --skip-modules=${SKIP_MODULES_FILE}${NORMAL}"
-    call_drush -y cimy --preview --source=${LIB_SYNC} --install={LIB_INSTALL_ONLY} --delete-list=${DELETE_LIST_FILE}${NORMAL}"
+    call_drush -y cimy --preview --source=${LIB_SYNC} --install={LIB_INSTALL_ONLY} --delete-list=${DELETE_LIST_FILE}
     ask "$((QUESTION++))- So really do it ?"
     if [ "xok" = "x${USER_CHOICE}" ]; then
          echo "${YELLOW}  - same command without the preview${NORMAL}"
-        call_drush -y cimy --source=${LIB_SYNC} --install={LIB_INSTALL_ONLY} --delete-list=${DELETE_LIST_FILE}${NORMAL}"
+        call_drush -y cimy --source=${LIB_SYNC} --install={LIB_INSTALL_ONLY} --delete-list=${DELETE_LIST_FILE}
     fi
 fi
 
