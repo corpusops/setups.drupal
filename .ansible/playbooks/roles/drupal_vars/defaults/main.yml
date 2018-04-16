@@ -130,7 +130,7 @@ cops_drupal_secret_variables:
   - local_settings_site_password
   - local_settings_drupal_hash
 cops_drupal_cops_format_resolve_topdb: false
-cops_drupal_cops_do_format_resolve: true
+cops_drupal_cops_do_format_resolve: false
 cops_drupal_cops_sub_namespaces:
   nginx: {}
   fpm: {}
