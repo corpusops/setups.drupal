@@ -398,7 +398,7 @@ cops_drupal_reconfigure: "{{vars['cops_drupal_project_dir']}}/reconfigure.sh"
 cops_drupal_reconfigure_passenv: "ANSIBLE_PLAY ANSIBLE_FOLDER COPS_ROOT"
 cops_drupal_reconfigure_verbosity: "-v"
 # Code synchronnisation settings
-cops_drupal_push_codes_cwd: "{{vars['cops_drupal_cops_cwd']}}"
+cops_drupal_push_codes_cwd: "{{vars['cops_cwd']}}"
 cops_drupal_push_codes_sync_mode: "{{ cops_installer_mode in ['vagrant'] and 'rsync' or 'git' }}"
 cops_drupal_push_codes_file_tests: "{{vars['cops_drupal_push_codes_file_tests___default']}}"
 cops_drupal_push_codes_file_tests___default:
