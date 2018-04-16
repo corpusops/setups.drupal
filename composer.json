@@ -1,12 +1,12 @@
 {
-    "name": "akeneo/marketplace",
-    "description": "Akeneo Marketplace based on Drupal 8.",
+    "name": "group/project",
+    "description": "Group project example.",
     "type": "project",
     "license": "proprietary",
     "authors": [
         {
-            "name": "Lonny Loquesol",
-            "email": "lonny.loquesol@makina-corpus.com",
+            "name": "XXXXXXXX",
+            "email": "XXXX@example.com",
             "role": "Developer"
         }
     ],
