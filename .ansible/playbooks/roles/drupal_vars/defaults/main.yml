@@ -33,7 +33,6 @@ cops_drupal_deb_packages___default:
     - "{{ corpusops_localsettings_php_vars.spackages_dom}}"
     - python-passlib
     - sqlite3
-    - libsqlite3-dev
     - apache2-utils
     - autoconf
     - automake
@@ -48,12 +47,24 @@ cops_drupal_deb_packages___default:
     - libgdbm-dev
     - libreadline-dev
     - libfreetype6-dev
-    - libsigc++-2.0-dev
+    - "{%- if (
+        ansible_distribution.lower() in ['ubuntu'] and
+        ansible_distribution_version|copsf_looseversion <=
+          '14.04'|copsf_looseversion) -%}
+    libsigc++-2.0-0c2a
+    {%- else -%}
+    libsigc++-2.0-0v5
+    {%- endif -%}"
     - libsqlite0-dev
     - libsqlite3-dev
     - libtiff5
     - libtiff5-dev
-    - libwebp5
+    - "{%- if (
+        ansible_distribution.lower() in ['ubuntu'] and
+        ansible_distribution_version|copsf_looseversion >=
+          '18.04'|copsf_looseversion)
+     %}libwebp6{%else
+     %}libwebp5{%endif%}"
     - libwebp-dev
     - libssl-dev
     - libtool
