@@ -1,3 +1,6 @@
+[submodule "local/setups.mysql"]
+	path = local/setups.mysql
+	url = https://github.com/corpusops/setups.mysql.git
 [submodule "local/setups.postgresql"]
 	path = local/setups.postgresql
 	url = https://github.com/corpusops/setups.postgresql.git

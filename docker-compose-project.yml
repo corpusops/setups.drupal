@@ -1,0 +1,10 @@
+---
+# copy/edit this file up to your project root instead of symlinking
+version: '3.5'
+networks: {drupal_net: {ipam: {config: [{subnet: "172.19.107.0/24"}], driver: default}, driver: bridge}}
+x-image: &image_template
+  image: "corpusops/setups.drupal"
+services:
+  drupal:
+    <<:  [ *image_template ]
+    networks: {drupal_net: {ipv4_address: "172.19.107.3"}}

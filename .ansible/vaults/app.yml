@@ -1,3 +1,10 @@
 ---
 # copy this file instead of symlinking
 cops_app_name: myapp
+cops_drupal_drupal_profile: "example_profile"
+
+# cops_drupal_db_password: secret
+cops_db_name: "{{cops_app_name}}"
+cops_db_user: "{{cops_app_name}}"
+cops_db_password: "{{cops_app_name}}"
+# corpusops_services_db_postgresql_version: "10"
