@@ -5,6 +5,8 @@
     when: "cops_drupal_lifecycle_db|default(true)"
     block:
     - include_role: {name: drupal_db_vars}
+  - set_fact:
+      cops_postgresql_do_install_postgis: "{{vars['cops_drupal_db_has_postgis']}}"
 - import_playbook: "../../local/setups.{{cops_drupal_db_role}}/.ansible/playbooks/site.yml"
   tags: [cops_drupal_lifecycle_db]
   when: "cops_drupal_lifecycle_db|default(true)"

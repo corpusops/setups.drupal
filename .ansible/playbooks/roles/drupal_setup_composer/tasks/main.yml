@@ -40,9 +40,10 @@
          set -ex
          cd {{cops_drupal_vars.project_root}}
          dsyml="{{cops_drupal_vars.project_root}}/www/sites/default/default.services.yml"
+         al="{{cops_drupal_vars.project_root}}/www/autoload.php"
          if grep -q "drupal-composer/drupal-scaffold" composer.json;then
             li=$(cat "${dsyml}" 2>/dev/null|wc -l)
-            if [ $li -lt 5 ];then
+            if [ $li -lt 5 ] || [ ! -e "$al" ];then
               echo "We have runscaffoldfromansible"
               sbin/composer run-script drupal-scaffold
             fi
@@ -57,7 +58,7 @@
 - name: drush test
   shell: |
          set -e
-         cd {{cops_drupal_vars.project_root}}/sbin
+         cd {{cops_drupal_vars.project_root}}
          {{cops_drupal_vars.project_root}}/sbin/{{item}} version
   become: true
   become_user: "{{cops_drupal_vars.user}}"

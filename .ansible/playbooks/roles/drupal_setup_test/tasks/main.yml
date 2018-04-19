@@ -1,11 +1,13 @@
 ---
 # We'll need vncserver, firefox
-- name: refresh apt cache if more than 1 hour
+- name: Install packages dependencies for running integration tests
   apt:
     update_cache: yes
     cache_valid_time: 3600
     name: [fluxbox, vnc4server, chromium-browser, chromium-chromedriver, expect, libxfont1, xfonts-terminus, xfonts-base, xterm, openjdk-9-jre, tar, gzip]
     state: latest
+  when: [cops_drupal_s_setup_test_build]
+  tags: [cops_drupal_s_setup_test_build]
 - name: ensure project user vnc directory exists
   file:
     path: "/home/{{cops_drupal_vars.user}}/.vnc"
@@ -13,6 +15,8 @@
     owner: "{{cops_drupal_vars.user}}"
     group: "{{cops_drupal_vars.group}}"
     mode: 0750
+  when: [cops_drupal_s_setup_test_build]
+  tags: [cops_drupal_s_setup_test_build]
 - name: Download Selenium standalone server
   get_url:
     url: "http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.1.jar"
@@ -21,10 +25,14 @@
     mode: "750"
     checksum: "sha256:1cce6d3a5ca5b2e32be18ca5107d4f21bddaa9a18700e3b117768f13040b7cf8"
     dest: "/home/{{cops_drupal_vars.user}}/selenium-server-standalone-2.53.1.jar"
+  when: [cops_drupal_s_setup_test_build]
+  tags: [cops_drupal_s_setup_test_build]
 - name: Vnc startup script launching selenium
   file:
     path: "/home/{{ cops_drupal_vars.user }}/.vnc"
     state: directory
+  when: [cops_drupal_s_setup_test_build]
+  tags: [cops_drupal_s_setup_test_build]
 - name: Vnc startup script launching selenium
   copy:
     dest: "/home/{{ cops_drupal_vars.user }}/.vnc/xstartup"
@@ -40,6 +48,8 @@
     owner: "{{ cops_drupal_vars.user }}"
     group: "{{ cops_drupal_vars.group }}"
     mode: "0750"
+  when: [cops_drupal_s_setup_test_build]
+  tags: [cops_drupal_s_setup_test_build]
 - become: true
   become_user: "{{ cops_drupal_vars.user }}"
   shell: |
@@ -55,3 +65,5 @@
       EOF
       vncserver :1 -localhost
       vncserver -kill :1
+  when: [cops_drupal_s_setup_test_run]
+  tags: [cops_drupal_s_setup_test_run]

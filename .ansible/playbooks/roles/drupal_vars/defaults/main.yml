@@ -16,6 +16,9 @@ cops_drupal__supereditors: >-
 cops_drupal_supereditors_paths: "{{vars['cops_drupal__supereditors_paths']}}"
 cops_drupal_supereditors: "{{vars['cops_drupal__supereditors']}}"
 cops_drupal_deb_packages: "{{vars['cops_drupal_deb_packages___default']}}"
+cops_drupal_db_has_postgis: false
+cops_drupal_db_has_postgresql: "{{ cops_drupal_db_has_postgis or (
+ vars['cops_drupal_db_type'] in ['pgsql'])}}"
 cops_drupal_deb_packages___default:
     - unzip
     - xsltproc
@@ -81,7 +84,7 @@ cops_drupal_rh_packages: "{{vars['cops_drupal_rh_packages___default']}}"
 cops_drupal_rh_packages___default: []
 # extra conf to add to pgconf (directly added to a tuning conf file (string))
 cops_drupal_sysctls: []
-cops_drupal_domain: "{{ansible_fqdn}}"
+cops_drupal_domain: "{{cops_drupal_name}}.corpusops.local"
 # for internal monitoring
 cops_drupal_query_host: "127.0.0.1"
 cops_drupal_internal_host: "127.0.0.1"
@@ -89,7 +92,8 @@ cops_drupal_name: 'drupal'
 cops_drupal_user: "{{vars['cops_drupal_name']}}-user"
 cops_drupal_group: "{{vars['cops_drupal_name']}}-group"
 cops_drupal_projects_dir: '{{corpusops_vars.projects_path}}'
-cops_drupal_project_dir: "{{vars['cops_drupal_projects_dir']}}/{{vars['cops_drupal_name']}}"
+cops_drupal_project_sdir: "{{vars['cops_drupal_name']}}"
+cops_drupal_project_dir: "{{vars['cops_drupal_projects_dir']}}/{{vars['cops_drupal_project_sdir']}}"
 cops_drupal_project_root: "{{vars['cops_drupal_project_dir']}}/project"
 cops_drupal_data_root: "{{vars['cops_drupal_project_dir']}}/data"
 cops_drupal_cfg: "{{vars['cops_drupal_data_root']}}/config"
@@ -225,41 +229,13 @@ cops_drupal_drupal_bind_host: '127.0.0.1'
 # templates
 ## entry point
 cops_drupal_provision_dir: /provision_dir
-cops_drupal_ep_ansible_args: >-
- -e "cops_cwd={{vars['cops_drupal_provision_dir']}}"
- -e "cops_playbooks=${COPS_ROOT}/playbooks/corpusops"
- -e "cops_path=${COPS_ROOT}"
-cops_drupal_ep_vaults:
-  - "{{vars['cops_drupal_provision_dir']}}/.ansible/vaults/default.yml"
-  - "{{vars['cops_drupal_provision_dir']}}/.ansible/vaults/app.yml"
-  - "{{vars['cops_drupal_provision_dir']}}/.ansible/vaults/docker.yml"
-  - /setup/reconfigure.yml
 cops_drupal_ep_template: "../templates/app_entry_point"
-# Docker entrypoint settings, tags for cli and vars for playbook reuse via
-# conditionals
-cops_drupal_ep_folder: ".ansible"
-cops_drupal_ep_playbook: "site.yml"
-cops_drupal_ep_skip_tags: "{{(
-  'cops_drupal_lifecycle_app_push_code,'
-  'cops_drupal_s_users,'
-  'cops_drupal_s_first_fixperms,'
-  'cops_drupal_s_prerequisites,'
-  'cops_drupal_s_setup_maintenance_on,'
-  'cops_drupal_s_setup_composer,'
-  'cops_drupal_s_setup_cron,'
-  'cops_drupal_s_setup_maintenance_off,'
-  'cops_drupal_s_workers,'
-  'cops_drupal_s_entry_point,'
-  'cops_drupal_s_manage_content,'
-  'cops_drupal_s_end_fixperms,'
-  )}}"
-cops_drupal_ep_post_start_skip_tags: "{{(
-  'cops_drupal_s_users,'
-  'cops_drupal_s_first_fixperms,'
-  'cops_drupal_s_prerequisites,'
-  'cops_drupal_s_setup,'
-  'cops_drupal_s_entry_point,'
-  )}}"
+cops_drupal_ep_playbook: ".ansible/playbooks/site.yml"
+# activated in docker compose
+cops_drupal_docker_has_db: false
+cops_drupal_docker_has_dbsmartbackup: false
+cops_drupal_docker_has_drupal: false
+cops_drupal_docker_has_nginx: false
 # global orchestration steps (db, code sync, web & workers prereqs, drupal config)
 cops_drupal_become: true
 #
@@ -268,10 +244,13 @@ cops_drupal_ep_main_ep: "/entry_point"
 cops_drupal_service: "php{{vars['cops_drupal_php_version']}}-fpm"
 cops_drupal_services: ["{{vars['cops_drupal_service']}}", "nginx"]
 # use in docker (via a vault):
-cops_drupal_rhandlers: [restart_cops_drupal_systemd,
-                        restart_cops_drupal]
-cops_drupal_reconfigure_services: []
-# cops_drupal_reconfigure_services: ["post-start-{{vars['cops_drupal_service']}}"]
+cops_drupal_rhandlers: [restart_cops_drupal_systemd, restart_cops_drupal]
+cops_drupal_reconfigure_services: |
+  {% set ret = [] %}
+  {% if ansible_virtualization_type in ['docker'] %}
+  {% set _ = ret.append("post-start-{{vars['cops_drupal_service']}}") %}
+  {% endif %}
+  {{ ret | to_json }}
 cops_drupal_activated: true
 # Layout, files & configs
 cops_drupal_stickymode: "2"
@@ -401,16 +380,23 @@ cops_drupal_ep_configs___default:
      dest: "/app_entry_point", mode: "0755",
      owner: root, group: root}
 # SystemD based reconfigure unit settings
-cops_drupal_reconfigure_service_stderr: ""
-cops_drupal_reconfigure_service_stdout: ""
+cops_drupal_reconfigure_service_stderr: "journal{% if ansible_virtualization_type in ['docker'] %}+console{%endif%}"
+cops_drupal_reconfigure_service_stdout: "journal{% if ansible_virtualization_type in ['docker'] %}+console{%endif%}"
 cops_drupal_reconfigure_unit_after: "network.target {{vars['cops_drupal_service']}}.service"
 cops_drupal_reconfigure_install_wantedby: "multi-user.target"
-cops_drupal_reconfigure: "{{vars['cops_drupal_project_dir']}}/reconfigure.sh"
-cops_drupal_reconfigure_passenv: "ANSIBLE_PLAY ANSIBLE_FOLDER COPS_ROOT"
+cops_drupal_reconfigure: "{{vars['cops_drupal_provision_dir']}}/reconfigure.sh"
+cops_drupal_reconfigure_passenv: >
+  COPS_ROOT NO_SILENT NO_OUTPUT NONINTERACTIVE
+  ANSIBLE_CWD ANSIBLE_PLAY ANSIBLE_VARARGS ANSIBLE_ARGS
+  A_VAULTS_FOLDERS A_VAULTS A_EXTRA_VAULTS
+  A_INVENTORY A_ENV_NAME NO_DEFAULT_VAULTS
 cops_drupal_reconfigure_verbosity: "-v"
 # Code synchronnisation settings
 cops_drupal_push_codes_cwd: "{{vars['cops_cwd']}}"
-cops_drupal_push_codes_sync_mode: "{{ cops_installer_mode in ['vagrant'] and 'rsync' or 'git' }}"
+cops_drupal_push_codes_sync_mode: "{{ (
+  cops_installer_mode in ['vagrant'] or
+  ansible_virtualization_type in ['docker']
+  ) and 'rsync' or 'git' }}"
 cops_drupal_push_codes_file_tests: "{{vars['cops_drupal_push_codes_file_tests___default']}}"
 cops_drupal_push_codes_file_tests___default:
   git: []

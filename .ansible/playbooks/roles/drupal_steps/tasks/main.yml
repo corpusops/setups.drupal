@@ -1,9 +1,13 @@
 ---
 - include_jinja_vars:
     content: |-
+      ---
       {% set r = {} %}
       {% set _ = r.update({'only_steps': only_steps|default(False)}) %}
       {% set only_steps = r['only_steps'] %}
+      #
+      {% set _ = r.update({'cops_drupal_s_docker_reconfigure': cops_drupal_s_docker_reconfigure|default(False)}) %}
+      {% set cops_drupal_s_docker_reconfigure = r['cops_drupal_s_docker_reconfigure'] %}
       #
       {% set _ = r.update({'cops_drupal_lifecycle_db':       cops_drupal_lifecycle_db      |default(not only_steps)}) %}
       {% set cops_drupal_lifecycle_db = r['cops_drupal_lifecycle_db'] %}
@@ -14,10 +18,10 @@
       {% set _ = r.update({'cops_drupal_lifecycle_app_push_code': cops_drupal_lifecycle_app_push_code|default(not only_steps)}) %}
       {% set cops_drupal_lifecycle_app_push_code = r['cops_drupal_lifecycle_app_push_code'] %}
       #
-      {% set _ = r.update({'cops_drupal_s_setup_app_install':           cops_drupal_s_setup_app_install | default(cops_drupal_s_setup_app                |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps ))))}) %}
+      {% set _ = r.update({'cops_drupal_s_setup_app_install':           cops_drupal_s_setup_app_install | default(cops_drupal_s_setup_app|default(cops_drupal_s_manage_content|default(cops_drupal_lifecycle_app_setup|default(not only_steps ))))}) %}
       {% set cops_drupal_s_setup_app_install = r['cops_drupal_s_setup_app_install'] %}
       #
-      {% set _ = r.update({'cops_drupal_s_setup_app_update':            cops_drupal_s_setup_app_update | default(cops_drupal_s_setup_app                |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps ))))}) %}
+      {% set _ = r.update({'cops_drupal_s_setup_app_update':             cops_drupal_s_setup_app_update | default(cops_drupal_s_setup_app|default(cops_drupal_s_manage_content|default(cops_drupal_lifecycle_app_setup|default(not only_steps ))))}) %}
       {% set cops_drupal_s_setup_app_update = r['cops_drupal_s_setup_app_update'] %}
       #
       {% set _ = r.update({'cops_drupal_s_prerequisites_nginxinstall':                                              cops_drupal_s_prerequisites_nginxinstall |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}) %}
@@ -25,6 +29,12 @@
       #
       {% set _ = r.update({'cops_drupal_s_prerequisites_phpinstall':                                                  cops_drupal_s_prerequisites_phpinstall |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}) %}
       {% set cops_drupal_s_prerequisites_phpinstall = r['cops_drupal_s_prerequisites_phpinstall'] %}
+      #  o test setup by default
+      #
+      {% set _ = r.update({'cops_drupal_s_setup_test_run':     cops_drupal_s_setup_test_run   |default(cops_drupal_s_setup_test |default(cops_drupal_lifecycle_app_setup|default(False)))}) %}
+      {% set _ = r.update({'cops_drupal_s_setup_test_build':   cops_drupal_s_setup_test_build |default(cops_drupal_s_setup_test |default(cops_drupal_lifecycle_app_setup|default(False)))}) %}
+      {% set cops_drupal_s_setup_test_build = r['cops_drupal_s_setup_test_build'] %}
+      {% set cops_drupal_s_setup_test_run   = r['cops_drupal_s_setup_test_run']   %}
       #
       {% set _ = r.update({'cops_drupal_s_prerequisites_extensions':                                                  cops_drupal_s_prerequisites_extensions |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}) %}
       {% set cops_drupal_s_prerequisites_extensions = r['cops_drupal_s_prerequisites_extensions'] %}
@@ -35,10 +45,10 @@
       {% set _ = r.update({'cops_drupal_s_prerequisites_pkgs':                                                              cops_drupal_s_prerequisites_pkgs |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}) %}
       {% set cops_drupal_s_prerequisites_pkgs = r['cops_drupal_s_prerequisites_pkgs'] %}
       #
-      {% set _ = r.update({'cops_drupal_s_setup_maintenance_on':        cops_drupal_s_setup_maintenance_on |default(cops_drupal_s_setup_maintenance          |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps))))}) %}
+      {% set _ = r.update({'cops_drupal_s_setup_maintenance_on':        cops_drupal_s_setup_maintenance_on |default(cops_drupal_s_setup_maintenance|default(cops_drupal_s_manage_content|default(cops_drupal_lifecycle_app_setup|default(not only_steps))))}) %}
       {% set cops_drupal_s_setup_maintenance_on = r['cops_drupal_s_setup_maintenance_on'] %}
       #
-      {% set _ = r.update({'cops_drupal_s_setup_maintenance_off':       cops_drupal_s_setup_maintenance_off|default(cops_drupal_s_setup_maintenance          |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps))))}) %}
+      {% set _ = r.update({'cops_drupal_s_setup_maintenance_off':       cops_drupal_s_setup_maintenance_off|default(cops_drupal_s_setup_maintenance|default(cops_drupal_s_manage_content|default(cops_drupal_lifecycle_app_setup|default(not only_steps))))}) %}
       {% set cops_drupal_s_setup_maintenance_off = r['cops_drupal_s_setup_maintenance_off'] %}
       #
       {% set _ = r.update({'cops_drupal_s_setup_configs':                                                           cops_drupal_s_setup_configs              |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}) %}
@@ -53,7 +63,7 @@
       {% set _ = r.update({'cops_drupal_s_setup_app': ( cops_drupal_s_setup_app_install or cops_drupal_s_setup_app_update  )}) %}
       {% set cops_drupal_s_setup_app = r['cops_drupal_s_setup_app'] %}
       #
-      {% set _ = r.update({'cops_drupal_s_setup_test':                                                              cops_drupal_s_setup_test                 |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}) %}
+      {% set _ = r.update({'cops_drupal_s_setup_test': (cops_drupal_s_setup_test_run or cops_drupal_s_setup_test_build)}) %}
       {% set cops_drupal_s_setup_test = r['cops_drupal_s_setup_test'] %}
       #
       {% set _ = r.update({'cops_drupal_s_setup_cron':                                                              cops_drupal_s_setup_cron                 |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}) %}
@@ -86,6 +96,12 @@
       {% set _ = r.update({'cops_drupal_s_workers_service':                                                         cops_drupal_s_workers_service            |default(cops_drupal_s_workers            |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}) %}
       {% set cops_drupal_s_workers_service = r['cops_drupal_s_workers_service'] %}
       #
+      {% set _ = r.update({'cops_drupal_s_entry_point_configs':  cops_drupal_s_entry_point_configs    |default(cops_drupal_s_entry_point|default(cops_drupal_lifecycle_app_setup|default(not only_steps))) and ansible_virtualization_type in ['docker']}) %}
+      {% set cops_drupal_s_entry_point_configs = r['cops_drupal_s_entry_point_configs'] %}
+      #
+      {% set _ = r.update({'cops_drupal_s_entry_point_services':  cops_drupal_s_entry_point_services  |default(cops_drupal_s_entry_point|default(cops_drupal_lifecycle_app_setup|default(not only_steps))) and ansible_virtualization_type in ['docker']}) %}
+      {% set cops_drupal_s_entry_point_services = r['cops_drupal_s_entry_point_services'] %}
+      #
       {% set _ = r.update({'cops_drupal_s_healthchecks':                                                                                                      cops_drupal_s_healthchecks               |default(cops_drupal_lifecycle_app_setup|default(not only_steps ))}) %}
       {% set cops_drupal_s_healthchecks = r['cops_drupal_s_healthchecks'] %}
       #
@@ -116,10 +132,10 @@
       {% set _ = r.update({'cops_drupal_s_workers':          cops_drupal_s_workers          |default(cops_drupal_lifecycle_app_setup|default(not only_steps))}) %}
       {% set cops_drupal_s_workers = r['cops_drupal_s_workers'] %}
       #
-      {% set _ = r.update({'cops_drupal_s_entry_point':      cops_drupal_s_entry_point      |default(cops_drupal_lifecycle_app_setup|default(not only_steps))}) %}
+      {% set _ = r.update({'cops_drupal_s_entry_point':    (cops_drupal_s_entry_point_configs or cops_drupal_s_entry_point_services)}) %}
       {% set cops_drupal_s_entry_point = r['cops_drupal_s_entry_point'] %}
       #
-      {% set _ = r.update({'cops_drupal_s_manage_content':   cops_drupal_s_manage_content   |default(cops_drupal_lifecycle_app_setup|default(not only_steps))}) %}
+      {% set _ = r.update({'cops_drupal_s_manage_content': ( cops_drupal_s_setup_maintenance_off or cops_drupal_s_setup_maintenance_on)}) %}
       {% set cops_drupal_s_manage_content = r['cops_drupal_s_manage_content'] %}
       #
       {% set _ = r.update({'cops_drupal_s_setup_reverse_proxy':  ( cops_drupal_s_setup_reverse_proxy_dvhost or cops_drupal_s_setup_reverse_proxy_vhost or cops_drupal_s_setup_reverse_proxy_users)}) %}
@@ -137,7 +153,7 @@
       {% set _ = r.update({'cops_drupal_s_prerequisites':  ( cops_drupal_s_prerequisites_nginxinstall or cops_drupal_s_prerequisites_phpinstall or cops_drupal_s_prerequisites_extensions or cops_drupal_s_prerequisites_dbclient or cops_drupal_s_prerequisites_pkgs)}) %}
       {% set cops_drupal_s_prerequisites = r['cops_drupal_s_prerequisites'] %}
       #
-      {% set _ = r.update({'cops_drupal_s_setup': ( cops_drupal_s_setup_maintenance_on or cops_drupal_s_setup_configs or cops_drupal_s_setup_hosts or cops_drupal_s_setup_composer or cops_drupal_s_setup_app or cops_drupal_s_setup_test or cops_drupal_s_setup_cron or cops_drupal_s_setup_maintenance_off or cops_drupal_s_setup_reverse_proxy or cops_drupal_s_setup_fpm)}) %}
+      {% set _ = r.update({'cops_drupal_s_setup': ( cops_drupal_s_setup_configs or cops_drupal_s_setup_hosts or cops_drupal_s_setup_composer or cops_drupal_s_setup_app or cops_drupal_s_setup_test or cops_drupal_s_setup_cron or cops_drupal_s_setup_reverse_proxy or cops_drupal_s_setup_fpm)}) %}
       {% set cops_drupal_s_setup = r['cops_drupal_s_setup'] %}
       #
       {% set _ = r.update({'cops_drupal_lifecycle_app_level_1_steps': ( cops_drupal_s_users or cops_drupal_s_layout or cops_drupal_s_first_fixperms or cops_drupal_s_prerequisites or cops_drupal_s_setup or cops_drupal_s_reverse_proxy or cops_drupal_s_fpm or cops_drupal_s_workers or cops_drupal_s_healthchecks or cops_drupal_s_entry_point or cops_drupal_s_manage_content or cops_drupal_s_end_fixperms)}) %}

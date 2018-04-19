@@ -1,6 +1,12 @@
 ---
 - include_role: {name: corpusops.roles/configs, private: true}
-  vars:
-    cops_configs_templates: "{{cops_drupal_vars.ep_configs}}"
-  tags: [cops_drupal_s_entry_point]
-  when: [cops_drupal_s_entry_point]
+  vars: {cops_configs_templates: "{{cops_drupal_vars.ep_configs}}"}
+  tags: [cops_drupal_s_entry_point_configs]
+  when: [cops_drupal_s_entry_point_configs]
+- cops_service:
+    enabled: "{{cops_drupal_vars.activated | ternary(True, False)}}"
+    daemon_reload: yes
+    name: "{{item}}"
+  with_items: "{{cops_drupal_vars.reconfigure_services}}"
+  tags: [cops_drupal_s_entry_point_services]
+  when: [cops_drupal_s_entry_point_services]

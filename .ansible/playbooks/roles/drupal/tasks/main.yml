@@ -3,6 +3,9 @@
   when: [cops_drupal_lifecycle_app_setup]
   become: "{{cops_drupal_vars.become}}"
   block:
+  - include_role: {name: drupal_docker_reconfigure, allow_duplicates: false}
+    tags: [cops_drupal_s_docker_reconfigure]
+    when: [cops_drupal_s_docker_reconfigure]
   - include_role: {name: drupal_users, allow_duplicates: false}
     tags: [cops_drupal_s_users]
     when: [cops_drupal_s_users]
@@ -27,12 +30,12 @@
   - include_role: {name: drupal_fpm, allow_duplicates: false}
     tags: [cops_drupal_s_fpm]
     when: [cops_drupal_s_fpm]
-  - include_role: {name: drupal_workers, allow_duplicates: false}
-    tags: [cops_drupal_s_workers]
-    when: [cops_drupal_s_workers]
   - include_role: {name: drupal_entry_point, allow_duplicates: false}
     tags: [cops_drupal_s_entry_point]
     when: [cops_drupal_s_entry_point]
+  - include_role: {name: drupal_workers, allow_duplicates: false}
+    tags: [cops_drupal_s_workers]
+    when: [cops_drupal_s_workers]
   - include_role: {name: drupal_manage_content, allow_duplicates: false}
     tags: [cops_drupal_s_manage_content]
     when: [cops_drupal_s_manage_content]

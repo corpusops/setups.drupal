@@ -1,3 +1,35 @@
 ---
+- name: db & db user setup
+  shell: |-
+    cd "{{cops_drupal_vars.provision_dir}}"
+    dodb="";
+    {%- if cops_drupal_vars.db_has_postgis %}
+    if ! ( su postgres -c "echo 'SELECT PostGIS_full_version();'|psql -v ON_ERROR_STOP=1  postgis" 2>&1 >/dev/null; );then
+      dodb=1
+    fi
+    {% endif %}
+    {%- if cops_drupal_vars.db_has_postgresql %}
+    if ! ( su postgres -c "echo 'SELECT 1;'|psql -v ON_ERROR_STOP=1 {{cops_drupal_vars.db_name}}"  2>&1 >/dev/null; );then
+      dodb=1
+    fi
+    {% endif %}
+    if [ x"${dodb}" != "x" ];then
+      export NONINTERACTIVE=1
+      .ansible/scripts/call_ansible.sh .ansible/playbooks/db.yml \
+        -e "{only_steps: true,
+             cops_{{cops_drupal_vars.db_role}}_s_managecontent: true}"
+    fi
+  when: "cops_drupal_vars.docker_has_db"
 # for now we do nothing here
 # would be a list of specific drush commands for example
+- include_role: {name: drupal_maintenance_on, allow_duplicates: false}
+  tags: [cops_drupal_s_setup_maintenance_on]
+  when: [cops_drupal_s_setup_maintenance_on]
+
+- include_role: {name: drupal_setup_app, allow_duplicates: false}
+  tags: [cops_drupal_s_setup_app]
+  when: [cops_drupal_s_setup_app]
+
+- include_role: {name: drupal_maintenance_off, allow_duplicates: false}
+  tags: [cops_drupal_s_setup_maintenance_off]
+  when: [cops_drupal_s_setup_maintenance_off]

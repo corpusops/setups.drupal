@@ -5,10 +5,12 @@ drupal_servers: all
 postgresql_servers: all
 mysql_servers: all
 search_servers: all
-cops_django_force_push_code: true
+cops_drupal_force_push_code: true
 #
 cops_drupal_s_setup_maintenance_on: false
 cops_drupal_s_setup_maintenance_off: false
+# install test stuff
+cops_drupal_composer_install_args: "--prefer-dist --optimize-autoloader"
 #
 cops_drupal_local_settings_site_password: secretCHAGEMEQ433i2S3OyVko6Y
 cops_drupal_local_settings_drupal_hash: secretCHANGEME461t4jjG596oj0W

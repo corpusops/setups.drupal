@@ -1,0 +1,96 @@
+---
+version: '3.5'
+# Build with (build stock first !):
+#  docker build --squash  -t corpusops/drupal:dev -f Dockerfile.dev [--build-arg=SKIP_COPS_UPDATE=y]
+# Start with:
+#  SUPEREDITORS=$(id -u) docker-compose -f d*-compose-dev.yml -f d*-compose-project.yml -f d*-compose-project-dev.yml up -t 0 -d --force-recreate drupal
+#
+x-image: &image_template
+  environment:
+  - SUPEREDITORS=$SUPEREDITORS
+  - "DOCKER_SKIP_START=${DOCKER_SKIP_START-}"
+  - |
+    A_RECONFIGURE=---
+    cops_drupal_docker_has_db: true
+    cops_drupal_docker_has_dbsmartbackup: false
+    cops_drupal_docker_has_nginx: true
+    cops_drupal_docker_has_drupal: true
+    only_steps: true
+    cops_drupal_lifecycle_app_push_code: false
+    cops_drupal_s_docker_reconfigure: true
+    cops_drupal_s_layout: true
+    cops_drupal_s_first_fixperms: true
+    cops_drupal_s_setup_reverse_proxy: true
+    cops_drupal_s_setup_reverse_proxy_dvhost: false
+    cops_drupal_s_setup_hosts: true
+    cops_drupal_s_setup_configs: true
+    cops_drupal_s_setup_composer: true
+    cops_drupal_s_manage_content: false
+    # dev
+    cops_drupal_s_setup_venv: true
+    cops_drupal_s_setup_front: true
+    cops_drupal_crons: []
+  - |
+    A_POSTCONFIGURE=---
+    cops_drupal_docker_has_db: true
+    cops_drupal_docker_has_dbsmartbackup: false
+    cops_drupal_docker_has_nginx: true
+    cops_drupal_docker_has_drupal: true
+    only_steps: true
+    cops_drupal_lifecycle_app_push_code: false
+    cops_drupal_s_manage_content: true
+    cops_drupal_s_setup_test_run: true
+  command: >
+    sh -c 'if [ "x$DOCKER_SKIP_START" != x ];
+    then while true;do echo sleeping;sleep 65535;done
+    else exec /app_entry_point;
+    fi'
+  # for now this is a bloat image-as-a-vm to make a dev env ligther than a vagrant VM
+  tmpfs: [/run, /run/lock]
+  volumes: &image_volumes
+  # systemd
+  - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  # data
+  - "./local/setup:/setup"
+  - "./local/data/postgresql:/var/lib/postgresql"
+  - "./local/data/mysql:/var/lib/mysql"
+  - "./local/data/media:/srv/projects/drupalproject/data/var/sites/default/files"
+  - "./local/data/backups:/srv/backups"
+  # logs
+  - "./local/data/log/app:/srv/projects/drupalproject/data/var/log"
+  - "./local/data/log/postgresql:/var/log/postgresql"
+  - "./local/data/log/mysql:/var/log/mysql"
+  - "./local/data/log/nginx:/var/log/nginx"
+  # sources
+  - "./sbin:/srv/projects/drupalproject/project/sbin"
+  - "./scripts:/srv/projects/drupalproject/project/scripts"
+  - "./drush:/srv/projects/drupalproject/project/drush"
+  - "./docs:/srv/projects/drupalproject/project/docs"
+  - "./www:/srv/projects/drupalproject/project/www"
+  - "./lib:/srv/projects/drupalproject/project/lib"
+  - "./vendor:/srv/projects/drupalproject/project/vendor"
+  - "./composer.json:/srv/projects/drupalproject/project/composer.json"
+  - "./.git:/srv/projects/drupalproject/project/.git"
+  - "./.gitignore:/srv/projects/drupalproject/project/.gitignore"
+  - "./.gitmodules:/srv/projects/drupalproject/project/.gitmodules"
+  - "./local/setups.drupal:/srv/projects/drupalproject/project/local/setups.drupal"
+  # provision
+  - "./.ansible/vaults:/provision_dir/.ansible/vaults"
+  - "./.ansible/scripts:/provision_dir/.ansible/scripts"
+  - "./.ansible/playbooks:/provision_dir/.ansible/playbooks"
+  - "./local/setups.drupal:/provision_dir/local/setups.drupal"
+  - "./local/setups.postgresql:/provision_dir/local/setups.postgresql"
+  - "./local/setups.mysql:/provision_dir/local/setups.mysql"
+  - "./local/setups.dbsmartbackup:/provision_dir/local/setups.dbsmartbackup"
+  # Need a bind mount in local/corpusops.bootstrap instead of the symlink
+  #- "./local/corpusops.bootstrap/bin:/srv/corpusops/corpusops.bootstrap/bin"
+  #- "./local/corpusops.bootstrap/hacking:/srv/corpusops/corpusops.bootstrap/hacking"
+  #- "./local/corpusops.bootstrap/roles:/srv/corpusops/corpusops.bootstrap/roles"
+  #- "./local/corpusops.bootstrap/requirements:/srv/corpusops/corpusops.bootstrap/requirements"
+  #- "./local/corpusops.bootstrap/docs:/srv/corpusops/corpusops.bootstrap/docs"
+  # Remember: /setup/rootfs/ is synced inside the container /
+  # - "./app_entry_point:/app_entry_point"
+  # - "./reconfigure.sh:/provision_dir/reconfigure.sh"
+services:
+  drupal:
+    <<:  [ *image_template ]

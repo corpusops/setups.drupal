@@ -1,7 +1,4 @@
 ---
-- include_role: {name: drupal_maintenance_on, allow_duplicates: false}
-  tags: [cops_drupal_s_setup_maintenance_on]
-  when: [cops_drupal_s_setup_maintenance_on]
 
 - include_role: {name: drupal_setup_configs, allow_duplicates: false}
   tags: [cops_drupal_s_setup_configs]
@@ -19,10 +16,6 @@
   tags: [cops_drupal_s_setup_composer]
   when: [cops_drupal_s_setup_composer]
 
-- include_role: {name: drupal_setup_app, allow_duplicates: false}
-  tags: [cops_drupal_s_setup_app]
-  when: [cops_drupal_s_setup_app]
-
 - include_role: {name: drupal_setup_fpm, allow_duplicates: false}
   tags: [cops_drupal_s_setup_fpm]
   when: [cops_drupal_s_setup_fpm]
@@ -30,10 +23,6 @@
 - include_role: {name: drupal_setup_reverse_proxy, allow_duplicates: false}
   tags: [cops_drupal_s_setup_reverse_proxy]
   when: [cops_drupal_s_setup_reverse_proxy]
-
-- include_role: {name: drupal_maintenance_off, allow_duplicates: false}
-  tags: [cops_drupal_s_setup_maintenance_off]
-  when: [cops_drupal_s_setup_maintenance_off]
 
 - include_role: {name: drupal_setup_cron, allow_duplicates: false}
   tags: [cops_drupal_s_setup_cron]
