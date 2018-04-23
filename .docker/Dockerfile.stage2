@@ -1,4 +1,0 @@
-# build layout, install virtualenv
-ADD . /provision_dir
-RUN ROLES="drupal_push_code drupal_users drupal_layout drupal_fixperms" $_call_roles
-RUN ROLES="drupal_setup_venv" $_call_roles
