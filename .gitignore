@@ -3,6 +3,7 @@ www/*.*
 www/core
 # Ignore vendor directory.
 vendor
+drush/contrib/drush-cmi-tools/
 # Ignore contrib files.
 www/libraries/*
 www/modules/*

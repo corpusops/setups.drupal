@@ -1,1 +1,0 @@
-../local/setups.drupal/sbin/corpusops_install.sh
