@@ -1,4 +1,0 @@
----
-# compute app settings
-- include_role: {name: ./roles/drupal}
-  become: "{{cops_drupal_vars.become}}"
