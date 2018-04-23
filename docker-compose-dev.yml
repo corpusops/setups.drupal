@@ -1,7 +1,7 @@
 ---
 version: '3.5'
 # Build with (build stock first !):
-#  docker build --squash  -t corpusops/drupal:dev -f Dockerfile.dev [--build-arg=SKIP_COPS_UPDATE=y]
+#  docker build --squash  -t <group/project>:dev . -f Dockerfile.dev [--build-arg=SKIP_COPS_UPDATE=y]
 # Start with:
 #  SUPEREDITORS=$(id -u) docker-compose -f d*-compose-dev.yml -f d*-compose-project.yml -f d*-compose-project-dev.yml up -t 0 -d --force-recreate drupal
 #

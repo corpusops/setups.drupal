@@ -1,7 +1,7 @@
 ---
 version: '3.5'
 # Build with:
-#  docker build --squash -t corpusops/drupal -f Dockerfile [--build-arg=SKIP_COPS_UPDATE=y]
+#  docker build --squash -t <group/project> . -f Dockerfile [--build-arg=SKIP_COPS_UPDATE=y]
 # Start with:
 #  docker-compose -f d*-compose.yml -f d*-compose-project.yml up -t 0 -d --force-recreate drupal
 x-image: &image_template
