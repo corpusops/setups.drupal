@@ -11,3 +11,6 @@
 	path = local/setups.drupal
 	url = https://github.com/corpusops/setups.drupal.git
 	branch = D8
+[submodule "local/setups.elasticsearch"]
+	path = local/setups.elasticsearch
+	url = https://github.com/corpusops/setups.elasticsearch.git
