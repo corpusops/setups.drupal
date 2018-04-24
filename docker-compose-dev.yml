@@ -46,6 +46,7 @@ x-image: &image_template
     else exec /app_entry_point;
     fi'
   # for now this is a bloat image-as-a-vm to make a dev env ligther than a vagrant VM
+  # cap_add: [SYS_PTRACE]
   tmpfs: [/run, /run/lock]
   volumes: &image_volumes
   # systemd
@@ -90,6 +91,7 @@ x-image: &image_template
   #- "./local/corpusops.bootstrap/docs:/srv/corpusops/corpusops.bootstrap/docs"
   # Remember: /setup/rootfs/ is synced inside the container /
   # - "./app_entry_point:/app_entry_point"
+  #- "./entry_point:/entry_point"
   # - "./reconfigure.sh:/provision_dir/reconfigure.sh"
 services:
   drupal:
