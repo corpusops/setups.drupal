@@ -174,7 +174,8 @@ cops_drupal_drupal_cron_enabled: true
 cops_drupal_drupal_xmlrpc_enabled: false
 cops_drupal_drupal_authorize_enabled: false
 cops_drupal_drupal_update_enabled: false
-cops_drupal_drupal_uri: "http://{{vars['cops_drupal_domain']}}"
+cops_drupal_drupal_uri_scheme: "http"
+cops_drupal_drupal_uri: "{{vars['cops_drupal_drupal_uri_scheme']}}://{{vars['cops_drupal_domain']}}"
 cops_drupal_drush_make_args: "profiles/{{vars['cops_drupal_drupal_profile']}}/{{vars['cops_drupal_drupal_profile']}}.make"
 # uncomment if you use -- elysia cron --
 cops_drupal_fixperms_cron_periodicity: "*/30 * * * *"
