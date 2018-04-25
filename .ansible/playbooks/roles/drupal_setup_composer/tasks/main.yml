@@ -34,16 +34,22 @@
   register: cops_drupal_composer_run
 
 # FIXME: kiorky you'll need to explain that to rle. Generating without force the
-# service file and then testing size of that file to potentially run scaffold...
+# service file and then testing size of that file to potentially run scaffold...
 - name: Drupal scaffold
   shell: |
          set -ex
          cd {{cops_drupal_vars.project_root}}
          dsyml="{{cops_drupal_vars.project_root}}/www/sites/default/default.services.yml"
-         al="{{cops_drupal_vars.project_root}}/www/autoload.php"
+         runc=""
          if grep -q "drupal-composer/drupal-scaffold" composer.json;then
+            for al in \
+              "{{cops_drupal_vars.project_root}}/www/autoload.php" \
+              "{{cops_drupal_vars.project_root}}/www/index.php";do
+              if [ ! -e "$al" ];then runc=1;fi
+            done
             li=$(cat "${dsyml}" 2>/dev/null|wc -l)
-            if [ $li -lt 5 ] || [ ! -e "$al" ];then
+            if [ $li -lt 5 ];then runc=1;fi
+            if [ "x$runc" != "x" ];then
               echo "We have runscaffoldfromansible"
               sbin/composer run-script drupal-scaffold
             fi
