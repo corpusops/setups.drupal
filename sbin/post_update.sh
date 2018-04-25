@@ -38,7 +38,7 @@ if [ ! -f ${SYSTEM_YML} ]; then
     SYSTEM_YML="${ROOTPATH}/lib/config/install/system.site.yml"
 fi
 if [ -f ${SYSTEM_YML} ]; then
-    SITE_UUID=$(cat ${ROOTPATH}/lib/config/sync/system.site.yml|grep uuid|tail -c +7|head -c 36)
+    SITE_UUID=$(cat ${SYSTEM_YML}|grep uuid|tail -c +7|head -c 36)
     ask "$((QUESTION++))- Do you want to force site UUID to ${SITE_UUID}?"
     if [ "xok" = "x${USER_CHOICE}" ]; then
         echo "${YELLOW}  - So we run  config-set -y system.site uuid \"${SITE_UUID}\"${NORMAL}"
