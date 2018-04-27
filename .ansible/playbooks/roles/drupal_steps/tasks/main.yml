@@ -45,6 +45,9 @@
       {% set _ = r.update({'cops_drupal_s_prerequisites_pkgs':                                                              cops_drupal_s_prerequisites_pkgs |default(cops_drupal_s_prerequisites      |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}) %}
       {% set cops_drupal_s_prerequisites_pkgs = r['cops_drupal_s_prerequisites_pkgs'] %}
       #
+      {% set _ = r.update({'cops_drupal_s_setup_db':        cops_drupal_s_setup_db |default(cops_drupal_s_manage_content|default(cops_drupal_lifecycle_app_setup|default(not only_steps)))}) %}
+      {% set cops_drupal_s_setup_db = r['cops_drupal_s_setup_db'] %}
+      #
       {% set _ = r.update({'cops_drupal_s_setup_maintenance_on':        cops_drupal_s_setup_maintenance_on |default(cops_drupal_s_setup_maintenance|default(cops_drupal_s_manage_content|default(cops_drupal_lifecycle_app_setup|default(not only_steps))))}) %}
       {% set cops_drupal_s_setup_maintenance_on = r['cops_drupal_s_setup_maintenance_on'] %}
       #
@@ -135,7 +138,7 @@
       {% set _ = r.update({'cops_drupal_s_entry_point':    (cops_drupal_s_entry_point_configs or cops_drupal_s_entry_point_services)}) %}
       {% set cops_drupal_s_entry_point = r['cops_drupal_s_entry_point'] %}
       #
-      {% set _ = r.update({'cops_drupal_s_manage_content': ( cops_drupal_s_setup_maintenance_off or cops_drupal_s_setup_maintenance_on)}) %}
+      {% set _ = r.update({'cops_drupal_s_manage_content': ( cops_drupal_s_setup_maintenance_off or cops_drupal_s_setup_maintenance_on or cops_drupal_s_setup_app or cops_drupal_s_setup_db)}) %}
       {% set cops_drupal_s_manage_content = r['cops_drupal_s_manage_content'] %}
       #
       {% set _ = r.update({'cops_drupal_s_setup_reverse_proxy':  ( cops_drupal_s_setup_reverse_proxy_dvhost or cops_drupal_s_setup_reverse_proxy_vhost or cops_drupal_s_setup_reverse_proxy_users)}) %}

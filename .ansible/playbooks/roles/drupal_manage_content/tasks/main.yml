@@ -19,7 +19,10 @@
         -e "{only_steps: true,
              cops_{{cops_drupal_vars.db_role}}_s_managecontent: true}"
     fi
-  when: "cops_drupal_vars.docker_has_db"
+  tags: [cops_drupal_s_setup_db]
+  when:
+  - "cops_drupal_vars.docker_has_db"
+  - "cops_drupal_s_setup_db"
 # for now we do nothing here
 # would be a list of specific drush commands for example
 - include_role: {name: drupal_maintenance_on, allow_duplicates: false}
