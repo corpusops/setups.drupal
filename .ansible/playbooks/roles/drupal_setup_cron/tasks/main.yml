@@ -9,11 +9,11 @@
   when: cops_drupal_vars.cron_activated
 
 - template:
-    dest: "/etc/cron.d/{{cops_drupal_vars.name}}drupalcron"
+    dest: "{{cops_drupal_vars.cron_root}}/{{cops_drupal_vars.name}}drupalcron"
     src: "../templates/cron"
-    owner: "root"
+    owner: "{{cops_drupal_vars.cron_owner}}"
     force: true
-    group: "root"
+    group: "{{cops_drupal_vars.cron_group}}"
     mode: "0644"
   when: cops_drupal_vars.cron_activated
 
