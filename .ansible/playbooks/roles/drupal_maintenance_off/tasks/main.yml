@@ -8,4 +8,4 @@
     - "{{cops_drupal_vars.project_root}}/www/sites/default/MAINTENANCE"
 - name: "remove MAINTENANCE mode and wait some seconds for open_file_cache to detect file trigger removal"
   pause:
-    seconds: {{vars['cops_drupal_maintenance_trigger_seconds']}}
+    seconds: "{{vars['cops_drupal_maintenance_trigger_seconds']}}"
