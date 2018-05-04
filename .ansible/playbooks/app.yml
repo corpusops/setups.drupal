@@ -9,5 +9,12 @@
   - when: ["cops_drupal_lifecycle_app"]
     tags: ["cops_drupal_lifecycle_app"]
     block:
+    - include_role: {name: drupal_maintenance_on, allow_duplicates: false}
+      when: ["cops_drupal_s_maintenance_on"]
+      tags: ["cops_drupal_s_maintenance_on"]
+      failed_when: false
     - include_role: {name: drupal_push_code, allow_duplicates: false}
     - include_role: {name: drupal,           allow_duplicates: false}
+    - include_role: {name: drupal_maintenance_off, allow_duplicates: false}
+      tags: [cops_drupal_s_maintenance_off]
+      when: [cops_drupal_s_maintenance_off]

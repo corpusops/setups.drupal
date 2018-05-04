@@ -25,14 +25,6 @@
   - "cops_drupal_s_setup_db"
 # for now we do nothing here
 # would be a list of specific drush commands for example
-- include_role: {name: drupal_maintenance_on, allow_duplicates: false}
-  tags: [cops_drupal_s_setup_maintenance_on]
-  when: [cops_drupal_s_setup_maintenance_on]
-
 - include_role: {name: drupal_setup_app, allow_duplicates: false}
   tags: [cops_drupal_s_setup_app]
   when: [cops_drupal_s_setup_app]
-
-- include_role: {name: drupal_maintenance_off, allow_duplicates: false}
-  tags: [cops_drupal_s_setup_maintenance_off]
-  when: [cops_drupal_s_setup_maintenance_off]
