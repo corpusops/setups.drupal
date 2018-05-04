@@ -14,8 +14,8 @@ cops_supereditors: ["{{ansible_user_id}}",
 # install dev pkgs also (reset default --no-dev)
 cops_drupal_composer_install_args: "--prefer-dist --optimize-autoloader"
 # avoid maintenance mode switchs
-cops_drupal_s_setup_maintenance_on: false
-cops_drupal_s_setup_maintenance_off: false
+cops_drupal_s_maintenance_on: false
+cops_drupal_s_maintenance_off: false
 # install test stuff
 cops_drupal_s_setup_test: true
 # reduce memory impact of elastic search
