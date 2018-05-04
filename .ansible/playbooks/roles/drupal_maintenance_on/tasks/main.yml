@@ -9,6 +9,6 @@
   with_items:
     - "{{cops_drupal_vars.project_root}}/var/tmp/run_cron.lock"
     - "{{cops_drupal_vars.project_root}}/www/sites/default/MAINTENANCE"
-- name: "After flagging MAINTENANCE mode,  wait 30s for open_file_cache to detect file trigger removal"
+- name: "After flagging MAINTENANCE mode, wait some seconds for open_file_cache to detect file trigger removal"
   pause:
-    seconds: 30
+    seconds: {{vars['cops_drupal_maintenance_trigger_seconds']}}

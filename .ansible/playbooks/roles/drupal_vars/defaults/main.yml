@@ -472,6 +472,7 @@ cops_drupal_nginx_loglevel: crit
 cops_drupal_nginx_upstream_name: "{{vars['cops_drupal_name']}}"
 cops_drupal_nginx_doc_root: "{{vars['cops_drupal_project_root']}}/www"
 cops_drupal_nginx_maintenance_page: "/index_maintenance.html"
+cops_drupal_maintenance_trigger_seconds: 30
 cops_drupal_services_nginx_reload_state: "reloaded"
 # PHP-Fpm
 cops_drupal_fpm_ping: "/ping"
