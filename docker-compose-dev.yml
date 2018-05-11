@@ -71,6 +71,7 @@ x-image: &image_template
   - "./lib:/srv/projects/drupalproject/project/lib"
   - "./vendor:/srv/projects/drupalproject/project/vendor"
   - "./composer.json:/srv/projects/drupalproject/project/composer.json"
+  - "./composer.lock:/srv/projects/drupalproject/project/composer.lock"
   - "./.git:/srv/projects/drupalproject/project/.git"
   - "./.gitignore:/srv/projects/drupalproject/project/.gitignore"
   - "./.gitmodules:/srv/projects/drupalproject/project/.gitmodules"
