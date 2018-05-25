@@ -11,16 +11,32 @@
       block:
       - set_fact:
           cacheable: false
-          cops_drupal_dbsmartbackup_default_free_form: |
-            {% set dbserver = groups.get('db_servers', groups['all'])[0] %}
-            export HOST="{{hostvars[dbserver]['ansible_fqdn']}}"
+          cops_drupal_dbsmartbackup_default_free_form: |-
+            {% set d   = groups.get('db_backup_servers', None) %}
+            {% set dbs = groups.get('db_servers',        None) %}
+            {% if 'db_servers' in groups and d != dbs %}
+            export HOST="{{hostvars[groups['db_servers'][0]]['ansible_fqdn']}}"
+            {% else %}
+            {%  if cops_drupal_vars.dbsmartbackup_type == 'postgresql' %}
+            export HOST="localhost"
+            {%  else %}
+            export HOST="127.0.0.1"
+            {%  endif %}
+            {% endif %}
             export PORT="{{cops_drupal_vars.db__port}}"
             export DBNAMES="{{cops_drupal_vars.db_name}}"
-            export PASSWORD="{{cops_drupal_vars.db_password}}"
             {% if cops_drupal_vars.dbsmartbackup_type == 'postgresql' %}
+            {%  if d == dbs %}
+            export DBUSER="postgres"
+            export RUNAS="postgres"
+            {%  else %}
             export DBUSER="{{cops_drupal_vars.db_user}}"
             export PGUSER="{{cops_drupal_vars.db_user}}"
             export PGPASSWORD="{{cops_drupal_vars.db_password}}"
+            export PASSWORD="{{cops_drupal_vars.db_password}}"
+            {%  endif %}
+            {% else %}
+            export PASSWORD="{{cops_drupal_vars.db_password}}"
             {% endif %}
       - set_fact:
           cacheable: false
