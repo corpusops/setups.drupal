@@ -78,7 +78,12 @@ cops_drupal_deb_packages___default:
     - libtool
     - libxml2-dev
     - libxslt1-dev
-    - libopenjpeg-dev
+    - "{% if ansible_distribution_version|copsf_looseversion <= '14.04'|copsf_looseversion
+ 
+       %}libopenjpeg2{% elif
+        ansible_distribution_version|copsf_looseversion < '18.04'|copsf_looseversion
+     %}libopenjpeg5{% else
+     %}libopenjp2-7{% endif %}"
     - m4
     - man-db
     - pkg-config
