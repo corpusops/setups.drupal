@@ -48,6 +48,16 @@ RUN bash -c '\
        cops_${COPS_DB_TYPE}_s_managecontent: false }" \
   && $COPS_ROOT/hacking/docker_toggle_pm off'
 
+### Install elasticsearch server but ensure that services wont be started through packages
+RUN bash -c '\
+  && : "install elasticsearch server" \
+  && $_call_ansible .ansible/playbooks/elasticsearch.yml \
+  -e "{corpusops_services_db_mysql_do_fix_encoding: false, \
+       corpusops_services_db_mysql_do_services: false, \
+       cops_${COPS_DB_TYPE}_s_entry_point: false, \
+       cops_${COPS_DB_TYPE}_s_workers: false, \
+       cops_${COPS_DB_TYPE}_s_managecontent: false }"'
+
 # Install drupal app
 RUN bash -c '\
   $_call_ansible .ansible/playbooks/app.yml \
