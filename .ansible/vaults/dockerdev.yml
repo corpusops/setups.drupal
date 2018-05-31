@@ -4,7 +4,7 @@ db_backup_servers: all
 drupal_servers: all
 postgresql_servers: all
 mysql_servers: all
-search_servers: all
+elasticsearch_servers: all
 cops_drupal_force_push_code: true
 #
 cops_drupal_s_maintenance_on: false

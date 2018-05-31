@@ -1,0 +1,10 @@
+---
+- include_role: {name: drupal_vars, allow_duplicates: false}
+- set_fact:
+    cacheable: false
+    cops_drupal_lifecycle_elasticsearch: |-
+      {{(
+         not vars.get('SKIP_INSTALL_ELASTICSEARCH', False) or
+         cops_drupal_lifecycle_elasticsearch|default(false) or
+         vars.get('FORCE_INSTALL_ELASTICSEARCH', False)
+      )}}

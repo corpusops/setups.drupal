@@ -4,7 +4,7 @@ db_backup_servers: all
 drupal_servers: all
 postgresql_servers: all
 mysql_servers: all
-search_servers: all
+elasrticsearch_servers: all
 cops_drupal_domain: "{{cops_drupal_name}}.vbox.local"
 cops_installer_mode: vagrant
 cops_drupal_lifecycle_dbbackup: false
@@ -20,4 +20,3 @@ cops_drupal_s_maintenance_off: false
 cops_drupal_s_setup_test: true
 # reduce memory impact of elastic search
 cops_elasticsearch_mem: "256m"
-cops_elasticsearch_nginx_is_default_server: False

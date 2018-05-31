@@ -4,7 +4,7 @@ db_backup_servers: all
 drupal_servers: all
 postgresql_servers: all
 mysql_servers: all
-search_servers: all
+elasticsearch_servers: all
 cops_django_force_push_code: true
 #
 cops_drupal_s_maintenance_on: false
@@ -15,3 +15,4 @@ cops_drupal_local_settings_drupal_hash: secretCHANGEME461t4jjG596oj0W
 cops_db_password: secretCHANGEME9PITTP4I21NY39f
 cops_drupal_project_sdir: "drupalproject"
 cops_elasticsearch_nginx_is_default_server: False
+cops_elasticsearch_has_reverse_proxy: false

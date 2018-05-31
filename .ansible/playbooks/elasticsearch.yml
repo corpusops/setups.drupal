@@ -1,0 +1,10 @@
+---
+- hosts: "{{elasticsearch_servers|default('all')}}"
+  tasks:
+  - tags: [cops_drupal_lifecycle_elasticsearch]
+    when: "cops_drupal_lifecycle_elasticsearch|default(true)"
+    block:
+    - include_role: {name: drupal_elasticsearch_vars}
+- import_playbook: "../../local/setups.elasticsearch/.ansible/playbooks/site.yml"
+  tags: [cops_drupal_lifecycle_elasticsearch]
+  when: "cops_drupal_lifecycle_elasticsearch|default(true)"
