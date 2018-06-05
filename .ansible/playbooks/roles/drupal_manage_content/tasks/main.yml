@@ -17,7 +17,7 @@
       export NONINTERACTIVE=1
       .ansible/scripts/call_ansible.sh .ansible/playbooks/db.yml \
         -e "{only_steps: true,
-             cops_{{cops_drupal_vars.db_role}}_s_managecontent: true}"
+             cops_{{cops_drupal_vars.db_role}}_s_manage_content: true}"
     fi
   tags: [cops_drupal_s_setup_db]
   when:
