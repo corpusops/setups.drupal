@@ -1,13 +1,19 @@
 ---
 # We'll need vncserver, firefox
+-
 - name: Install packages dependencies for running integration tests
   apt:
     update_cache: yes
     cache_valid_time: 3600
-    name: [fluxbox, vnc4server, chromium-browser, chromium-chromedriver, expect, libxfont1, xfonts-terminus, xfonts-base, xterm, openjdk-9-jre, tar, gzip]
+    name: [fluxbox, vnc4server, chromium-browser, chromium-chromedriver, expect, libxfont1, xfonts-terminus, xfonts-base, xterm, tar, gzip]
     state: latest
   when: [cops_drupal_s_setup_test_build]
   tags: [cops_drupal_s_setup_test_build]
+- shell: java -version
+  failed_when: false
+  register: _c_drupal_install_java
+- include_role: {name: corpusops.roles/localsettings_jdk}
+  when: _c_drupal_install_java.rc != 0
 - name: ensure project user vnc directory exists
   file:
     path: "/home/{{cops_drupal_vars.user}}/.vnc"
