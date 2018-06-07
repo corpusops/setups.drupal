@@ -28,7 +28,7 @@ cops_postgresql__databases:
 cops_mysql__roles:
 - name: "{{cops_db_user}}"
   password: "{{cops_db_password}}"
-  privs: "{{cops_db_name}}.*: ALL"
+  priv: "{{cops_db_name}}.*:ALL"
 cops_mysql__databases:
 - db: "{{cops_db_name}}"
   # for pgsql
