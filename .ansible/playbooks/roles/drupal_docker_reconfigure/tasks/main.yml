@@ -9,6 +9,9 @@
   with_items: |-
     {% set res = [] %}
     {% set s = [] %}
+    {% if  not cops_drupal_docker_has_elasticseach %}
+    {%  set _ = s.append('nginx') %}
+    {% endif %}
     {% if  not cops_drupal_docker_has_nginx %}
     {%  set _ = s.append('nginx') %}
     {% endif %}
@@ -39,6 +42,12 @@
     {% else %}
     rm -fv /etc/cron.d/dbsmartbackup*
     {% endif %}
+- name: maybe enable db
+  when: cops_drupal_docker_has_db
+  changed_when: false
+  cops_service:
+    enabled: true
+    name: "{{cops_drupal_db_role}}"
 - when: "cops_drupal_do_reconfigure_db|default(true)"
   changed_when: false
   name: "Init & reconfigure or disable DB"
@@ -76,10 +85,11 @@
         mkdir -p "$c"
         chown mysql:mysql "$c"
         #mysql_install_db --user=mysql --basedir=$d --datadir=$c --insecure
-        mysqld --initialize-insecure --user={{corpusops_services_db_mysql_user}} \
+        mysqld --initialize-insecure \
           --basedir=$d --datadir=$c \
-          --character-set-server='{{corpusops_services_db_mysql_character_set}}' \
-          --collation-server='{{corpusops_services_db_mysql_collate}}'
+          --user={{corpusops_services_db_mysql_user|default('root')}} \
+          --character-set-server='{{corpusops_services_db_mysql_character_set|default('utf8')}}' \
+          --collation-server='{{corpusops_services_db_mysql_collate|default('utf8_general_ci')}}'
       fi
       chown -Rf mysql:mysql "$c" /var/log/mysql
     {% endif %}

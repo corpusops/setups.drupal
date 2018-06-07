@@ -2,6 +2,7 @@
 - name: db & db user setup
   shell: |-
     cd "{{cops_drupal_vars.provision_dir}}"
+    set -ex
     dodb="";
     {%- if cops_drupal_vars.db_has_postgis %}
     if ! ( su postgres -c "echo 'SELECT PostGIS_full_version();'|psql -v ON_ERROR_STOP=1  postgis" 2>&1 >/dev/null; );then
@@ -13,16 +14,26 @@
       dodb=1
     fi
     {% endif %}
+    {% if cops_drupal_db_role == 'mysql' %}
+    if ! ( echo 'SELECT 1;'|mysql \
+            --user="{{cops_drupal_vars.db_user}}" \
+            --password="{{cops_drupal_vars.db_password}}" \
+            "{{cops_drupal_vars.db_name}}"  2>&1 >/dev/null; );then
+      dodb=1
+    fi
+    {% endif %}
     if [ x"${dodb}" != "x" ];then
+      echo "_mchanged" >&2
       export NONINTERACTIVE=1
       .ansible/scripts/call_ansible.sh .ansible/playbooks/db.yml \
-        -e "{only_steps: true,
-             cops_{{cops_drupal_vars.db_role}}_s_manage_content: true}"
+        -e "{only_steps: true, cops_{{cops_drupal_vars.db_role}}_s_manage_content: true}"
     fi
   tags: [cops_drupal_s_setup_db]
   when:
   - "cops_drupal_vars.docker_has_db"
   - "cops_drupal_s_setup_db"
+  register: _c_drupal_docker_mdb
+  changed_when: "'_mchanged' in _c_drupal_docker_mdb.stderr"
 # for now we do nothing here
 # would be a list of specific drush commands for example
 - include_role: {name: drupal_setup_app, allow_duplicates: false}

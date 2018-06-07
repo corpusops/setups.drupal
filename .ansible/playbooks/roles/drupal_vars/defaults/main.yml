@@ -250,6 +250,7 @@ cops_drupal_docker_has_db: false
 cops_drupal_docker_has_dbsmartbackup: false
 cops_drupal_docker_has_drupal: false
 cops_drupal_docker_has_nginx: false
+cops_drupal_docker_has_elasticseach: false
 # global orchestration steps (db, code sync, web & workers prereqs, drupal config)
 cops_drupal_become: true
 #
