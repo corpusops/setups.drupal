@@ -12,6 +12,9 @@ drupal_servers
 [postgresql_servers]
 mydbserver.foo.net
 
+[elasticsearch_servers]
+mydbserver.foo.net
+
 [db_backup_servers]
 mydbserver.foo.net
 

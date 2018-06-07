@@ -36,39 +36,45 @@ RUN bash -c '\
   && .ansible/scripts/download_corpusops.sh \
   && .ansible/scripts/setup_ansible.sh'
 
+# setup app (without services and content managment)
+ADD . /provision_dir
+RUN bash -c '\
+  rm -rf local/corpusops.bootstrap \
+  && ln -sf $COPS_ROOT local/corpusops.bootstrap \
+  && .ansible/scripts/download_corpusops.sh \
+  && .ansible/scripts/setup_ansible.sh'
+
 ### Install db server but ensure that services wont be started through packages
 RUN bash -c '\
   $COPS_ROOT/hacking/docker_toggle_pm on \
   && : "install db server" \
   && $_call_ansible .ansible/playbooks/db.yml \
-  -e "{corpusops_services_db_postgresql_do_fix_encoding: false, \
-       corpusops_services_db_postgresql_do_services: false, \
+  -e "{corpusops_services_db_mysql_do_fix_encoding: false, \
+       corpusops_services_db_mysql_do_services: false, \
        cops_${COPS_DB_TYPE}_s_entry_point: false, \
-       cops_${COPS_DB_TYPE}_s_workers: false, \
-       cops_${COPS_DB_TYPE}_s_managecontent: false }" \
+       cops_${COPS_DB_TYPE}_s_healthchecks: false, \
+       cops_${COPS_DB_TYPE}_s_manage_content: false }" \
   && $COPS_ROOT/hacking/docker_toggle_pm off'
 
 ### Install elasticsearch server but ensure that services wont be started through packages
 RUN bash -c '\
-  && : "install elasticsearch server" \
+  : "install elasticsearch server" \
   && $_call_ansible .ansible/playbooks/elasticsearch.yml \
-  -e "{corpusops_services_db_mysql_do_fix_encoding: false, \
-       corpusops_services_db_mysql_do_services: false, \
-       cops_${COPS_DB_TYPE}_s_entry_point: false, \
-       cops_${COPS_DB_TYPE}_s_workers: false, \
-       cops_${COPS_DB_TYPE}_s_managecontent: false }"'
+  -e "{cops_elasticsearch_s_entry_point: false, \
+       cops_elasticsearch_s_healthchecks: false, \
+       cops_elasticsearch_s_manage_content: false }"'
 
 # Install drupal app
 RUN bash -c '\
   $_call_ansible .ansible/playbooks/app.yml \
   -e "{cops_${COPS_PROJECT_TYPE}_s_healthchecks: false, \
-       cops_drupal_s_setup_test_build: true,\
+       cops_${COPS_PROJECT_TYPE}_s_setup_test_build: true,\
        cops_${COPS_PROJECT_TYPE}_s_manage_content: false}"'
 
 # Install sidecar dbsmartbackup
 RUN bash -c '\
   $_call_ansible .ansible/playbooks/db_backup.yml \
-  -e "{cops_dbsmartbackup_s_managecontent: false, \
+  -e "{cops_dbsmartbackup_s_manage_content: false, \
        cops_dbsmartbackup_s_entry_point: false}"'
 
 
