@@ -11,10 +11,6 @@ cops_drupal_s_maintenance_on: false
 cops_drupal_s_maintenance_off: false
 # install test stuff
 cops_drupal_composer_install_args: "--prefer-dist --optimize-autoloader"
-#
-cops_drupal_local_settings_site_password: secretCHAGEMEQ433i2S3OyVko6Y
-cops_drupal_local_settings_drupal_hash: secretCHANGEME461t4jjG596oj0W
-cops_db_password: "{{corpusops_services_db_mysql_root_password}}"
 cops_drupal_project_sdir: "drupalproject"
 cops_elasticsearch_nginx_is_default_server: False
 cops_drupal_lifecycle_db: true

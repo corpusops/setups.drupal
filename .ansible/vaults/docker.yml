@@ -10,9 +10,6 @@ cops_django_force_push_code: true
 cops_drupal_s_maintenance_on: false
 cops_drupal_s_maintenance_off: false
 #
-cops_drupal_local_settings_site_password: secretCHAGEMEQ433i2S3OyVko6Y
-cops_drupal_local_settings_drupal_hash: secretCHANGEME461t4jjG596oj0W
-cops_db_password: "{{corpusops_services_db_mysql_root_password}}"
 cops_drupal_project_sdir: "drupalproject"
 cops_elasticsearch_nginx_is_default_server: False
 cops_elasticsearch_has_reverse_proxy: false
