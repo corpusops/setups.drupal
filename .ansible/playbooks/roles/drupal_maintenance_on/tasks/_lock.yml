@@ -1,0 +1,7 @@
+---
+- stat: {path: "{{lockitem|copsf_dirname}}"}
+  register: _c_drupal_sites_defaultli
+- shell: |
+         set -e
+         chmod u-w,g-w "{{lockitem|copsf_dirname}}"
+  when: "_c_drupal_sites_defaultli.stat.exists"

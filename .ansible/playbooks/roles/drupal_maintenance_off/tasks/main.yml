@@ -1,25 +1,33 @@
 ---
+- shell: whoami
+  register: _c_drupal_sites_defaultlu
+- set_fact:
+    _c_drupal_become:
+      user: "{{ _c_drupal_sites_defaultlu.stdout != 'root' and cops_drupal_vars.user or None }}"
+      become: "{{ _c_drupal_sites_defaultlu.stdout != 'root' and True or False }}"
 - name: "ensure we have write access on maintenance trigger directory"
   shell: |
          set -e
-         chmod 2775 "{{cops_drupal_vars.data_root}}/var/sites/default"
-  become: true
-  become_user: "{{cops_drupal_vars.user}}"
+         if [ -e "{{cops_drupal_vars.sites_default_dir}}" ];then
+           chmod u+w,g+w "{{cops_drupal_vars.sites_default_dir}}"
+         fi
+  become: "{{_c_drupal_become.become}}"
+  become_user: "{{_c_drupal_become.user}}"
 - name: "remove cron suspension (removal lock file) & nginx MAINTENANCE marker"
   file:
     state: absent
     path: "{{item}}"
-  become: true
-  become_user: "{{cops_drupal_vars.user}}"
+  become: "{{_c_drupal_become.become}}"
+  become_user: "{{_c_drupal_become.user}}"
   with_items:
     - "{{cops_drupal_vars.project_root}}/var/tmp/run_cron.lock"
-    - "{{cops_drupal_vars.doc_root}}/sites/default/MAINTENANCE"
+    - "{{cops_drupal_vars.sites_default_dir}}/MAINTENANCE"
 - name: "remove MAINTENANCE mode and wait some seconds for open_file_cache to detect file trigger removal"
   pause:
     seconds: "{{vars['cops_drupal_maintenance_trigger_seconds']}}"
 - name: "redo the special rights on maintenance trigger directory"
   shell: |
          set -e
-         chmod 2555 "{{cops_drupal_vars.data_root}}/var/sites/default"
-  become: true
-  become_user: "{{cops_drupal_vars.user}}"
+         chmod u-w,g-w,o-w "{{cops_drupal_vars.sites_default_target_dir}}"
+  become: "{{_c_drupal_become.become}}"
+  become_user: "{{_c_drupal_become.user}}"

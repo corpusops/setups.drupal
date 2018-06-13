@@ -1,0 +1,17 @@
+---
+- stat: {path: "{{lockitem|copsf_dirname}}"}
+  register: _c_drupal_sites_defaulti
+- name: "ensure we have write access on maintenance trigger directory: {{lockitem}}"
+  shell: |
+         set -e
+         chmod u+rw,g+rw "{{lockitem|copsf_dirname}}"
+  changed_when: false
+  when: "_c_drupal_sites_defaulti.stat.exists"
+- name: "suspend new cron tasks with file lock & flag nginx maintainance: {{lockitem}}"
+  copy:
+    content: ""
+    force: true
+    dest: "{{lockitem}}"
+    mode: "0644"
+  loop_control: {loop_var: lockitem}
+  when: "_c_drupal_sites_defaulti.stat.exists"
