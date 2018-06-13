@@ -38,7 +38,7 @@ default:
       blackbox: ~
       api_driver: "drupal"
       drupal:
-        drupal_root: "{{ cfg.project_root }}/www"
+        drupal_root: "{{ cfg.doc_root }}"
       selectors:
         message_selector: 'div[role=alert]'
         error_message_selector: '.placeholder'

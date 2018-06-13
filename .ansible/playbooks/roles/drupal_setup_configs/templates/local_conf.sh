@@ -9,7 +9,7 @@
 
 ROOTPATH="{{cfg.project_root}}"
 BINPATH="{{cfg.project_root}}/sbin"
-WWW_DIR="{{cfg.project_root}}/www"
+WWW_DIR="{{cfg.doc_root}}"
 DATA_DIR="{{cfg.data_root}}/var/sites"
 
 # System User

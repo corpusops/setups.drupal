@@ -13,7 +13,7 @@
   become_user: "{{cops_drupal_vars.user}}"
   with_items:
     - "{{cops_drupal_vars.project_root}}/var/tmp/run_cron.lock"
-    - "{{cops_drupal_vars.project_root}}/www/sites/default/MAINTENANCE"
+    - "{{cops_drupal_vars.doc_root}}/sites/default/MAINTENANCE"
 - name: "remove MAINTENANCE mode and wait some seconds for open_file_cache to detect file trigger removal"
   pause:
     seconds: "{{vars['cops_drupal_maintenance_trigger_seconds']}}"

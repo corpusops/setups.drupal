@@ -6,7 +6,7 @@
 - name: Drush install if necessary
   shell: |
     set -e
-    cd "{{cops_drupal_vars.project_root}}/www"
+    cd "{{cops_drupal_vars.doc_root}}"
     export NONINTERACTIVE=y
     ../sbin/install.sh
   register: cops_drupal_install_log
@@ -17,7 +17,7 @@
 - name: Drush postupdate if necessary
   shell: |
     set -e
-    cd "{{cops_drupal_vars.project_root}}/www"
+    cd "{{cops_drupal_vars.doc_root}}"
     export NONINTERACTIVE=y
     ../sbin/post_update.sh
   register: cops_drupal_post_update_log
