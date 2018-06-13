@@ -79,7 +79,6 @@ cops_drupal_deb_packages___default:
     - libxml2-dev
     - libxslt1-dev
     - "{% if ansible_distribution_version|copsf_looseversion <= '14.04'|copsf_looseversion
- 
        %}libopenjpeg2{% elif
         ansible_distribution_version|copsf_looseversion < '18.04'|copsf_looseversion
      %}libopenjpeg5{% else
@@ -224,11 +223,9 @@ cops_drupal_force_remove_maintenance: 1
 remove_suspend_cron: 1
 cops_drupal_db_prefix: ""
 cops_drupal_db_type: pgsql
-cops_drupal_db_role_type:
-  pgsql: postgresql
-cops_drupal_dbs_types_mapping:
-  pgsql: postgresql
-cops_drupal_db_role: "{{cops_drupal_db_role_type.get(cops_drupal_db_type, cops_drupal_db_type)}}"
+# CF VAUTS
+# cops_drupal_db_role_type: ""
+# cops_drupal_db_role: ""
 cops_drupal_db_host: "localhost"
 cops_drupal_db_name: "{{vars['cops_drupal_name']}}"
 cops_drupal_db_password: "{{vars['cops_drupal_db_name']}}"
@@ -524,5 +521,5 @@ cops_drupal_composer_install_args: "--no-dev --prefer-dist --optimize-autoloader
 cops_drupal_dbsmartbackup: {}
 cops_drupal_dbsmartbackup_name: "{{vars['cops_drupal_name']}}"
 cops_drupal_dbsmartbackup_type: "{{(
-   cops_drupal_dbs_types_mapping[cops_drupal_db_type])}}"
+   cops_drupal_db_role_type[cops_drupal_db_type])}}"
 # vim:set ft=sls:
