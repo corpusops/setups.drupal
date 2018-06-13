@@ -310,7 +310,7 @@ cops_drupal_files___default:
   - {path: "{{vars['cops_drupal_data_root']}}/var/sites",
      owner: "{{vars['cops_drupal_user']}}", group: "{{vars['cops_drupal_group']}}",
      state: directory, mode: "{{vars['cops_drupal_stickymode']}}750"}
-  - {path: "{{vars['cops_drupal_data_root']}}/var/sites/default/files",
+  - {path: "{{vars['cops_drupal_sites_default_target_dir']}}",
      owner: "{{vars['cops_drupal_user']}}", group: "{{vars['cops_drupal_group']}}",
      state: directory, mode: "{{vars['cops_drupal_stickymode']}}770"}
   - {path: "{{vars['cops_drupal_data_root']}}/var/log",
@@ -342,7 +342,6 @@ cops_drupal_files___default:
   - {src: "{{vars['cops_drupal_project_root']}}/vendor",             path: "{{vars['cops_drupal_data_root']}}/vendor",      state: link, force: true}
   - {src: "{{vars['cops_drupal_project_root']}}/bin",                path: "{{vars['cops_drupal_data_root']}}/bin",         state: link, force: true}
   #
-  - {path: "{{vars['cops_drupal_doc_root']}}/sites/default", src: "{{vars['cops_drupal_data_root']}}/var/sites/default", state: link, force: true}
   - {path: "{{vars['cops_drupal_project_root']}}/var",               src: "{{vars['cops_drupal_data_root']}}/var",         state: link, force: true}
   - {path: "{{vars['cops_drupal_project_root']}}/log",               src: "{{vars['cops_drupal_data_root']}}/var/log",     state: link, force: true}
   - {path: "{{vars['cops_drupal_project_root']}}/private",           src: "{{vars['cops_drupal_data_root']}}/var/private", state: link, force: true}
@@ -351,14 +350,20 @@ cops_drupal_files___default:
   - {path: "{{vars['cops_drupal_project_root']}}/sbin/profile_conf.sh", state: absent, force: true}
   - {path: "{{vars['cops_drupal_project_root']}}/sbin/composer.lock",   state: absent, force: true}
   - {path: "{{vars['cops_drupal_doc_root']}}/sites/default/common.settings.php",   state: absent, force: true}
+cops_drupal_sites_default_target_dir: "{{vars['cops_drupal_data_root']}}/var/sites/default"
+cops_drupal_sites_default_dir: "{{vars['cops_drupal_doc_root']}}/sites/default"
+cops_drupal_sites_default_dirs:
+  - {path: "{{vars['cops_drupal_sites_default_dir']}}", src: "{{vars['cops_drupal_data_root']}}/var/sites/default", state: link, force: true}
+cops_drupal_sites_default_subdirs: [files, private_files]
 # Config files
 cops_drupal_configs: "{{vars['cops_drupal_configs___default']}}"
 cops_drupal_config_template_settings: "../templates/default.settings.php"
 cops_drupal_config_template_bash_conf: "../templates/local_conf.sh"
 cops_drupal_config_template_behat: "../templates/behat.yml"
+cops_drupal_settings_path: "{{vars['cops_drupal_sites_default_dir']}}/settings.php"
 cops_drupal_configs___default:
   - {src: "{{vars['cops_drupal_config_template_settings']}}",
-     dest: "{{vars['cops_drupal_doc_root']}}/sites/default/settings.php",
+     dest: "{{vars['cops_drupal_settings_path']}}",
      mode: "0640",
      owner: "{{vars['cops_drupal_user']}}",
      group: "{{vars['cops_drupal_group']}}"}

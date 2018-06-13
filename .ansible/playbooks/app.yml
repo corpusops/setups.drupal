@@ -9,7 +9,7 @@
   - when: ["cops_drupal_lifecycle_app"]
     tags: ["cops_drupal_lifecycle_app"]
     block:
-    - stat: {path: "{{cops_drupal_vars.data_root}}/var/sites/default"}
+    - stat: {path: "{{cops_drupal_vars.sites_default_dir}}"}
       register: _c_drupal_sites_default
     - set_fact:
         _c_drupal_sites_default_exists: "{{_c_drupal_sites_default.stat.exists}}"
