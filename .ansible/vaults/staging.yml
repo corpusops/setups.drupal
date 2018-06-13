@@ -1,7 +1,5 @@
 ---
 # THIS SHOULD RESIDE IN AN ENCRYPTED VAULT
-cops_db_name: "{{cops_app_name}}"
-cops_db_user: "{{cops_app_name}}"
 cops_db_password: "secret"
 cops_deploy_ssh_key_paths:
   staging:
@@ -12,3 +10,8 @@ cops_deploy_ssh_key_paths:
       -----BEGIN RSA PRIVATE KEY-----
       yyy==
       -----END RSA PRIVATE KEY-----
+cops_drupal_http_users___default:
+- {user: "{{vars['cops_drupal_local_settings_account_name']}}",
+   password: "{{vars['cops_drupal_local_settings_site_password']}}"}
+- {user: "root", password: "rootroot"}
+

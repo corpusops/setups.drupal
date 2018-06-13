@@ -9,6 +9,9 @@ staging-myapp.foo.net
 [app_servers:children]
 drupal_servers
 
+[mysql_servers]
+mydbserver.foo.net
+
 [postgresql_servers]
 mydbserver.foo.net
 
