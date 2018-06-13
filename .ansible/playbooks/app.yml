@@ -9,6 +9,16 @@
   - when: ["cops_drupal_lifecycle_app"]
     tags: ["cops_drupal_lifecycle_app"]
     block:
+    - stat: {path: "{{cops_drupal_vars.data_root}}/var/sites/default"}
+      register: _c_drupal_sites_default
+    - set_fact:
+        _c_drupal_sites_default_exists: "{{_c_drupal_sites_default.stat.exists}}"
+    - when: "_c_drupal_sites_default_exists"
+      block:
+      - shell: "getent passwd {{cops_drupal_vars.user}}"
+      rescue:
+      - include_role: {name: drupal_users,  allow_duplicates: false}
+      - shell: "getent passwd {{cops_drupal_vars.user}}"
     - include_role: {name: drupal_maintenance_on, allow_duplicates: false}
       when: ["cops_drupal_s_maintenance_on"]
       tags: ["cops_drupal_s_maintenance_on"]

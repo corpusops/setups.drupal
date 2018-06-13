@@ -4,7 +4,9 @@
          set -e
          chmod 2775 "{{cops_drupal_vars.data_root}}/var/sites/default"
   become: true
+  changed_when: false
   become_user: "{{cops_drupal_vars.user}}"
+  when: "_c_drupal_sites_default_exists|default(false)"
 - name: "suspend new cron tasks with file lock & flag nginx maintainance"
   copy:
     content: ""
@@ -17,12 +19,15 @@
   with_items:
     - "{{cops_drupal_vars.data_root}}/var/tmp/run_cron.lock"
     - "{{cops_drupal_vars.doc_root}}/sites/default/MAINTENANCE"
+  when: "_c_drupal_sites_default_exists|default(false)"
 - name: "After flagging MAINTENANCE mode, wait some seconds for open_file_cache to detect file trigger removal"
   pause:
     seconds: "{{vars['cops_drupal_maintenance_trigger_seconds']}}"
+  when: "_c_drupal_sites_default_exists|default(false)"
 - name: "redo the special rights on maintenance trigger directory"
   shell: |
          set -e
          chmod 2555 "{{cops_drupal_vars.data_root}}/var/sites/default"
   become: true
   become_user: "{{cops_drupal_vars.user}}"
+  when: "_c_drupal_sites_default_exists|default(false)"
