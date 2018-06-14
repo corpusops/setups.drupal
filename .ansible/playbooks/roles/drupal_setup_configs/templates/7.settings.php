@@ -5,6 +5,10 @@
 
 // BASE URL --------------------------------------------------------------------
 $base_url = '{{ cfg.drupal_uri }}';
+{% if 'https' in cfg.drupal_uri %}
+$conf['https'] = TRUE;
+{% endif %}
+
 // this is a hack for drush in site-install mode, overriding base_url with crap,
 // at least you have a copy in variables, if needed
 $conf['base_url'] = $base_url;
@@ -198,11 +202,16 @@ $conf['block_cache_bypass_node_grants'] = {{ data.block_cache_bypass_node_grants
 $conf['reroute_email_enable'] = {{ cfg.local_settings.reroute_email_enable }};
 $conf['reroute_email_address'] = '{{ cfg.local_settings.reroute_email_address }}';
 
+
 // That's something not generated, anything which does not need env overrides
 // could be stored in this file (and saved in git)
 $projectsettingsfile = DRUPAL_ROOT . "/sites/project.settings.php";
 if (file_exists($projectsettingsfile)) {
   include_once($projectsettingsfile);
+}
+$dprojectsettingsfile = DRUPAL_ROOT . "/sites/default/project.settings.php";
+if (file_exists($dprojectsettingsfile)) {
+  include_once($dprojectsettingsfile);
 }
 
 // That's for devs, of you want some non commited files

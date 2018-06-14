@@ -183,6 +183,10 @@ $projectsettingsfile = DRUPAL_ROOT . "/sites/project.settings.php";
 if (file_exists($projectsettingsfile)) {
   include_once($projectsettingsfile);
 }
+$dprojectsettingsfile = DRUPAL_ROOT . "/sites/default/project.settings.php";
+if (file_exists($dprojectsettingsfile)) {
+  include_once($dprojectsettingsfile);
+}
 
 // That's for devs, of you want some non commited files
 $localsettingsfile = DRUPAL_ROOT . "/sites/default/local.settings.php";
