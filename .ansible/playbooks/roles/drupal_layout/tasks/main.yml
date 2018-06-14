@@ -12,16 +12,18 @@
   with_items: "{{cops_drupal_vars.files}}"
   tags: [cops_drupal_s_layout_layout]
   when: [cops_drupal_s_layout_layout]
-- name: Manage sites_default files subdir
+- name: Manage medias directories
   file:
-    path: "{{cops_drupal_vars.sites_default_target_dir}}/{{item}}"
+    path: "{{item}}"
     state: directory
     force: true
     mode: "{{vars['cops_drupal_stickymode']}}771"
     owner: "{{cops_drupal_vars.user}}"
     group: "{{cops_drupal_vars.group}}"
     recurse: true
-  with_items: "{{cops_drupal_vars.sites_default_subdirs}}"
+  with_items:
+  - "{{cops_drupal_vars.sites_default_target_files}}"
+  - "{{cops_drupal_vars.private_files}}"
   tags: [cops_drupal_s_layout_layout]
   when: [cops_drupal_s_layout_layout]
 # handling of sites/default/files & sites/default/private_files
@@ -31,17 +33,16 @@
 #     and then ignore sublinks
 - stat: {path: "{{cops_drupal_vars.sites_default_dir}}"}
   register: _c_drupal_sites_default_dir
-- name: Manage links for sites_default files
+- name: Manage Symink for sites/defaults/files (sites/default is a dir)
   file:
-    path: "{{cops_drupal_vars.sites_default_dir}}/{{item}}"
-    src: "{{cops_drupal_vars.sites_default_target_dir}}/{{item}}"
+    path: "{{cops_drupal_vars.sites_default_files}}"
+    src: "{{cops_drupal_vars.sites_default_target_files}}"
     state: link
-  with_items: "{{cops_drupal_vars.sites_default_subdirs}}"
   tags: [cops_drupal_s_layout_layout]
   when:
   - cops_drupal_s_layout_layout
   - _c_drupal_sites_default_dir.stat.exists and _c_drupal_sites_default_dir.stat.isdir
-- name: Manage dirs for sites_default files
+- name: Manage Symink for sites/defaults (sites/default is not a dir)
   file:
     path: "{{cops_drupal_vars.sites_default_dir}}"
     src: "{{cops_drupal_vars.sites_default_target_dir}}"

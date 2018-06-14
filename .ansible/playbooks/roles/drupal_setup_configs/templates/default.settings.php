@@ -92,6 +92,11 @@ $config['system.mail']['smtp_on'] = TRUE;
 $config['system.mail']['smtp_host'] = "{{ cfg.local_settings_smtp.host }}";
 $config['system.mail']['smtp_from'] = "{{ cfg.local_settings_smtp.from }}";
 $config['system.mail']['smtp_fromname'] = "{{ cfg.local_settings_smtp.fromname }}";
+{% for i in ['port', 'protocol', 'auth', 'username', 'password'] %}
+{%- set val = cfg['local_settings_smtp_{0}'.format(i)] %}
+{%- if val %}
+$confif['system.mail']['{{'smtp_{0}'.format(i)}}'] = "{{ val }}";
+{% endif %}{% endfor %}
 {% endif %}
 
 // File system ////////////////////////////////////////////////////////////////
@@ -100,7 +105,7 @@ $config['system.mail']['smtp_fromname'] = "{{ cfg.local_settings_smtp.fromname }
 $settings['file_public_path'] = 'sites/default/files';
 # www/sites/default/settings.php
 $root = "{{ cfg.project_root }}";
-$settings['file_private_path'] = $root . '/var/private';
+$settings['file_private_path'] = '{{ cfg.private_files }}';
 $config['system.file']['path']['temporary'] = $root . '/var/tmp';
 $config['system.file']['temporary_maximum_age'] = 21600; // in seconds 21600->6hours
 

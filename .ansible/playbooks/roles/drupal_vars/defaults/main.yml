@@ -1,4 +1,6 @@
 ---
+# set to 8 for d8, anything else for others
+cops_drupal_drupal_version: "8"
 cops_drupal_php_version: "7.1"
 corpusops_core_projects_path: /srv/projects
 # users than have full right to edit file in the container
@@ -152,6 +154,12 @@ cops_drupal_local_settings_conf_staging_dir: "{{vars['cops_drupal_project_root']
 cops_drupal_local_settings_conf_todev_dir: "{{vars['cops_drupal_project_root']}}/lib/config/to_dev"
 cops_drupal_local_settings_smtp_used: True
 cops_drupal_local_settings_smtp_host: '127.0.0.1'
+cops_drupal_local_settings_smtp_auth: null
+cops_drupal_local_settings_smtp_username: null
+cops_drupal_local_settings_smtp_password: null
+cops_drupal_local_settings_smtp_port: null
+# standard / ssl / tls
+cops_drupal_local_settings_smtp_protocol: null
 cops_drupal_local_settings_smtp_from: "root@{{vars['cops_drupal_domain']}}"
 cops_drupal_local_settings_smtp_fromname: ''
 cops_drupal_local_settings_block_cache_bypass_node_grants: 1
@@ -169,8 +177,6 @@ cops_drupal_cops_sub_namespaces:
   force: {}
   dbsmartbackup: {}
 cops_drupal_use_etc_hosts: true
-# set to 8 for d8, anything else for others
-cops_drupal_drupal_version: 8
 # This is "new_site" for the 1st player,
 # and "sync" after that (to get the same UUIDs)
 cops_drupal_d8_install_mode: "sync"
@@ -328,9 +334,6 @@ cops_drupal_files___default:
  # - {path: "{{vars['cops_drupal_data_root']}}/var/log/php",
  #    owner: "{{vars['cops_drupal_user']}}", group: "{{vars['cops_drupal_group']}}",
  #    state: directory, mode: "{{vars['cops_drupal_stickymode']}}755"}
-  - {path: "{{vars['cops_drupal_data_root']}}/var/private",
-     owner: "{{vars['cops_drupal_user']}}", group: "{{vars['cops_drupal_group']}}",
-     state: directory, mode: "{{vars['cops_drupal_stickymode']}}770"}
   - {path: "{{vars['cops_drupal_data_root']}}/var/tmp",
      owner: "{{vars['cops_drupal_user']}}", group: "{{vars['cops_drupal_group']}}",
      state: directory, mode: "{{vars['cops_drupal_stickymode']}}770"}
@@ -350,14 +353,19 @@ cops_drupal_files___default:
   - {path: "{{vars['cops_drupal_project_root']}}/sbin/profile_conf.sh", state: absent, force: true}
   - {path: "{{vars['cops_drupal_project_root']}}/sbin/composer.lock",   state: absent, force: true}
   - {path: "{{vars['cops_drupal_doc_root']}}/sites/default/common.settings.php",   state: absent, force: true}
-cops_drupal_sites_default_target_dir: "{{vars['cops_drupal_data_root']}}/var/sites/default"
 cops_drupal_sites_default_dir: "{{vars['cops_drupal_doc_root']}}/sites/default"
-cops_drupal_sites_default_dirs:
-  - {path: "{{vars['cops_drupal_sites_default_dir']}}", src: "{{vars['cops_drupal_data_root']}}/var/sites/default", state: link, force: true}
-cops_drupal_sites_default_subdirs: [files, private_files]
+cops_drupal_sites_default_target_dir: "{{vars['cops_drupal_data_root']}}/var/sites/default"
+cops_drupal_sites_default_files: "{{vars['cops_drupal_sites_default_dir']}}/files"
+cops_drupal_sites_default_target_files: "{{vars['cops_drupal_sites_default_target_dir']}}/files"
+cops_drupal_private_files: "{{vars['cops_drupal_data_root']}}/var/private"
 # Config files
 cops_drupal_configs: "{{vars['cops_drupal_configs___default']}}"
-cops_drupal_config_template_settings: "../templates/default.settings.php"
+cops_drupal_templa: null
+cops_drupal_config_template_settings_mapping:
+  default: "../templates/default.settings.php"
+  "7": "../templates/{{vars['cops_drupal_drupal_version']}}.settings.php"
+cops_drupal_config_template_settings: "{{vars['cops_drupal_config_template_settings_mapping'].get(vars['cops_drupal_drupal_version'], 'default')}}"
+# cops_drupal_config_template_settings: "../templates/7.settings.php"
 cops_drupal_config_template_bash_conf: "../templates/local_conf.sh"
 cops_drupal_config_template_behat: "../templates/behat.yml"
 cops_drupal_settings_path: "{{vars['cops_drupal_sites_default_dir']}}/settings.php"
