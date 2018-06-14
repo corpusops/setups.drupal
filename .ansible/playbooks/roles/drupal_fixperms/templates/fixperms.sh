@@ -134,6 +134,23 @@ while read i;do
  \) )
 done <<< "$TOP_SCRIPTS"
 
+
+while read i;do
+    if [ ! -e "$i" ];then continue;fi
+    while read j;do
+        echo $j
+        chmod 0660 "$j"
+        chown $user:$group "$j"
+    done < <(\
+ find -H "$i" \
+ \(\
+       -type f -name "*log" -and \( -not -user $user -or \
+                       -not -group $group -or \
+                       -not -perm 0660 \) \
+ \) )
+done <<< "
+${project_root}/var/log"
+
 while read i;do
     if [ ! -e "$i" ];then continue;fi
     while read j;do
