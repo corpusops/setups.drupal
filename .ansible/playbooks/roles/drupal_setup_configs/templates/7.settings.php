@@ -33,25 +33,23 @@ $databases['default']['default'] = array(
   {% if cfg.get('db_namespace', None) %}'namespace' => '{{ cfg.db_namespace }}',{%endif%}
 );
 
-$settings['update_free_access'] = FALSE;
+$conf['update_free_access'] = FALSE;
 $drupal_hash_salt = '{{ cfg.local_settings_drupal_hash }}';
-$settings['hash_salt'] = $drupal_hash_salt;
 
 ini_set('session.gc_probability', 1);
 ini_set('session.gc_divisor', 100);
 ini_set('session.gc_maxlifetime', 200000);
 ini_set('session.cookie_lifetime', 2000000);
 
-$settings['container_yamls'][] = __DIR__ . '/services.yml';
 
 
 $conf['404_fast_paths_exclude'] = '/\/(?:styles)\//';
 $conf['404_fast_paths'] = '/\.(?:txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|asp|yml)$/i';
 $conf['404_fast_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>';
 
-$settings['allow_authorize_operations'] = FALSE;
+$conf['allow_authorize_operations'] = FALSE;
 
-$settings['install_profile'] = '{{ cfg.drupal_profile }}';
+$conf['install_profile'] = '{{ cfg.drupal_profile }}';
 
 /**
  * Vary Cookie: please Read
@@ -201,6 +199,12 @@ $conf['block_cache_bypass_node_grants'] = {{ data.block_cache_bypass_node_grants
 // AVOID SENDING emails if not in production env -------------------------------
 $conf['reroute_email_enable'] = {{ cfg.local_settings.reroute_email_enable }};
 $conf['reroute_email_address'] = '{{ cfg.local_settings.reroute_email_address }}';
+
+
+/// Symfony
+$conf['kernel.environment'] = '{{cfg.symfony_environment}}';
+$conf['kernel.debug'] = {{cfg.symfony_debug}};
+$conf['kernel.cache_dir'] = '{{ cfg.symfony_cache_dir }}';
 
 
 // That's something not generated, anything which does not need env overrides

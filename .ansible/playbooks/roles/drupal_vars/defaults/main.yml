@@ -120,6 +120,9 @@ cops_drupal_tz: "Europe/Paris"
 cops_drupal_country: "FR"
 cops_drupal_update_status_module: 0
 cops_drupal_vncpasswd: "default"
+cops_drupal_symfony_environment: prod
+cops_drupal_symfony_debug: "true"
+cops_drupal_symfony_cache_dir: "{{vars['cops_drupal_private_files']}}/symfony"
 cops_drupal_local_settings_cache: 0
 cops_drupal_local_settings_cache_block: 0
 cops_drupal_local_settings_reverse_proxy_header: 'HTTP_X_FORWARDED_FOR'
