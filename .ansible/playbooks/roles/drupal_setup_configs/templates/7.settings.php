@@ -205,6 +205,7 @@ $conf['reroute_email_address'] = '{{ cfg.local_settings.reroute_email_address }}
 $conf['kernel.environment'] = '{{cfg.symfony_environment}}';
 $conf['kernel.debug'] = {{cfg.symfony_debug}};
 $conf['kernel.cache_dir'] = '{{ cfg.symfony_cache_dir }}';
+$conf['kernel.logs_dir'] = '{{ cfg.symfony_logs_dir }}';
 
 
 // That's something not generated, anything which does not need env overrides
