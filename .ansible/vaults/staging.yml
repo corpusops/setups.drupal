@@ -1,6 +1,10 @@
 ---
 # THIS SHOULD RESIDE IN AN ENCRYPTED VAULT
 cops_drupal_local_settings_drupal_hash: secretdfsgsfdgxdfg9FL8DmHmpNbGW1vb4kv36l0WSW9wrk48B8QoO2J
+cops_drupal_http_users___default:
+- {user: "{{vars['cops_drupal_local_settings_account_name']}}",
+   password: "{{vars['cops_drupal_local_settings_site_password']}}"}
+- {user: "root", password: "rootroot"}
 #cops_drupal_local_settings_smtp_host: 'mail.makina-corpus.net'
 #cops_drupal_local_settings_smtp_auth: 'true'
 #cops_drupal_local_settings_smtp_username: relay@foo.com
@@ -17,8 +21,3 @@ cops_deploy_ssh_key_paths:
       -----BEGIN RSA PRIVATE KEY-----
       yyy==
       -----END RSA PRIVATE KEY-----
-cops_drupal_http_users___default:
-- {user: "{{vars['cops_drupal_local_settings_account_name']}}",
-   password: "{{vars['cops_drupal_local_settings_site_password']}}"}
-- {user: "root", password: "rootroot"}
-
