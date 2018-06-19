@@ -4,7 +4,10 @@ cops_db_name: "{{cops_app_name}}"
 cops_db_user: "{{cops_app_name}}"
 cops_drupal_domain: "staging-myapp.makina-corpus.net"
 cops_drupal_db_host: "mydbserver.makina-corpus.net"
-cops_drupal_local_settings_account_email: "root@mycompany.com"
+cops_drupal_local_settings_smtp_fromname: 'Site'
+cops_drupal_local_settings_account_email: "foo@bar.com"
+cops_drupal_local_settings_site_email: "Site@bar.com"
+#cops_drupal_local_settings_smtp_used: True
 cops_postgresql_conf:
 - default_statistics_target = 50
 - maintenance_work_mem = 960MB
