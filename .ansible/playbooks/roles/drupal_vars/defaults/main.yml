@@ -374,11 +374,12 @@ cops_drupal_sites_default_target_files: "{{vars['cops_drupal_sites_default_targe
 cops_drupal_private_files: "{{vars['cops_drupal_data_root']}}/var/private"
 # Config files
 cops_drupal_configs: "{{vars['cops_drupal_configs___default']}}"
-cops_drupal_templa: null
 cops_drupal_config_template_settings_mapping:
   default: "../templates/default.settings.php"
   "7": "../templates/{{vars['cops_drupal_drupal_version']}}.settings.php"
-cops_drupal_config_template_settings: "{{vars['cops_drupal_config_template_settings_mapping'].get(vars['cops_drupal_drupal_version'], 'default')}}"
+cops_drupal_config_template_settings: "{{vars['cops_drupal_config_template_settings_mapping'].get(
+  '{0}'.format(vars['cops_drupal_drupal_version']),
+  vars['cops_drupal_config_template_settings_mapping'].default)}}"
 # cops_drupal_config_template_settings: "../templates/7.settings.php"
 cops_drupal_config_template_bash_conf: "../templates/local_conf.sh"
 cops_drupal_config_template_behat: "../templates/behat.yml"
