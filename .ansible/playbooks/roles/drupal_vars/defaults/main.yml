@@ -135,7 +135,7 @@ cops_drupal_local_settings_drupal_hash: null
 cops_drupal_local_settings_site_password: null
 cops_drupal_local_settings_account_name: 'admin'
 cops_drupal_local_settings_account_email: "root@{{vars['cops_drupal_domain']}}"
-cops_drupal_local_settings_site_email: "root@{{vars['cops_drupal_domain']}}"
+cops_drupal_local_settings_site_email: "{{vars['cops_drupal_local_settings_account_email']}}"
 cops_drupal_local_settings_site_name: "{{vars['cops_drupal_name']}}"
 cops_drupal_local_settings_reverse_proxy: 'TRUE'
 cops_drupal_local_settings_reverse_proxy_addresses: "array('127.0.0.1', '10.5.0.1')"
@@ -164,7 +164,7 @@ cops_drupal_local_settings_smtp_password: null
 cops_drupal_local_settings_smtp_port: null
 # standard / ssl / tls
 cops_drupal_local_settings_smtp_protocol: null
-cops_drupal_local_settings_smtp_from: "root@{{vars['cops_drupal_domain']}}"
+cops_drupal_local_settings_smtp_from: "{{vars['cops_drupal_local_settings_site_email']}}"
 cops_drupal_local_settings_smtp_fromname: ''
 cops_drupal_local_settings_block_cache_bypass_node_grants: 1
 cops_drupal_secret_variables:
