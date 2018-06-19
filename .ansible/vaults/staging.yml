@@ -8,7 +8,7 @@ cops_drupal_local_settings_drupal_hash: secretdfsgsfdgxdfg9FL8DmHmpNbGW1vb4kv36l
 #cops_drupal_local_settings_smtp_password: "secret"
 #cops_drupal_local_settings_smtp_port: 465
 #cops_drupal_local_settings_smtp_protocol: "tls"
-#cops_drupal_local_settings_smtp_from: "{{vars['cops_drupal_local_settings_account_email']}}"
+#cops_drupal_local_settings_smtp_from: "{{vars['cops_drupal_local_settings_site_email']}}"
 #cops_drupal_local_settings_smtp_fromname: 'xxx'
 cops_db_password: "secretB2FA8m6fy5Ld7J9F"
 cops_deploy_ssh_key_paths:
