@@ -2,9 +2,15 @@
 - include_role: {name: drupal_vars, allow_duplicates: false}
 - set_fact:
     cacheable: false
-    cops_drupal_lifecycle_elasticsearch: |-
+    cops_drupal_lifecycle_solr_core: |-
+      {{(
+         not vars.get('SKIP_INSTALL_SOLR_CORE', False) or
+         cops_drupal_lifecycle_solr_core|default(false) or
+         vars.get('FORCE_INSTALL_SOLR_CORE', False)
+      )}}
+    cops_drupal_lifecycle_solr: |-
       {{(
          not vars.get('SKIP_INSTALL_SOLR', False) or
-         cops_drupal_lifecycle_elasticsearch|default(false) or
+         cops_drupal_lifecycle_solr|default(false) or
          vars.get('FORCE_INSTALL_SOLR', False)
       )}}

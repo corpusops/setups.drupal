@@ -7,4 +7,39 @@
     - include_role: {name: drupal_solr_vars}
 - import_playbook: "../../local/setups.solr/.ansible/playbooks/site.yml"
   tags: [cops_drupal_lifecycle_solr]
-  when: "cops_drupal_lifecycle_solr|default(true)" 
+  when: "cops_drupal_lifecycle_solr|default(true)"
+- hosts: "{{solr_servers|default('all')}}"
+  tasks:
+  - include_role: {name: drupal_vars}
+  - name: Install core
+    shell: |-
+      set -ex
+      u="{{cops_drupal_vars.solr_tb}}"
+      t=$(basename $u)
+      n=$(basename $t .tar.gz)
+      n=search_api_solr
+      r="{{cops_drupal_vars.solr_root}}"
+      cd "$r"
+      if [ ! -e $t ];then wget -c "$u";echo changed>&2;fi
+      if [ ! -e $n/solr-conf ];then tar xzvf $t;fi
+      {% for cores in cops_drupal_vars.solr_cores %}
+      {% for s, sdata in cores.items() %}
+      if [ ! -e "server/solr/{{s}}/conf/schema.xml" ];then
+        if [ ! -e "server/solr/{{s}}/conf" ];then
+          mkdir -pv "server/solr/{{s}}/conf"
+        fi
+        rsync -av "$n/solr-conf/{{sdata.schema}}/" "server/solr/{{s}}/conf/"
+      fi
+      if [ ! -e server/solr/{{s}}/core.properties ];then
+        bin/solr create -c {{s}} -d "$r/server/solr/{{s}}/conf/"
+      fi
+      {% endfor %}
+      {% endfor %}
+    become: true
+    become_user: "{{cops_drupal_vars.solr_user}}"
+    register: _c_drupal_install
+    changed_when: "'changed' in _c_drupal_install.stderr"
+    tags: [cops_drupal_lifecycle_solr_core]
+    when: "cops_drupal_lifecycle_solr_core|default(true)"
+
+

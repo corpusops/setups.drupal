@@ -24,6 +24,12 @@ cops_drupal_supereditors_paths: "{{vars['cops_drupal__supereditors_paths']}}"
 cops_drupal_supereditors: "{{vars['cops_drupal__supereditors']}}"
 cops_drupal_deb_packages: "{{vars['cops_drupal_deb_packages___default']}}"
 cops_drupal_db_has_postgis: false
+cops_drupal_search_solr_ver: 7.x-1.12
+cops_drupal_solr_cores:
+- drupal: {schema: 6.x}
+cops_drupal_solr_tb: "https://ftp.drupal.org/files/projects/search_api_solr-{{vars['cops_drupal_search_solr_ver']}}.tar.gz"
+cops_drupal_solr_root: "/srv/projects/solr/project/solr"
+cops_drupal_solr_user: "solr-user"
 cops_drupal_db_has_postgresql: "{{ cops_drupal_db_has_postgis or (
  vars['cops_drupal_db_type'] in ['pgsql'])}}"
 cops_drupal_deb_packages___default:
