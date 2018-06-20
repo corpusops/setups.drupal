@@ -15,6 +15,9 @@ mydbserver.foo.net
 [postgresql_servers]
 mydbserver.foo.net
 
+[solr_servers]
+mydbserver.foo.net
+
 [elasticsearch_servers]
 mydbserver.foo.net
 
