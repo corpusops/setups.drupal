@@ -1,0 +1,10 @@
+---
+- hosts: "{{solr_servers|default('all')}}"
+  tasks:
+  - tags: [cops_drupal_lifecycle_solr]
+    when: "cops_drupal_lifecycle_solr|default(true)"
+    block:
+    - include_role: {name: drupal_solr_vars}
+- import_playbook: "../../local/setups.solr/.ansible/playbooks/site.yml"
+  tags: [cops_drupal_lifecycle_solr]
+  when: "cops_drupal_lifecycle_solr|default(true)" 
