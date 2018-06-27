@@ -34,7 +34,7 @@ variables:
   A_GIT_PROJECT: "$CI_PROJECT_NAME"
   A_GIT_URL: "$CI_PROJECT_URL"
 
-stages: [test, deploy, jobs]
+stages: [test, deploy]
 
 .cache: &cache
   cache:
@@ -58,22 +58,16 @@ stages: [test, deploy, jobs]
   when: manual
 
 .deploy_branchs: &deploy_branchs
-  only:   [staging]
+  only: [staging, production]
 
 .not_deploy_branchs: &not_deploy_branchs
-  except: [staging]
+  except: [staging, production]
 
-.jobs_branchs: &jobs_branchs
-  only:   [jobs]
+-.test_branchs: &test_branchs
+  except: [staging, production]
 
-.not_jobs_branchs: &not_jobs_branchs
-  except: [jobs]
-
-.test_branchs: &test_branchs
-  except: [staging, jobs]
-
-.not_test_branchs: &not_test_branchs
-  only: [staging, jobs]
+-.not_test_branchs: &not_test_branchs
+  only: [staging, production]
 
 .test_skip: &test_skip
   <<: *job_skip
@@ -95,14 +89,6 @@ stages: [test, deploy, jobs]
   environment:
      name: $CI_COMMIT_REF_NAME
      url: "https://$CI_COMMIT_REF_NAME-$CI_PROJECT_NAME.$CORP_DOMAIN"
-
-.jobs_skip: &jobs_skip
-  <<: *job_skip
-  stage: jobs
-
-.jobs_template: &jobs
-  <<: *job_template
-  stage: jobs
 
 .setup_templates: &setup
   before_script:
@@ -139,14 +125,17 @@ stages: [test, deploy, jobs]
     <<: [ *env_vault_variables ]
     A_VAULT_NAME: staging
 
+.production_vault_template: &production_vault
+  <<: [ *env_vault  ]
+  variables: &production_vault_variables
+    <<: [ *env_vault_variables ]
+    A_VAULT_NAME: production
+
 test_skip_on_not_tests_branchs:
   <<: [*not_test_branchs, *test_skip]
 
 deploy_skip_on_not_deploy_branchs:
   <<: [*not_deploy_branchs, *deploy_skip]
-
-jobs_skip_on_not_jobs_branchs:
-  <<: [*not_jobs_branchs, *jobs_skip]
 
 # Test on non deploy branchs
 test:
@@ -154,6 +143,7 @@ test:
   script: [.ansible/scripts/test.sh]
 
 # Deploy envs
+# Staging
 staging_deploy:
   <<: [ *ansible, *teardown_ansible, *setup_ansible, *deploy_env, *deploy ]
   only: [staging]
@@ -161,21 +151,67 @@ staging_deploy:
     <<: [ *staging_vault_variables ]
     PLAYBOOK: ".ansible/playbooks/app.yml"
 
-# Manual jobs
-# setup_haproxy:
-#   <<: [ *ansible, *teardown_ansible, *setup_ansible, *jobs_branchs, *jobs ]
-#   variables:
-#     <<: [ *staging_vault_variables ]
-#     PLAYBOOK: ".ansible/playbooks/haproxy.yml"
-#
+# Staging
 setup_staging_db:
-   <<: [ *ansible, *teardown_ansible, *setup_ansible, *jobs_branchs, *jobs ]
-   variables:
-     <<: [ *staging_vault_variables ]
-     PLAYBOOK: ".ansible/playbooks/db.yml"
+  <<: [ *ansible, *teardown_ansible, *setup_ansible, *deploy_env, *deploy ]
+  only: [staging]
+  variables:
+    <<: [ *staging_vault_variables ]
+    PLAYBOOK: ".ansible/playbooks/db.yml"
 
 setup_staging_db_backup:
-  <<: [ *ansible, *teardown_ansible, *setup_ansible, *jobs_branchs, *jobs ]
+  <<: [ *ansible, *teardown_ansible, *setup_ansible, *deploy_env, *deploy ]
   variables:
     <<: [ *staging_vault_variables ]
     PLAYBOOK: ".ansible/playbooks/db_backup.yml"
+
+setup_staging_nginx:
+  <<: [ *ansible, *teardown_ansible, *setup_ansible, *deploy_env, *deploy ]
+  only: [staging]
+  variables:
+    <<: [ *staging_vault_variables ]
+  script:
+    - >
+      PLAYBOOK="" .ansible/scripts/call_ansible.sh .ansible/playbooks/app.yml
+      -e "{
+      only_steps: True,
+      cops_drupal_lifecycle_app_push_code: True,
+      cops_drupal_s_setup_reverse_proxy_vhost: True,
+      cops_drupal_s_reverse_proxy_reload: True,
+      cops_drupal_s_setup_reverse_proxy_users: True}"
+
+# Production
+production_deploy:
+  <<: [ *ansible, *teardown_ansible, *setup_ansible, *deploy_env, *deploy ]
+  only: [production]
+  variables:
+    <<: [ *production_vault_variables ]
+    PLAYBOOK: ".ansible/playbooks/app.yml"
+
+setup_production_db:
+  <<: [ *ansible, *teardown_ansible, *setup_ansible, *deploy_env, *deploy ]
+  only: [production]
+  variables:
+    <<: [ *production_vault_variables ]
+    PLAYBOOK: ".ansible/playbooks/db.yml"
+
+setup_production_db_backup:
+  <<: [ *ansible, *teardown_ansible, *setup_ansible, *deploy_env, *deploy ]
+  variables:
+    <<: [ *production_vault_variables ]
+    PLAYBOOK: ".ansible/playbooks/db_backup.yml"
+
+setup_production_nginx:
+  <<: [ *ansible, *teardown_ansible, *setup_ansible, *deploy_env, *deploy ]
+  only: [production]
+  variables:
+    <<: [ *production_vault_variables ]
+  script:
+    - >
+      PLAYBOOK="" .ansible/scripts/call_ansible.sh .ansible/playbooks/app.yml
+      -e "{
+      only_steps: True,
+      cops_drupal_lifecycle_app_push_code: True,
+      cops_drupal_s_setup_reverse_proxy_vhost: True,
+      cops_drupal_s_reverse_proxy_reload: True,
+      cops_drupal_s_setup_reverse_proxy_users: True}"
