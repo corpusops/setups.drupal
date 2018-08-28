@@ -162,14 +162,18 @@ cops_drupal_local_settings_conf_sync_dir: "{{vars['cops_drupal_project_root']}}/
 cops_drupal_local_settings_conf_install_dir: "{{vars['cops_drupal_project_root']}}/lib/config/install"
 cops_drupal_local_settings_conf_staging_dir: "{{vars['cops_drupal_project_root']}}/lib/config/staging"
 cops_drupal_local_settings_conf_todev_dir: "{{vars['cops_drupal_project_root']}}/lib/config/to_dev"
-cops_drupal_local_settings_smtp_used: True
+# MAIL - SMTP - shared
 cops_drupal_local_settings_smtp_host: '127.0.0.1'
-cops_drupal_local_settings_smtp_auth: null
 cops_drupal_local_settings_smtp_username: null
 cops_drupal_local_settings_smtp_password: null
 cops_drupal_local_settings_smtp_port: null
+cops_drupal_local_settings_smtp_auth: null
 # standard / ssl / tls
 cops_drupal_local_settings_smtp_protocol: null
+# used only by Swiftmailer module ---
+cops_drupal_local_settings_swiftmailer_used: False
+# used only by SMTP module ----------
+cops_drupal_local_settings_smtp_used: True
 cops_drupal_local_settings_smtp_from: "{{vars['cops_drupal_local_settings_site_email']}}"
 cops_drupal_local_settings_smtp_fromname: ''
 cops_drupal_local_settings_block_cache_bypass_node_grants: 1

@@ -85,9 +85,27 @@ $config['automated_cron.settings']['interval'] = 0;
 // FIXME: elysia_cron is a D7 only module for now...
 //$config['elysia_cron_time_limit'] = 0;
 
+{% if cfg.local_settings.swiftmailer_used %}
+// SMTP - SWIFTMAILER /////////////////////////////////////////////////
+$config['swiftmailer.transport']['transport'] = 'smtp';
+$config['swiftmailer.transport']['smtp_host'] = "{{ cfg.local_settings_smtp.host }}";
+$config['swiftmailer.transport']['smtp_credential_provider'] = 'swiftmailer';
+$config['swiftmailer.transport']['smtp_port'] = "{{ cfg.local_settings_smtp.port }}";
+{% if cfg.local_settings_smtp.protocol %}
+$config['swiftmailer.transport']['smtp_encryption'] = "{{ cfg.local_settings_smtp.protocol }}";
+{% endif %}
+{% if cfg.local_settings_smtp.auth %}
+$config['swiftmailer.transport']['smtp_credentials'] = [
+    'swiftmailer' => [
+        'username' => '{{ cfg.local_settings_smtp.username }}',
+        'password' => '{{ cfg.local_settings_smtp.password }}'
+    ]];
+{% endif %}
+{% endif %}
+
 {% if cfg.local_settings.smtp_used %}
 // SMTP ///////////////////////////////////////////////////////////////
-// FIXME: untested, check the smtp D8 module
+// untested, check swiftmailer instead
 $config['system.mail']['smtp_on'] = TRUE;
 $config['system.mail']['smtp_host'] = "{{ cfg.local_settings_smtp.host }}";
 $config['system.mail']['smtp_from'] = "{{ cfg.local_settings_smtp.from }}";
@@ -95,7 +113,7 @@ $config['system.mail']['smtp_fromname'] = "{{ cfg.local_settings_smtp.fromname }
 {% for i in ['port', 'protocol', 'auth', 'username', 'password'] %}
 {%- set val = cfg['local_settings_smtp_{0}'.format(i)] %}
 {%- if val %}
-$confif['system.mail']['{{'smtp_{0}'.format(i)}}'] = "{{ val }}";
+$config['system.mail']['{{'smtp_{0}'.format(i)}}'] = "{{ val }}";
 {% endif %}{% endfor %}
 {% endif %}
 
