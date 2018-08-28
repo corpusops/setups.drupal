@@ -206,9 +206,8 @@ cops_drupal_drupal_update_enabled: false
 cops_drupal_drupal_uri_scheme: "http"
 cops_drupal_drupal_uri: "{{vars['cops_drupal_drupal_uri_scheme']}}://{{vars['cops_drupal_domain']}}"
 cops_drupal_drush_make_args: "profiles/{{vars['cops_drupal_drupal_profile']}}/{{vars['cops_drupal_drupal_profile']}}.make"
-# uncomment if you use -- elysia cron --
 cops_drupal_fixperms_cron_periodicity: "*/30 * * * *"
-# how many minutes before rmoving lock file of a currently running cro
+# how many minutes before moving lock file of a currently running cron
 # this can be used outside of drupal, to avoid internal locks and messages
 # about cron already running
 cops_drupal_cron_activated: true
@@ -220,11 +219,13 @@ cops_drupal_cron_elysia_cmd: >-
   ../sbin/drush --root={{vars['cops_drupal_doc_root']}}
   --uri={{vars['cops_drupal_domain']}} elysia-cron run >${LOG} 2>&1
 cops_drupal_cron_mail: true
-cops_drupal_cron_cmd:  "{{vars['cops_drupal_cron_elysia_cmd']}}"
 cops_drupal_cron_stock_cmd: >-
   cd {{vars['cops_drupal_doc_root']}} &&
   ../sbin/drush --root={{vars['cops_drupal_doc_root']}}
   --uri={{vars['cops_drupal_domain']}} cron -y >${LOG} 2>&1
+# by default, especially for D8, we use stock cron and not elysia
+# cops_drupal_cron_cmd:  "{{vars['cops_drupal_cron_elysia_cmd']}}"
+cops_drupal_cron_cmd:  "{{vars['cops_drupal_cron_stock_cmd']}}"
 cops_drupal_password: "secret"
 # if a special php is needed for drush, set the path here
 cops_drupal_modules_dir: "{{vars['cops_drupal_doc_root']}}/sites/all/modules"
