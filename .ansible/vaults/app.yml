@@ -9,4 +9,4 @@ cops_db_user: "{{cops_app_name}}"
 cops_db_password: "{{cops_app_name}}"
 corpusops_services_db_postgresql_version: "10"
 # d8.6+
-# cops_drupal_site_install_args: "--existing-config"
+# cops_drupal_site_install_extra_args: "--existing-config"
