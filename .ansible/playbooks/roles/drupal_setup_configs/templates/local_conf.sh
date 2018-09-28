@@ -40,6 +40,7 @@ DRUSH_EXTRA_ARGS="--uri="${DRUPAL_URI}""
 # drush install related
 FORCE_INSTALL_MARKER="{{cfg.data_root}}/force_install"
 FORCE_INSTALL="{{force.get('install') and 'y' or ''}}"
+EXTRA_DRUSH_SITE_INSTALL_ARGS="{{cfg.site_install_extra_args}}"
 INSTALL_MARKER="{{cfg.data_root}}/installed"
 
 unset -v TARGETS

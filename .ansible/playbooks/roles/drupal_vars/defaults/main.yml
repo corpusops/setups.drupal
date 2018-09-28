@@ -194,6 +194,7 @@ cops_drupal_use_etc_hosts: true
 # This is "new_site" for the 1st player,
 # and "sync" after that (to get the same UUIDs)
 cops_drupal_d8_install_mode: "sync"
+cops_drupal_site_install_extra_args: ""
 cops_drupal_drupal_profile: example_profile
 cops_drupal_drush_make_opts: "--no-cache --translations={{vars['cops_drupal_drupal_locale']}}"
 cops_drupal_drush_make: "profiles/{{vars['cops_drupal_drupal_profile']}}/{{vars['cops_drupal_drupal_profile']}}.make"

@@ -30,6 +30,7 @@ DRUPAL_URI="http://${PROJECT_NAME}.local"
 DRUSH_EXTRA_ARGS="--uri="${DRUPAL_URI}""
 
 # drush install related
+EXTRA_DRUSH_SITE_INSTALL_ARGS="{{cfg.site_install_extra_args}}"
 FORCE_INSTALL_MARKER="${DATA_DIR}/force_install"
 INSTALL_MARKER="${DATA_DIR}/installed"
 FORCE_INSTALL=""
