@@ -37,7 +37,7 @@ ini_set('session.gc_divisor', 100);
 ini_set('session.gc_maxlifetime', 200000);
 ini_set('session.cookie_lifetime', 2000000);
 
-$settings['container_yamls'][] = __DIR__ . '/services.yml';
+$settings['container_yamls'][] = '{{ cfg.local_settings.container_yamls }}';
 
 
 $config['system.performance']['fast_404']['exclude_paths'] = '/\/(?:styles)\//';

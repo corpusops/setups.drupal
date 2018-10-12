@@ -130,6 +130,9 @@ cops_drupal_symfony_environment: prod
 cops_drupal_symfony_debug: "true"
 cops_drupal_symfony_cache_dir: "{{vars['cops_drupal_private_files']}}/symfony"
 cops_drupal_symfony_logs_dir: "{{vars['cops_drupal_log_dir']}}/symfony"
+# This one is classically "__DIR__ . '/services.yml'", that would set it in sites/default, which is not in git.
+# we put it in lib/config/services.yml
+cops_drupal_local_settings_containers_yaml: "{{vars['cops_drupal_project_root']}}/lib/config/services.yml"
 cops_drupal_local_settings_cache: 0
 cops_drupal_local_settings_cache_block: 0
 cops_drupal_local_settings_reverse_proxy_header: 'HTTP_X_FORWARDED_FOR'
