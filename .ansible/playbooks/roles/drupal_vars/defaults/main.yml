@@ -505,7 +505,7 @@ cops_drupal_http_users___default:
 - {user: "{{vars['cops_drupal_local_settings_account_name']}}",
    password: "{{vars['cops_drupal_local_settings_site_password']}}"}
 #  - {user: name, password: foobar}
-cops_drupal_ssl_protected: false
+cops_drupal_ssl_protected: "{{'https' in vars['cops_drupal_drupal_uri_scheme']}}"
 cops_drupal_nginx: {}
 cops_drupal_nginx_port: "80"
 cops_drupal_nginx_content_template: "../templates/nginx.conf"
