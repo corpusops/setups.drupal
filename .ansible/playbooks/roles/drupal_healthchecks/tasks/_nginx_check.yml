@@ -4,6 +4,7 @@
     uri:
       url: "http://{{cops_drupal_vars.query_host}}:{{cops_drupal_vars.nginx.port}}/"
       return_content: true
+      follow_redirects: "{{cops_drupal_vars.healthcheck_follow_redirect}}"
       headers:
         Host: "{{cops_drupal_vars.domain}}"
       user: "{{((not cops_drupal_vars.http_users)
@@ -13,9 +14,9 @@
                   and omit
                   or cops_drupal_vars.http_users[0].password)}}"
     register: cops_drupal_check1
-    until: "('{0}'.format(cops_drupal_check1.status)[0]
+    until: "('{0}'.format(cops_drupal_check1.get('status', 'FAILED'))[0]
               in ['1','2','3','4','5','6','7','8','9'])"
     retries: 10
     delay: 1
-    failed_when: "not ('{0}'.format(cops_drupal_check1.status)[0]
+    failed_when: "not ('{0}'.format(cops_drupal_check1.get('status', 'FAILED'))[0]
               in ['1','2','3','4','5','6','7','8','9'])"

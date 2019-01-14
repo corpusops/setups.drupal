@@ -508,6 +508,7 @@ cops_drupal_http_users___default:
 cops_drupal_ssl_protected: "{{'https' in vars['cops_drupal_drupal_uri_scheme']}}"
 cops_drupal_nginx: {}
 cops_drupal_nginx_port: "80"
+cops_drupal_healthcheck_follow_redirect: false
 cops_drupal_nginx_content_template: "../templates/nginx.conf"
 cops_drupal_nginx_top_template: "../templates/nginx.top.conf"
 cops_drupal_nginx_basename: "corpus-{{vars['cops_drupal_name']}}"
