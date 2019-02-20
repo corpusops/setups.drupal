@@ -69,6 +69,7 @@
       {% set _ = r.update({'cops_drupal_s_setup_test': (cops_drupal_s_setup_test_run or cops_drupal_s_setup_test_build)}) %}
       {% set cops_drupal_s_setup_test = r['cops_drupal_s_setup_test'] %}
       #
+      {% set _ = r.update({'cops_drupal_s_setup_front':                                                              cops_drupal_s_setup_front                 |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}) %}
       {% set _ = r.update({'cops_drupal_s_setup_cron':                                                              cops_drupal_s_setup_cron                 |default(cops_drupal_s_setup              |default(cops_drupal_lifecycle_app_setup|default(not only_steps )))}) %}
       {% set cops_drupal_s_setup_cron = r['cops_drupal_s_setup_cron'] %}
       #
