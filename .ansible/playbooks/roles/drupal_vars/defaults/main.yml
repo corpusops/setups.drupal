@@ -579,4 +579,5 @@ cops_drupal_dbsmartbackup: {}
 cops_drupal_dbsmartbackup_name: "{{vars['cops_drupal_name']}}"
 cops_drupal_dbsmartbackup_type: "{{(
    cops_drupal_db_role_type[cops_drupal_db_type])}}"
+cops_drupal_github_pat: null
 # vim:set ft=sls:

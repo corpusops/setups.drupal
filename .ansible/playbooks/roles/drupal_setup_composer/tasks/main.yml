@@ -11,6 +11,19 @@
   changed_when: false
   with_items: ['composer']
 
+
+# composer should have been installed system wide by precedent provision
+- name: Composer github api token
+  shell: |
+         set -e
+         {{cops_drupal_vars.project_root}}/sbin/composer config -g github-oauth.github.com {{cops_drupal_vars.github_pat}}
+  become: true
+  become_user: "{{cops_drupal_vars.user}}"
+  changed_when: false
+  when:
+  - cops_drupal_vars.github_pat|default('')|copsf_asbool
+
+
 # FIXME: move that to configs ?
 - name: initialize services config file (restricted perms)
   copy:
