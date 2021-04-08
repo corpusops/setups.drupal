@@ -156,7 +156,7 @@ cops_drupal_local_settings_locale_cache_length: 204800
 cops_drupal_local_settings_cookie_cache_bypass_adv_cache_lifetime: 300
 cops_drupal_local_settings_file_chmod_directory: '02770'
 cops_drupal_local_settings_file_chmod_file: '0660'
-cops_drupal_local_settings_error_level: 0
+cops_drupal_local_settings_error_level: hide
 cops_drupal_local_settings_preprocess_css: 0
 cops_drupal_local_settings_preprocess_js: 0
 cops_drupal_local_settings_base_url: 'default'
